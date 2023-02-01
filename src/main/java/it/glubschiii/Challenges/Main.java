@@ -1,11 +1,14 @@
 package it.glubschiii.Challenges;
 
 import it.glubschiii.Challenges.commands.*;
+import it.glubschiii.Challenges.gamerules.DifficultyGamerule;
+import it.glubschiii.Challenges.gamerules.RegenerationGamerule;
 import it.glubschiii.Challenges.listeners.*;
 import it.glubschiii.Challenges.commands.*;
 import it.glubschiii.Challenges.listeners.*;
 import it.glubschiii.Challenges.timer.Timer;
 import it.glubschiii.Challenges.utils.Config;
+import it.glubschiii.Challenges.utils.MainInventoryManager;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -69,9 +72,11 @@ public final class Main extends JavaPlugin {
         manager.registerEvents(new JumpListener(), this);
         manager.registerEvents(new SneakListener(), this);
         manager.registerEvents(new SettingsMenuInventoryClickEvent(), this);
-        manager.registerEvents(new SpielregelnMenuInventoryClickEvent(), this);
+        manager.registerEvents(new DifficultyGamerule(), this);
+        manager.registerEvents(new RegenerationGamerule(), this);
         manager.registerEvents(new PickupItemEvent(), this);
         manager.registerEvents(new DragonKillEvent(), this);
+        manager.registerEvents(new MainInventoryManager(), this);
 
         getCommand("timer").setExecutor(new TimerCommand());
         getCommand("backpack").setExecutor(new BackpackCommand());
@@ -140,7 +145,7 @@ public final class Main extends JavaPlugin {
                 Config.set("timer-direction", "up");
             }
             Config.set("difficulty", Bukkit.getWorld("world").getDifficulty().toString()); //TODO: Speichern überprüfen, noch hinzufügen beim ändern/enablen
-            Config.set("regeneration-status", SettingsMenuInventoryClickEvent.getStatus());
+            Config.set("regeneration-status", RegenerationGamerule.getStatus());
         } catch (IOException e) {
             e.printStackTrace();
         }

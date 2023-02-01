@@ -20,41 +20,20 @@ import org.bukkit.potion.PotionType;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static it.glubschiii.Challenges.gamerules.RegenerationGamerule.getStatus;
+
 /** @author Glubschiii | https://github.com/glubschiii
  @since 1.0.4
  */
 public class SettingsMenuInventoryClickEvent implements Listener {
 
-    public static int status = Main.getInstance().getConfig().getInt("regeneration-status");
-    private final int max_status = 2;
-    private final int min_status = 0;
-
-    public void setStatus() {
-        if(status < max_status) {
-            status++;
-        }
-    }
-
-    public void minStatus() {
-        if(status > min_status) {
-            status--;
-        }
-    }
-
-    public static int getStatus() {
-        return status;
-    }
-
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) throws IOException {
+        //TODO: Die Funktionen dieser Klasse in den MainInventoryManager
         Player player = (Player) event.getWhoClicked();
         if (event.getView().getTitle().equalsIgnoreCase(ChatColor.GOLD + "Settings" + ChatColor.DARK_GRAY + " • " +
                 ChatColor.BLUE + "Übersicht")) {
-            if (event.getCurrentItem() == null) {
-                return;
-            } else if (event.getCurrentItem().getType().equals(Material.GRAY_STAINED_GLASS_PANE)) {                // ODER: ((event.getSlot() == 0) {
-                event.setCancelled(true);
-            } else if (event.getCurrentItem().getType().equals(Material.MAP)) {
+            if (event.getCurrentItem().getType().equals(Material.MAP)) {
                 if (event.isLeftClick()) {
                     Inventory spielregelnmenu = Bukkit.createInventory(null, 36, ChatColor.GREEN + "Spielregeln" + ChatColor.DARK_GRAY + " • " +
                             ChatColor.BLUE + "Seite 1");

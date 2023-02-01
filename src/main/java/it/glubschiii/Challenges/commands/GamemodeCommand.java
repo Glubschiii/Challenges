@@ -50,7 +50,6 @@ public class GamemodeCommand implements CommandExecutor {
                     default:
                         sendUsage(sender);
                 }
-                //TODO: Es wird nur auf den ersten arg geachtet, "/gm 1 g" setzt den Spieler "Glubschiii" bereits in gm 1
             } else if(args.length == 2) {
                 Player target = null;
                 for(Player all : Bukkit.getOnlinePlayers()) {
@@ -70,7 +69,7 @@ public class GamemodeCommand implements CommandExecutor {
                             target.setGameMode(GameMode.SURVIVAL);
                         } else {
                             sender.sendMessage(ChatColor.DARK_GRAY + "» " + ChatColor.GRAY + "Der Spieler " + ChatColor.GOLD + args[1] + ChatColor.GRAY +
-                                    " befindet sich derzeit nicht auf dem Server");
+                                    " befindet sich derzeit nicht auf dem Server.");
                         }
                         break;
                     case "1":
@@ -83,7 +82,7 @@ public class GamemodeCommand implements CommandExecutor {
                             target.setGameMode(GameMode.CREATIVE);
                         } else {
                             sender.sendMessage(ChatColor.DARK_GRAY + "» " + ChatColor.GRAY + "Der Spieler " + ChatColor.GOLD + args[1] + ChatColor.GRAY +
-                                    " befindet sich derzeit nicht auf dem Server");
+                                    " befindet sich derzeit nicht auf dem Server.");
                         }
                         break;
                     case "2":
@@ -96,7 +95,7 @@ public class GamemodeCommand implements CommandExecutor {
                             target.setGameMode(GameMode.ADVENTURE);
                         } else {
                             sender.sendMessage(ChatColor.DARK_GRAY + "» " + ChatColor.GRAY + "Der Spieler " + ChatColor.GOLD + args[1] + ChatColor.GRAY +
-                                    " befindet sich derzeit nicht auf dem Server");
+                                    " befindet sich derzeit nicht auf dem Server.");
                         }
                         break;
                     case "3":
@@ -109,7 +108,7 @@ public class GamemodeCommand implements CommandExecutor {
                             target.setGameMode(GameMode.SPECTATOR);
                         } else {
                             sender.sendMessage(ChatColor.DARK_GRAY + "» " + ChatColor.GRAY + "Der Spieler " + ChatColor.GOLD + args[1] + ChatColor.GRAY +
-                                    " befindet sich derzeit nicht auf dem Server");
+                                    " befindet sich derzeit nicht auf dem Server.");
                         }
                         break;
                 }

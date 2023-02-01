@@ -21,7 +21,13 @@ public class HealCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.DARK_GRAY + "» " + ChatColor.GRAY + "Du wurdest geheilt!");
             } else if(args.length == 1) {
                 //TODO: Es wird nur auf den ersten arg geachtet, "/heal g" heilt den Spieler "Glubschiii" bereits
-                Player target = Bukkit.getPlayer(args[0]);
+                Player target = null;
+                for(Player all : Bukkit.getOnlinePlayers()) {
+                    if(all.getName().equalsIgnoreCase(args[0])) {
+                        target = all.getPlayer();
+                        continue;
+                    }
+                }
                 if(target != null) {
                     target.setHealth(20);
                     target.setFoodLevel(20);
@@ -31,7 +37,7 @@ public class HealCommand implements CommandExecutor {
                             " geheilt!");
                 } else
                     player.sendMessage(ChatColor.DARK_GRAY + "» " + ChatColor.GRAY + "Der Spieler " + ChatColor.GOLD + args[0] + ChatColor.GRAY +
-                            " befindet sich derzeit nicht auf dem Server");
+                            " befindet sich derzeit nicht auf dem Server.");
             } else
                 player.sendMessage(ChatColor.RED + "Verwendung: /heal <SPIELER>");
         } else
