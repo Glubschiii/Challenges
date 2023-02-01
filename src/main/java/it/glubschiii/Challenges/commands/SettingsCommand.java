@@ -29,32 +29,27 @@ public class SettingsCommand implements CommandExecutor {
 
                 ItemStack herausforderungen = new ItemStack(Material.DRAGON_HEAD);
                 ItemStack challenges = new ItemStack(Material.GRASS_BLOCK);
-                ItemStack funktionen = new ItemStack(Material.IRON_PICKAXE);
                 ItemStack spielregeln = new ItemStack(Material.MAP);
                 ItemStack background = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
 
                 ItemMeta herausforderungenMeta = herausforderungen.getItemMeta();
                 ItemMeta challengesMeta = challenges.getItemMeta();
-                ItemMeta funktionenMeta = funktionen.getItemMeta();
                 ItemMeta spielregelnMeta = spielregeln.getItemMeta();
                 ItemMeta backgroundMeta = background.getItemMeta();
 
                 herausforderungenMeta.setDisplayName(ChatColor.RED + "Herausforderungen");
                 challengesMeta.setDisplayName(ChatColor.AQUA + "Challenges");
-                funktionenMeta.setDisplayName(ChatColor.GOLD + "Funktionen"); //TODO: "When in Main Hand..." weg machen
-                funktionenMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
                 spielregelnMeta.setDisplayName(ChatColor.GREEN + "Spielregeln");
                 backgroundMeta.setDisplayName(" ");
 
                 ArrayList<String> herausforderungenlore = new ArrayList<>();
                 ArrayList<String> challengeslore = new ArrayList<>();
-                ArrayList<String> funktionenlore = new ArrayList<>();
                 ArrayList<String> spielregelnlore = new ArrayList<>();
 
                 herausforderungenlore.add(" ");
                 herausforderungenlore.add(ChatColor.RED + " Herausforderungen " + ChatColor.GRAY + "geben das " + ChatColor.RED + "Ziel");
                 herausforderungenlore.add(ChatColor.GRAY + " und das " + ChatColor.RED + "Ende " + ChatColor.GRAY + "der " +
-                       ChatColor.RED + "Challenge " + ChatColor.GRAY + "vor.");
+                        ChatColor.RED + "Challenge " + ChatColor.GRAY + "vor.");
                 herausforderungenlore.add(" ");
                 herausforderungenlore.add(ChatColor.RED + "" + ChatColor.ITALIC + "Klick: " + ChatColor.RED + "Übersicht");
                 herausforderungenMeta.setLore(herausforderungenlore);
@@ -67,16 +62,6 @@ public class SettingsCommand implements CommandExecutor {
                 challengeslore.add(" ");
                 challengeslore.add(ChatColor.AQUA + "" + ChatColor.ITALIC + "Klick: " + ChatColor.AQUA + "Übersicht");
                 challengesMeta.setLore(challengeslore);
-
-                funktionenlore.add(" ");
-                funktionenlore.add(ChatColor.GOLD + " Funktionen " + ChatColor.GRAY + "sind Modifikationen,");
-                funktionenlore.add(ChatColor.GRAY + " welche " + ChatColor.GOLD + "kosmetisch " + ChatColor.GRAY + "und " + ChatColor.GOLD
-                        + "funktionell");
-                funktionenlore.add(ChatColor.GRAY + " sind und das Spielgeschehen");
-                funktionenlore.add(ChatColor.GOLD + " nicht beeinflussen" + ChatColor.GRAY + ".");
-                funktionenlore.add(" ");
-                funktionenlore.add(ChatColor.GOLD + "" + ChatColor.ITALIC + "Klick: " + ChatColor.GOLD + "Übersicht");
-                funktionenMeta.setLore(funktionenlore);
 
                 spielregelnlore.add(" ");
                 spielregelnlore.add(ChatColor.GREEN + " Spielregeln " + ChatColor.GRAY + "sind normale");
@@ -91,7 +76,6 @@ public class SettingsCommand implements CommandExecutor {
 
                 herausforderungen.setItemMeta(herausforderungenMeta);
                 challenges.setItemMeta(challengesMeta);
-                funktionen.setItemMeta(funktionenMeta);
                 spielregeln.setItemMeta(spielregelnMeta);
                 background.setItemMeta(backgroundMeta);
 
@@ -108,7 +92,7 @@ public class SettingsCommand implements CommandExecutor {
                 settingsmenu.setItem(17, background);
                 settingsmenu.setItem(16, background);
                 settingsmenu.setItem(15, spielregeln);
-                settingsmenu.setItem(14, funktionen);
+                settingsmenu.setItem(14, background);
                 settingsmenu.setItem(13, background);
                 settingsmenu.setItem(12, challenges);
                 settingsmenu.setItem(11, herausforderungen);
