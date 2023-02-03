@@ -1,5 +1,6 @@
 package it.glubschiii.Challenges.commands;
 
+import it.glubschiii.Challenges.utils.MainInventoryManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 /** @author Glubschiii | https://github.com/glubschiii
  @since 1.0.3
  */
-public class SettingsCommand implements CommandExecutor {
+public class SettingsCommand extends MainInventoryManager implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(sender instanceof Player) {
@@ -108,7 +109,7 @@ public class SettingsCommand implements CommandExecutor {
                 settingsmenu.setItem(1, background);
                 settingsmenu.setItem(0, background);
 
-                player.openInventory(settingsmenu);
+                player.openInventory(settingsinv);
 
 
 

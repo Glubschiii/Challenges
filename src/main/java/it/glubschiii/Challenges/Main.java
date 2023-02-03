@@ -85,6 +85,7 @@ public final class Main extends JavaPlugin {
         getCommand("reset").setExecutor(new ResetCommand());
         getCommand("gm").setExecutor(new GamemodeCommand());
 
+        MainInventoryManager.puttingBackground(0);
 
         if (Config.get("timer") != null) {
             timer = new Timer(false, (Integer) Config.get("timer"));
