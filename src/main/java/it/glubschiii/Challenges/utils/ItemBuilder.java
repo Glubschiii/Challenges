@@ -1,16 +1,18 @@
 package it.glubschiii.Challenges.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Used this ItemBuilder class from NonameSL to easily create custom Items. Shoutout to him!
@@ -20,7 +22,7 @@ import java.util.Map;
  * @author NonameSL
  */
 public class ItemBuilder {
-    private ItemStack is;
+    private final ItemStack is;
     /**
      * Create a new ItemBuilder from scratch.
      * @param m The material to create the ItemBuilder with.
@@ -212,6 +214,25 @@ public class ItemBuilder {
     @SuppressWarnings("deprecation")
     public ItemBuilder setDyeColor(DyeColor color){
         this.is.setDurability(color.getDyeData());
+        return this;
+    }
+    /**
+     * Add an effect to a potion
+     *
+     * @param type     The potion type
+     * @param strength The amplifier
+     * @param duration The duration
+     * @return {@link ItemBuilder}
+     */
+    public ItemBuilder addPotionEffect(final PotionEffectType type, final int strength, final int duration,
+                                       final boolean overwrite) {
+        ItemMeta im = is.getItemMeta();
+        if (is.getType() == Material.POTION) {
+            final PotionMeta potionMeta = (PotionMeta) im;
+            im.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            potionMeta.addCustomEffect(new PotionEffect(type, strength, duration), overwrite);
+            is.setItemMeta(potionMeta);
+        }
         return this;
     }
     /**

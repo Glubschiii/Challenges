@@ -1,14 +1,12 @@
 package it.glubschiii.Challenges.gamerules;
 
 import it.glubschiii.Challenges.Main;
-import it.glubschiii.Challenges.commands.SettingsCommand;
-import it.glubschiii.Challenges.listeners.SettingsMenuInventoryClickEvent;
 import it.glubschiii.Challenges.utils.Config;
+import it.glubschiii.Challenges.utils.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameRule;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,7 +17,6 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -28,7 +25,7 @@ import java.util.EnumSet;
  @since 1.0.4
  */
 
-public class RegenerationGamerule extends SettingsMenuInventoryClickEvent implements Listener {
+public class RegenerationGamerule implements Listener {
 
     private static int status = Main.getInstance().getConfig().getInt("regeneration-status");
     private final int max_status = 2;
@@ -50,7 +47,7 @@ public class RegenerationGamerule extends SettingsMenuInventoryClickEvent implem
         return status;
     }
 
-    public void finalStatus(boolean naturalregeneration, String regstatus, Material dye) {
+    public void finalStatus(boolean naturalregeneration, String regstatus, Material dye) throws IOException {
         Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.NATURAL_REGENERATION, naturalregeneration));
         for (Player all : Bukkit.getOnlinePlayers()) {
             all.sendMessage(prefix + ChatColor.GRAY + " Die Regeneration wurde auf " + ChatColor.GOLD.toString() +
@@ -59,13 +56,11 @@ public class RegenerationGamerule extends SettingsMenuInventoryClickEvent implem
             if (iview.getTitle().equalsIgnoreCase(ChatColor.GREEN + "Spielregeln" + ChatColor.DARK_GRAY + " • " +
                     ChatColor.BLUE + "Seite 1")) {
                 Inventory contents = iview.getTopInventory();
-                ItemStack regdye = new ItemStack(dye);
-                ItemMeta regdyeMeta = regdye.getItemMeta();
-                regdyeMeta.setDisplayName(ChatColor.GREEN + regstatus);
-                regdye.setItemMeta(regdyeMeta);
-                contents.setItem(20, regdye);
+                ItemStack regdye = new ItemBuilder(dye, 1).setName(regstatus).toItemStack();
+                contents.setItem(12, regdye);
             }
         }
+        Config.set("regeneration-status", getStatus());
     }
 
     public String prefix = ChatColor.DARK_GRAY + "[" + ChatColor.LIGHT_PURPLE + "P2YL" + ChatColor.DARK_GRAY + "] ";
@@ -75,12 +70,10 @@ public class RegenerationGamerule extends SettingsMenuInventoryClickEvent implem
         Player player = (Player) event.getWhoClicked();
         if (event.getView().getTitle().equalsIgnoreCase(ChatColor.GREEN + "Spielregeln" + ChatColor.DARK_GRAY + " • " +
                 ChatColor.BLUE + "Seite 1")) {
-            if (event.getCurrentItem().getType().equals(Material.POTION)) {
+            if (event.getCurrentItem().getType().equals(Material.POTION) || event.getSlot() == 12) {
                 if (event.isLeftClick()) {
                     if(getStatus() == 0 || getStatus() == 1) {
                         setStatus();
-                        Config.set("regeneration-status", getStatus());
-                        //TODO: Config überprüfen
                         if (getStatus() == 1) {
                             finalStatus(false, "UHC", Material.ORANGE_DYE);
                         } else if (getStatus() == 2) {
@@ -90,7 +83,6 @@ public class RegenerationGamerule extends SettingsMenuInventoryClickEvent implem
                 } else if(event.isRightClick()) {
                     if (getStatus() == 2 || getStatus() == 1) {
                         minStatus();
-                        Config.set("regeneration-status", getStatus());
                         if (getStatus() == 1) {
                             finalStatus(false, "UHC", Material.ORANGE_DYE);
                         } else if (getStatus() == 0) {
