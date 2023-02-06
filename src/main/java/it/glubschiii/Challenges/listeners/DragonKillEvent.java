@@ -24,6 +24,7 @@ public class DragonKillEvent implements Listener {
                     World world = event.getEntity().getWorld();
                     if(world.getEnvironment() == World.Environment.THE_END) {
                         timer.setRunning(false);
+                        //TODO: Challenge geschafft Methode machen & einfügen
                     }
                 }
             }

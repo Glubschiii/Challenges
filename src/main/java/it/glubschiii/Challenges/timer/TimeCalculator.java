@@ -12,7 +12,7 @@ public class TimeCalculator {
             if (!Timer.isRunning()) {
                 result = "Der Timer ist pausiert";
             } else if (time <= 59) {
-                result = format(0,result + time + "s </bold></gradient>");
+                result = format(0,result + time + "s");
             } else if (time <= 3599) {
 
                 int m = (int) Math.floor(time / 60);

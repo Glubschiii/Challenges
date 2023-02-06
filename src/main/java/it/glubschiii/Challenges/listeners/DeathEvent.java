@@ -31,6 +31,7 @@ public class DeathEvent implements Listener {
         Timer timer = Main.getInstance().getTimer();
         isEventRunning = true;
         Player player = event.getEntity();
+        Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false));
         if(Timer.isRunning()) {
             for (Player all : Bukkit.getOnlinePlayers()) {
                 spawnUpGoingParticleCircle((JavaPlugin) Main.getInstance(), all.getLocation(), Particle.SPELL_WITCH, 17, 1.0D, 2.0D);
@@ -38,15 +39,15 @@ public class DeathEvent implements Listener {
                     all.setHealth(0);
                 }
             }
-            timer.setRunning(false);
             Bukkit.getServer().broadcastMessage(ChatColor.RED + "Die Challenge wurde gescheitert! " + ChatColor.GOLD + "#FeelsBadMan ✞");
             Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "Zeit verschwendet: " + ChatColor.GREEN.toString() + ChatColor.BOLD +
                     TimeCalculator.format(getTime()/5, ""));
             Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "Seed: " + ChatColor.YELLOW.toString() + ChatColor.BOLD
                     + Bukkit.getWorld("world").getSeed());
+            timer.setRunning(false);
         }
+        event.setDeathMessage(null);
         isEventRunning = false;
-        event.deathMessage(null);
     }
 
     public static void spawnUpGoingParticleCircle(@Nonnull JavaPlugin plugin, @Nonnull Location location, @Nonnull Particle particle, int points, double radius, double height) {

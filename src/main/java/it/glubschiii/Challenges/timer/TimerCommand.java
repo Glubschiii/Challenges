@@ -1,4 +1,4 @@
-package it.glubschiii.Challenges.commands;
+package it.glubschiii.Challenges.timer;
 
 import it.glubschiii.Challenges.Main;
 import it.glubschiii.Challenges.timer.Timer;

@@ -1,7 +1,6 @@
 package it.glubschiii.Challenges.timer;
 
 import it.glubschiii.Challenges.Main;
-import it.glubschiii.Challenges.commands.TimerCommand;
 import it.glubschiii.Challenges.utils.Config;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -55,7 +54,7 @@ public class Timer extends TimerCommand {
                     player.sendActionBar(parsed);
                 } else if(Main.getInstance().getColor(player) != null) {
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(Main.getInstance().getColor(player).toString() +
-                            ChatColor.BOLD + TimeCalculator.format(getTime(), "")));
+                            ChatColor.BOLD + TimeCalculator.format(getTime()/5, "")));
                 }
             }
         }

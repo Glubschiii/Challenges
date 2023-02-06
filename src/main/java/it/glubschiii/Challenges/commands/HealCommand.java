@@ -20,7 +20,6 @@ public class HealCommand implements CommandExecutor {
                 player.setFoodLevel(20);
                 player.sendMessage(ChatColor.DARK_GRAY + "» " + ChatColor.GRAY + "Du wurdest geheilt!");
             } else if(args.length == 1) {
-                //TODO: Es wird nur auf den ersten arg geachtet, "/heal g" heilt den Spieler "Glubschiii" bereits
                 Player target = null;
                 for(Player all : Bukkit.getOnlinePlayers()) {
                     if(all.getName().equalsIgnoreCase(args[0])) {

@@ -1,14 +1,16 @@
 package it.glubschiii.Challenges;
 
+import it.glubschiii.Challenges.challenges.NoJumpChallenge;
+import it.glubschiii.Challenges.challenges.NoSneakChallenge;
 import it.glubschiii.Challenges.commands.*;
 import it.glubschiii.Challenges.gamerules.DifficultyGamerule;
 import it.glubschiii.Challenges.gamerules.RegenerationGamerule;
 import it.glubschiii.Challenges.listeners.*;
-import it.glubschiii.Challenges.commands.*;
-import it.glubschiii.Challenges.listeners.*;
 import it.glubschiii.Challenges.timer.Timer;
+import it.glubschiii.Challenges.timer.TimerCommand;
 import it.glubschiii.Challenges.utils.Config;
 import it.glubschiii.Challenges.utils.MainInventoryManager;
+import it.glubschiii.Challenges.timer.PreTimer;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -66,11 +68,12 @@ public final class Main extends JavaPlugin {
 
         PluginManager manager = Bukkit.getPluginManager();
         manager.registerEvents(new JoinListener(), this);
+        manager.registerEvents(new PreTimer(), this);
         manager.registerEvents(new QuitListener(), this);
         manager.registerEvents(new DeathEvent(), this);
         manager.registerEvents(new EntityDamageEvent(), this);
-        manager.registerEvents(new JumpListener(), this);
-        manager.registerEvents(new SneakListener(), this);
+        manager.registerEvents(new NoJumpChallenge(), this);
+        manager.registerEvents(new NoSneakChallenge(), this);
         manager.registerEvents(new DifficultyGamerule(), this);
         manager.registerEvents(new RegenerationGamerule(), this);
         manager.registerEvents(new PickupItemEvent(), this);
