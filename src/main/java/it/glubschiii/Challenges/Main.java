@@ -94,7 +94,7 @@ public final class Main extends JavaPlugin {
         }
 
         if (Config.get("timer") != null) {
-            timer = new Timer(false, (Integer) Config.get("timer"));
+            timer = new Timer(false, (Integer) Config.get("timer")*5);
         } else {
             timer = new Timer(false, 0);
         }

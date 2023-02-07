@@ -131,7 +131,7 @@ public class TimerCommand implements CommandExecutor {
                 } catch (Exception e) {
                     sendColorUsage(sender);
                 }
-            } else if (args[0].equalsIgnoreCase("set")) {
+            } else if (args[0].equalsIgnoreCase("set")) {       //TODO: s for secs, d for days... hinzufügbar
                 try {
                     timer.setTime(Integer.parseInt(args[1]) * 5);
                     sender.sendMessage(prefix + ChatColor.GREEN + "Der Timer wurde auf " + ChatColor.WHITE + ChatColor.BOLD + args[1] +
