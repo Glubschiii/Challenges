@@ -122,7 +122,8 @@ public class TimerCommand implements CommandExecutor {
                     default:
                         sendUsage(sender);
                 }
-            } else if (args[0].equalsIgnoreCase("color")) {
+            } else if(args.length >= 1) {
+                if (args[0].equalsIgnoreCase("color")) {
                 try {
                     Main.getInstance().setColor((Player) sender, ChatColor.getByChar(args[1]));
                     timer.sendActionBar();
@@ -131,13 +132,52 @@ public class TimerCommand implements CommandExecutor {
                 } catch (Exception e) {
                     sendColorUsage(sender);
                 }
-            } else if (args[0].equalsIgnoreCase("set")) {       //TODO: s for secs, d for days... hinzufügbar
-                try {
-                    timer.setTime(Integer.parseInt(args[1]) * 5);
-                    sender.sendMessage(prefix + ChatColor.GREEN + "Der Timer wurde auf " + ChatColor.WHITE + ChatColor.BOLD + args[1] +
-                            "" + ChatColor.RESET + "" + ChatColor.GREEN + " gesetzt!");
-                } catch (NumberFormatException e) {
-                    sender.sendMessage(ChatColor.GREEN + "Dein Parameter 2 muss eine Zahl sein!");
+            } else if (args[0].equalsIgnoreCase("set")) {
+                    try {
+                        if (args.length >= 2) {
+                            int timeInSec = 0;
+                            String friendlyFormatTime = "";
+                            for (String time : args) {
+                                if (!time.equalsIgnoreCase("set")) {
+                                    int tempTime = Integer.parseInt(time.substring(0, time.length() - 1));
+                                    switch (time.charAt(time.length() - 1)) {
+                                        case 'd': {
+                                            timeInSec = timeInSec + tempTime * 86400;
+                                            friendlyFormatTime = friendlyFormatTime + tempTime + "d ";
+                                            break;
+                                        }
+                                        case 'h': {
+                                            timeInSec = timeInSec + tempTime * 3600;
+                                            friendlyFormatTime = friendlyFormatTime + tempTime + "h ";
+                                            break;
+                                        }
+                                        case 'm': {
+                                            timeInSec = timeInSec + tempTime * 60;
+                                            friendlyFormatTime = friendlyFormatTime + tempTime + "m ";
+                                            break;
+                                        }
+                                        case 's': {
+                                            timeInSec = timeInSec + tempTime;
+                                            friendlyFormatTime = friendlyFormatTime + tempTime + "s ";
+                                            break;
+                                        }
+                                        default: {
+                                            friendlyFormatTime = null;
+                                        }
+                                    }
+                                }
+                            }
+                            if (friendlyFormatTime != null) {
+                                timer.setTime(timeInSec * 5);
+                                sender.sendMessage(prefix + ChatColor.GREEN + "Der Timer wurde auf " + ChatColor.WHITE + ChatColor.BOLD + friendlyFormatTime +
+                                        "" + ChatColor.RESET + "" + ChatColor.GREEN + "gesetzt!");
+                            } else {
+                                sender.sendMessage(ChatColor.RED + "Bitte verwende d für Tage, h für Stunden, m für Minuten und s für Sekunden!");
+                            }
+                        }
+                    } catch (NumberFormatException e) {
+                        sender.sendMessage(ChatColor.RED + "Dein Parameter 2 muss eine Zahl sein!");
+                    }
                 }
             } else {
                 sendUsage(sender);

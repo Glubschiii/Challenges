@@ -30,6 +30,7 @@ public class MainInventoryManager implements Listener {
     /*
      * Creating custom /settings inventories
      */
+    //TODO: Namen und Farben ändern..
     public static Inventory settingsinv = Bukkit.createInventory(null, 45, ChatColor.GOLD + "Settings" + ChatColor.DARK_GRAY + " • " +
             ChatColor.BLUE + "Übersicht");
     public static Inventory gamerulesinv = Bukkit.createInventory(null, 54, ChatColor.GREEN + "Spielregeln" + ChatColor.DARK_GRAY + " • " +
@@ -37,14 +38,85 @@ public class MainInventoryManager implements Listener {
     public static Inventory timerinv = Bukkit.createInventory(null, 36, ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
             ChatColor.BLUE + "Seite 1");
     public static Inventory timerinv2 = Bukkit.createInventory(null, 36, ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
-            ChatColor.BLUE + "Seite 2");        //TODO: Namen und Farben ändern..
+            ChatColor.BLUE + "Seite 2");
+    public static Inventory timerinv3 = Bukkit.createInventory(null, 36, ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
+            ChatColor.BLUE + "Seite 3");
     /*
      * Putting items inside the custom /settings inventories and it's repositories
      */
     static ItemStack background = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName(" ").toItemStack();
     static ItemStack background2 = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").toItemStack();
     static ItemStack back = new ItemBuilder(Material.DARK_OAK_DOOR).setName(ChatColor.AQUA + "Zurück").toItemStack();
-    static ItemStack next = new ItemBuilder(Material.IRON_DOOR).setName(ChatColor.GRAY + "Seite 2").toItemStack();
+
+    private static void buildNextPage(byte page, Inventory invtype) {
+        ItemStack next = new ItemBuilder(Material.IRON_DOOR).setName(ChatColor.GRAY + "Seite " + page).toItemStack();
+        invtype.setItem(35, next);
+    }
+    private static void timeDays(short amount) {
+        ItemStack days = new ItemBuilder(Material.CLOCK, amount).setName(ChatColor.GRAY + "Tage").toItemStack();
+        timerinv2.setItem(10, days);
+    }
+    private static void timeHours(short amount) {
+        ItemStack hours = new ItemBuilder(Material.CLOCK, amount).setName(ChatColor.GRAY + "Stunden").toItemStack();
+        timerinv2.setItem(12, hours);
+    }
+    private static void timeMinutes(short amount) {
+        ItemStack minutes = new ItemBuilder(Material.CLOCK, amount).setName(ChatColor.GRAY + "Minuten").toItemStack();
+        timerinv2.setItem(14, minutes);
+    }
+    private static void timeSeconds(short amount) {
+        ItemStack seconds = new ItemBuilder(Material.CLOCK, amount).setName(ChatColor.GRAY + "Sekunden").toItemStack();
+        timerinv2.setItem(16, seconds);
+    }
+    private static void timerDirectionChange(ChatColor direction, PotionEffectType potionEffectType, char arrow) {
+        ItemStack timerDirection = new ItemBuilder(Material.TIPPED_ARROW).setName(direction + "Timerrichtung").addArrowEffect(potionEffectType, 1, 1, true)
+                .addLoreLine(" ").addLoreLine(ChatColor.GRAY + " Verändert die" + direction + " Timerrichtung" + ChatColor.GRAY + ".")
+                .addLoreLine(" ").addLoreLine(direction + " Nach oben: " + ChatColor.BLUE + "Linksklick").addLoreLine(direction + " Nach unten: " + ChatColor.BLUE + "Rechtsklick")
+                .addLoreLine(" ").addLoreLine(ChatColor.GRAY + "Aktuell: " + ChatColor.BOLD + direction.toString() + arrow).toItemStack();
+        timerinv3.setItem(13, timerDirection);
+    }
+
+    public static void timeCalculator() {
+        /*
+        * Calculating all the days in the timer
+         */
+        if(Timer.getTime()/5/86400 >= 1) {
+            timeDays((short) (Timer.getTime() / 5 / 86400));
+        } else {
+            timeDays((short) 1);
+        }
+        /*
+        * Calculating all the remaining hours in the timer
+         */
+        short totalHours = (short) (Timer.getTime()/5 / 3600);
+        short fullDays = (short) (totalHours / 24);
+        short remainingHours = (short) (totalHours - (fullDays * 24));
+        if(remainingHours >= 1) {
+            timeHours(remainingHours);
+        } else {
+            timeHours((short) 1);
+        }
+        /*
+        * Calculating all the remaining minutes in the timer
+         */
+        short totalMinutes = (short) (Timer.getTime()/5 / 60);
+        short fullHours = (short) (totalMinutes / 60);
+        short remainingMinutes = (short) (totalMinutes - (fullHours * 60));
+        if(remainingMinutes >= 1) {
+            timeMinutes(remainingMinutes);
+        } else {
+            timeMinutes((short) 1);
+        }
+        /*
+        * Calculating all the remaining seconds in the timer
+         */
+        short totalSeconds = (short) (Timer.getTime()/5 % 60);
+        if(totalSeconds >= 1) {
+            timeSeconds(totalSeconds);
+        } else {
+            timeSeconds((short) 1);
+        }
+    }
 
     public static void puttingItems() throws IOException {
         int[] background2SlotsMainInv = {0, 1, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 43, 44};
@@ -54,7 +126,9 @@ public class MainInventoryManager implements Listener {
         int[] background2SlotsTimerInv = {1, 3, 5, 7, 10, 12, 14, 16, 19, 21, 23, 25, 28, 30, 32, 34};
         int[] backgroundSlotsTimerInv2 = {0, 2, 4, 6, 8, 9, 11, 13, 15, 17, 18, 20, 22, 24, 26, 29, 31, 33};
         int[] background2SlotsTimerInv2 = {28, 30, 32, 34};
-        int[] modifyTimeSlotsTimerInv2 = {1, 3, 5, 7, 19, 21, 23, 25};
+        int[] modifyTimeSlotsTimerInv2 = {1, 3, 5, 7, 19, 21, 23, 25};  //TODO: Bei den unteren Knäpfen steht auch noch +10 obwohl da -10 sein sollte und Text ändern!
+        int[] backgroundSlotsTimerInv3 = {0, 2, 4, 6, 8, 9, 11, 15, 17, 18, 20, 22, 24, 26, 29, 31, 33};
+        int[] background2SlotsTimerInv3 = {1, 3, 5, 7, 10, 12, 14, 16, 19, 21, 23, 25, 28, 30, 32, 34};
         puttingItemsHelper(background2SlotsMainInv, settingsinv, background2);
         puttingItemsHelper(backgroundSlotsGamerulesInv, gamerulesinv, background);
         puttingItemsHelper(background2SlotsGamerulesInv, gamerulesinv, background2);
@@ -63,6 +137,8 @@ public class MainInventoryManager implements Listener {
         puttingItemsHelper(backgroundSlotsTimerInv2, timerinv2, background);
         puttingItemsHelper(background2SlotsTimerInv2, timerinv2, background2);
         puttingItemsHelper(modifyTimeSlotsTimerInv2, timerinv2, modifytime);
+        puttingItemsHelper(backgroundSlotsTimerInv3, timerinv3, background);
+        puttingItemsHelper(background2SlotsTimerInv3, timerinv3, background2);
         for (int i = 2; i <= 44; i++) {
             if (i <= 3 || i == 5 || i == 6 || (i >= 10 && i <= 16) || i == 19 || i == 21 || i == 23 || i == 25 || (i >= 28 && i <= 34) || (i >= 38 && i <= 39) || i == 41 || i == 42) {
                 settingsinv.setItem(i, background);
@@ -81,7 +157,8 @@ public class MainInventoryManager implements Listener {
         timerinv.setItem(22, reset);
         timerinv.setItem(24, pause);
         timerinv.setItem(27, back);
-        timerinv.setItem(35, next);
+        timerinv2.setItem(27, back);
+        timerinv3.setItem(27, back);
     }
 
     /*
@@ -141,7 +218,7 @@ public class MainInventoryManager implements Listener {
     static ItemStack reset = new ItemBuilder(Material.BARRIER).setName(ChatColor.RED + "Timer zurücksetzen").toItemStack();
     static ItemStack pause = new ItemBuilder(Material.CHIPPED_ANVIL).setName(ChatColor.GOLD + "Timer pausieren").toItemStack();
     static ItemStack modifytime = new ItemBuilder(Material.ACACIA_BUTTON).setName(ChatColor.GREEN + "+1").addLoreLine(" ")
-            .addLoreLine(ChatColor.GREEN + " Shift-Linksklick" + ChatColor.GRAY + " für " + ChatColor.GREEN + "+10").toItemStack();
+            .addLoreLine(ChatColor.GREEN + " Shift-Rechtsklick" + ChatColor.GRAY + " für " + ChatColor.GREEN + "+10").toItemStack();
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
@@ -154,12 +231,10 @@ public class MainInventoryManager implements Listener {
                 ChatColor.BLUE + "Übersicht") || event.getView().getTitle().equalsIgnoreCase(ChatColor.GREEN + "Spielregeln" + ChatColor.DARK_GRAY + " • " +
                 ChatColor.BLUE + "Seite 1") || event.getView().getTitle().equalsIgnoreCase(ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
                 ChatColor.BLUE + "Seite 1") || event.getView().getTitle().equalsIgnoreCase(ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
-                ChatColor.BLUE + "Seite 2")) {
+                ChatColor.BLUE + "Seite 2") || event.getView().getTitle().equalsIgnoreCase(ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
+                ChatColor.BLUE + "Seite 3")) {
             if (event.getCurrentItem() == null) {
                 return;
-            }
-            if (event.getCurrentItem().getType().equals(Material.DARK_OAK_DOOR)) {
-                player.openInventory(settingsinv);
             }
             event.setCancelled(true);
         }
@@ -201,11 +276,10 @@ public class MainInventoryManager implements Listener {
             } else if (event.getCurrentItem().getType().equals(Material.CLOCK)) {
                 if (event.isLeftClick()) {
                     player.openInventory(timerinv);
+                    buildNextPage((byte) 2, timerinv);
                 }
             }
-        }
-        Timer timer = Main.getInstance().getTimer();
-        if (event.getView().getTitle().equalsIgnoreCase(ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
+        } else if(event.getView().getTitle().equalsIgnoreCase(ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
                 ChatColor.BLUE + "Seite 1")) {
             if (event.getCurrentItem().getType().equals(Material.TOTEM_OF_UNDYING)) {
                 if (event.isLeftClick()) {
@@ -225,38 +299,71 @@ public class MainInventoryManager implements Listener {
                 }
             } else if (event.getCurrentItem().getType().equals(Material.IRON_DOOR)) {
                 player.openInventory(timerinv2);
+                buildNextPage((byte) 3, timerinv2);
+                timeCalculator();
+            } else if (event.getCurrentItem().getType().equals(Material.DARK_OAK_DOOR)) {
+                player.openInventory(settingsinv);
             }
-        }
-        if (event.getView().getTitle().equalsIgnoreCase(ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
+        } else if (event.getView().getTitle().equalsIgnoreCase(ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
                 ChatColor.BLUE + "Seite 2")) {
+            Timer timer = Main.getInstance().getTimer();
             if (event.getSlot() == 1) {
                 if (event.isLeftClick()) {
-                    timer.setTime(Timer.getTime() + 86400 * 5);         //TODO: BessEr machen, sobald man d anhängen kann zu /timer set (Mit bukkit.dispatchCommand)
-                    if (event.isShiftClick()) {
-                        timer.setTime(Timer.getTime() + (86400 * 5) * 9);
-                    }
+                    timer.setTime(Timer.getTime() + 86400 * 5);
+                    timeCalculator();
+                } else if(event.isShiftClick()) {
+                    timer.setTime(Timer.getTime() + (86400 * 5) * 10);
+                    timeCalculator();
                 }
             } else if (event.getSlot() == 3) {
                 if (event.isLeftClick()) {
                     timer.setTime(Timer.getTime() + 3600 * 5);
-                    if(event.isShiftClick()) {
-                        timer.setTime(Timer.getTime() + (3600 * 5) * 9);
-                    }
+                    timeCalculator();
+                } else if(event.isShiftClick()) {
+                    timer.setTime(Timer.getTime() + (3600 * 5) * 9);
+                    timeCalculator();
                 }
             } else if (event.getSlot() == 5) {
                 if (event.isLeftClick()) {
                     timer.setTime(Timer.getTime() + 60 * 5);
-                    if(event.isShiftClick()) {
-                        timer.setTime(Timer.getTime() + (60 * 5) * 9);
-                    }
+                    timeCalculator();
+                } else if(event.isShiftClick()) {
+                    timer.setTime(Timer.getTime() + (60 * 5) * 9);
+                    timeCalculator();
                 }
             } else if (event.getSlot() == 7) {
                 if (event.isLeftClick()) {
                     timer.setTime(Timer.getTime() + 5);
-                    if(event.isShiftClick()) {
-                        timer.setTime(Timer.getTime() + 5 * 9);
+                    timeCalculator();
+                } else if(event.isShiftClick()) {
+                    timer.setTime(Timer.getTime() + 5 * 9);
+                    timeCalculator();
+                }
+            } else if(event.getCurrentItem().getType().equals(Material.IRON_DOOR)) {
+                if (event.isLeftClick()) {
+                    player.openInventory(timerinv3);
+                    if(((String) Config.get("timer-direction")).contains("down")) {
+                        //TODO: Apply PotionEffect to Spectral (or tipped) arrow correctly here and in the ItemBuilder
+                        timerDirectionChange(ChatColor.RED, PotionEffectType.HEAL, '↡');
+                    } else {
+                        timerDirectionChange(ChatColor.GREEN, PotionEffectType.BLINDNESS, '↟');
                     }
                 }
+            } else if (event.getCurrentItem().getType().equals(Material.DARK_OAK_DOOR)) {
+                player.openInventory(timerinv);
+            }
+        } else if(event.getView().getTitle().equalsIgnoreCase(ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
+                ChatColor.BLUE + "Seite 3")) {
+            if(event.getSlot() == 13) {
+                if(event.isLeftClick()) {
+                    timerDirectionChange(ChatColor.GREEN, PotionEffectType.BLINDNESS, '↟');
+                    Bukkit.dispatchCommand(player, "timer up");
+                } else if(event.isRightClick()) {
+                    timerDirectionChange(ChatColor.RED, PotionEffectType.HEAL, '↡');
+                    Bukkit.dispatchCommand(player, "timer down");
+                }
+            } else if (event.getCurrentItem().getType().equals(Material.DARK_OAK_DOOR)) {
+                player.openInventory(timerinv2);
             }
         }
     }

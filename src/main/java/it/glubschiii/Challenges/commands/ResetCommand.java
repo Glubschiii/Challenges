@@ -21,7 +21,7 @@ public class ResetCommand implements CommandExecutor {
                 case "confirm":
                     //TODO: Welt richtig zurücksetzen
                     for (Player player : Bukkit.getOnlinePlayers()) {
-                        player.kickPlayer("Server restart");
+                        player.kickPlayer("Server restart");        //TODO: Nachricht hinzufügen
                     }
                     try {
                         Config.set("reset.confirm", Boolean.valueOf(true));

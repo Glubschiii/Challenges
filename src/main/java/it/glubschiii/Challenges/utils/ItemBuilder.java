@@ -235,6 +235,17 @@ public class ItemBuilder {
         }
         return this;
     }
+    public ItemBuilder addArrowEffect(final PotionEffectType type, final int strength, final int duration,
+                                      final boolean overwrite) {
+        ItemMeta im = is.getItemMeta();
+        if(is.getType() == Material.TIPPED_ARROW) {
+            final PotionMeta potionMeta = (PotionMeta) im;
+            im.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            potionMeta.addCustomEffect(new PotionEffect(type, strength, duration), overwrite);
+            is.setItemMeta(potionMeta);
+        }
+        return this;
+    }
     /**
      * Retrieves the itemstack from the ItemBuilder.
      * @return The itemstack created/modified by the ItemBuilder instance.

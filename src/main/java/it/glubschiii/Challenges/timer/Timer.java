@@ -14,7 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  @since 1.0.1
  */
 public class Timer extends TimerCommand {
-
+//TODO: Zeit wird nach /reset confirm bzw. nach ändern im Menü bzw. nach reload (KP durch was) nicht immer richtig abgespeichert und dann wird falsche Zeit angezeigt
     private static boolean running; //true or false                                                                            // TODO: Wenn man in MC /timer "" eingibt, soll vorgeschlagen werden
     private static int time;                                                                                                   // TODO: was man eingeben kann, wie wenn man zb /gamemode "" eingibt
 
@@ -77,10 +77,10 @@ public class Timer extends TimerCommand {
                     }
                     return;
                 }
-                if(Config.get("timer-direction") == "down") {
-                    setTime(getTime() - 1);
-                } else {
+                if(((String) Config.get("timer-direction")).contains("up")) {
                     setTime(getTime() + 1);
+                } else {
+                    setTime(getTime() - 1);
                 }
                 count = count + 0.1;
                 if(count >= 1) {

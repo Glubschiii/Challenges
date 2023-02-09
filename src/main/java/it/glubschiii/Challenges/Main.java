@@ -48,15 +48,14 @@ public final class Main extends JavaPlugin {
         instance = this;
         if(Config.contains("reset.confirm") && Config.getBoolean("reset.confirm").booleanValue()) {
             deleteWorlds();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + "Wurde gelöscht!");
+            Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + "Welten gelöscht!");
             try {
                 Config.set("reset.confirm", Boolean.valueOf(false));
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart");
+                timer = new Timer(false, 0);
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart");       //TODO: Geht nicht mehr wenn man den Timer in der obrigen Zeile auf 0 setzt. WTF?
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            config.clearConfig();
-            //TODO: Config zurücksetzen überprüfen...
         }
         deletedFolders = true;
     }
@@ -117,7 +116,7 @@ public final class Main extends JavaPlugin {
             Config.get("difficulty");
         } else {
             try {
-                Config.set("difficulty", "HARD");
+                Config.set("difficulty", "HARD");       //TODO: Wenn es den path "difficulty" in der Config nicht gibt, dann stellt er ihn nicht auf "HARD" wie diese Zeile besagt, sondern auf "EASY"???? WTF?
                 Bukkit.getWorlds().forEach(world -> world.setDifficulty(Difficulty.HARD));
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -146,11 +145,11 @@ public final class Main extends JavaPlugin {
         // Plugin shutdown logic
         try {
             Config.set("timer", Timer.getTime()/5);
-            if(Config.get("timer-direction") == "down") {
+            /*if(Config.get("timer-direction") == "down") {
                 Config.set("timer-direction", "down");
             } else {
                 Config.set("timer-direction", "up");
-            }
+            }*/
             Config.set("difficulty", Bukkit.getWorld("world").getDifficulty().toString()); //TODO: Speichern überprüfen, noch hinzufügen beim ändern/enablen
             Config.set("regeneration-status", RegenerationGamerule.getStatus());
         } catch (IOException e) {
