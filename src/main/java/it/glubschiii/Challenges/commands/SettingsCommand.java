@@ -24,9 +24,7 @@ public class SettingsCommand extends MainInventoryManager implements CommandExec
         if(sender instanceof Player) {
             Player player = (Player) sender;
             if(args.length == 0) {
-
-                player.openInventory(settingsinv);
-
+                player.openInventory(settingsInv);
             } else
                 player.sendMessage(ChatColor.RED + "Verwendung: /settings");
         }

@@ -19,6 +19,9 @@ import java.util.Map;
     @since 1.0.2
  */
 public class EntityDamageEvent implements Listener {
+
+    //TODO: In settings inv an/ausschaltbar machen
+
     private String prefix = ChatColor.DARK_GRAY + "[" + ChatColor.LIGHT_PURPLE + "P2YL" + ChatColor.DARK_GRAY + "] ";
     private Map<org.bukkit.event.entity.EntityDamageEvent.DamageCause, String> damageCauseMap = new HashMap<>();
     {

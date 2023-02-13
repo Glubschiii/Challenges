@@ -5,6 +5,8 @@ import it.glubschiii.Challenges.challenges.NoSneakChallenge;
 import it.glubschiii.Challenges.commands.*;
 import it.glubschiii.Challenges.gamerules.DifficultyGamerule;
 import it.glubschiii.Challenges.gamerules.RegenerationGamerule;
+import it.glubschiii.Challenges.goals.DragonKillGoal;
+import it.glubschiii.Challenges.goals.ElderGuardianKillGoal;
 import it.glubschiii.Challenges.listeners.*;
 import it.glubschiii.Challenges.timer.Timer;
 import it.glubschiii.Challenges.timer.TimerCommand;
@@ -26,6 +28,8 @@ import java.util.*;
         @since 1.0
      */
 public final class Main extends JavaPlugin {
+
+    //TODO: Prefixe ändern / neues Design
 
     public static Main instance;
 
@@ -71,12 +75,13 @@ public final class Main extends JavaPlugin {
         manager.registerEvents(new QuitListener(), this);
         manager.registerEvents(new DeathEvent(), this);
         manager.registerEvents(new EntityDamageEvent(), this);
-        manager.registerEvents(new NoJumpChallenge(), this);
-        manager.registerEvents(new NoSneakChallenge(), this);
+        //manager.registerEvents(new NoJumpChallenge(), this);
+        //manager.registerEvents(new NoSneakChallenge(), this);
         manager.registerEvents(new DifficultyGamerule(), this);
         manager.registerEvents(new RegenerationGamerule(), this);
         manager.registerEvents(new PickupItemEvent(), this);
-        manager.registerEvents(new DragonKillEvent(), this);
+        manager.registerEvents(new DragonKillGoal(), this);
+        manager.registerEvents(new ElderGuardianKillGoal(), this);
         manager.registerEvents(new MainInventoryManager(), this);
 
         getCommand("timer").setExecutor(new TimerCommand());
@@ -137,6 +142,20 @@ public final class Main extends JavaPlugin {
             Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.NATURAL_REGENERATION, true));
         } else {
             Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.NATURAL_REGENERATION, false));
+        }
+
+        if(getConfig().contains("goals.enderdragon") && Config.getBoolean("goals.enderdragon").booleanValue()) {
+            Config.getBoolean("goals.enderdragon").booleanValue();
+        } else if(!getConfig().contains("goals.elderguardian") && !Config.getBoolean("goals.elderguardian").booleanValue()) {
+            try {
+                Config.set("goals.enderdragon", Boolean.valueOf(true));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if(getConfig().contains("goals.elderguardian") && Config.getBoolean("goals.elderguardian").booleanValue()) {
+            Config.getBoolean("goals.elderguardian").booleanValue();
         }
     }
 
