@@ -16,6 +16,9 @@ import org.jetbrains.annotations.NotNull;
 
 import static it.glubschiii.Challenges.timer.Timer.getTime;
 
+/** @author Glubschiii | https://github.com/glubschiii
+ @since 1.0.6
+ */
 public class ElderGuardianKillGoal implements Listener {
 
     @EventHandler

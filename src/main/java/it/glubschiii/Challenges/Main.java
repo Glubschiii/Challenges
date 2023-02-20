@@ -1,7 +1,5 @@
 package it.glubschiii.Challenges;
 
-import it.glubschiii.Challenges.challenges.NoJumpChallenge;
-import it.glubschiii.Challenges.challenges.NoSneakChallenge;
 import it.glubschiii.Challenges.commands.*;
 import it.glubschiii.Challenges.gamerules.DifficultyGamerule;
 import it.glubschiii.Challenges.gamerules.RegenerationGamerule;
@@ -13,6 +11,7 @@ import it.glubschiii.Challenges.timer.TimerCommand;
 import it.glubschiii.Challenges.utils.Config;
 import it.glubschiii.Challenges.utils.MainInventoryManager;
 import it.glubschiii.Challenges.timer.PreTimer;
+import it.glubschiii.Challenges.utils.TablistManager;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -34,6 +33,7 @@ public final class Main extends JavaPlugin {
     public static Main instance;
 
     private Timer timer;
+    private TablistManager tablistManager;
 
     private HashMap<Player, ChatColor> color = new HashMap<>();
     private HashMap<Player, Integer> stage = new HashMap<Player, Integer>();
@@ -70,9 +70,9 @@ public final class Main extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Challenges Plugin geladen!");
 
         PluginManager manager = Bukkit.getPluginManager();
-        manager.registerEvents(new JoinListener(), this);
+        manager.registerEvents(new JoinEvent(), this);
         manager.registerEvents(new PreTimer(), this);
-        manager.registerEvents(new QuitListener(), this);
+        manager.registerEvents(new QuitEvent(), this);
         manager.registerEvents(new DeathEvent(), this);
         manager.registerEvents(new EntityDamageEvent(), this);
         //manager.registerEvents(new NoJumpChallenge(), this);
@@ -83,6 +83,7 @@ public final class Main extends JavaPlugin {
         manager.registerEvents(new DragonKillGoal(), this);
         manager.registerEvents(new ElderGuardianKillGoal(), this);
         manager.registerEvents(new MainInventoryManager(), this);
+        manager.registerEvents(new ChatEvent(), this);
 
         getCommand("timer").setExecutor(new TimerCommand());
         getCommand("backpack").setExecutor(new BackpackCommand());
@@ -90,6 +91,8 @@ public final class Main extends JavaPlugin {
         getCommand("settings").setExecutor(new SettingsCommand());
         getCommand("reset").setExecutor(new ResetCommand());
         getCommand("gm").setExecutor(new GamemodeCommand());
+
+        tablistManager = new TablistManager();
 
         try {
             MainInventoryManager.puttingItems();
@@ -183,6 +186,10 @@ public final class Main extends JavaPlugin {
 
     public Timer getTimer() {
         return timer;
+    }
+
+    public TablistManager getTablistManager() {
+        return tablistManager;
     }
 
     public void deleteWorlds() {

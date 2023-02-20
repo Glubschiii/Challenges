@@ -15,7 +15,7 @@ import java.io.IOException;
 /** @author Glubschiii | https://github.com/glubschiii
  @since 1.0.1
  */
-public class QuitListener implements Listener {
+public class QuitEvent implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) throws IOException {

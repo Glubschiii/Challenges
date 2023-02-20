@@ -39,7 +39,7 @@ public class DifficultyGamerule implements Listener {
         Config.set("difficulty", Bukkit.getWorld("world").getDifficulty().toString());
     }
 
-    //TODO: Setzt man mit /difficulty <diff> den Schwierigkeitsgrad, ist der Dye immer grün
+    //TODO: CHECK: Setzt man mit /difficulty <diff> den Schwierigkeitsgrad, ist der Dye immer grün
 
     public static String prefix = ChatColor.DARK_GRAY + "[" + ChatColor.LIGHT_PURPLE + "P2YL" + ChatColor.DARK_GRAY + "] ";
 

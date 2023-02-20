@@ -46,10 +46,9 @@ public class Timer extends TimerCommand {
         public void sendActionBar() {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (Main.getInstance().getColor(player) == null) {
-                    //TODO: Statt light_purple dieses gradient wie bei Basti (adventure api!!)
                     //Main.getInstance().setColor(player, ChatColor.LIGHT_PURPLE);
                     var mm = MiniMessage.miniMessage();
-                    Component parsed = mm.deserialize("<gradient:green:blue:" + count + "><bold>" +
+                    Component parsed = mm.deserialize("<gradient:#6bd1ff:#e061f8:" + count + "><bold>" +
                             TimeCalculator.format(getTime()/5, ""));
                     player.sendActionBar(parsed);
                 } else if(Main.getInstance().getColor(player) != null) {

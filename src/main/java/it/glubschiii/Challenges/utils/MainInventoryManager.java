@@ -283,10 +283,10 @@ public class MainInventoryManager implements Listener {
                         ItemStack difficultydye = new ItemBuilder(Material.GREEN_DYE, 1).setName("Einfach").toItemStack();
                         gamerulesInv.setItem(3, difficultydye);
                     } else if (Bukkit.getWorld("world").getDifficulty() == Difficulty.NORMAL) {
-                        ItemStack difficultydye = new ItemBuilder(Material.GREEN_DYE, 1).setName("Normal").toItemStack();
+                        ItemStack difficultydye = new ItemBuilder(Material.ORANGE_DYE, 1).setName("Normal").toItemStack();
                         gamerulesInv.setItem(3, difficultydye);
                     } else if (Bukkit.getWorld("world").getDifficulty() == Difficulty.HARD) {
-                        ItemStack difficultydye = new ItemBuilder(Material.GREEN_DYE, 1).setName("Schwer").toItemStack();
+                        ItemStack difficultydye = new ItemBuilder(Material.RED_DYE, 1).setName("Schwer").toItemStack();
                         gamerulesInv.setItem(3, difficultydye);
                     }
                     if (getStatus() == 0) {
