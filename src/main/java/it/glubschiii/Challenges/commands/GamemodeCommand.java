@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
  @since 1.0.2
  */
 public class GamemodeCommand implements CommandExecutor {
+    //TODO: Bei /gamemode kommt die sendUsage();
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player) {

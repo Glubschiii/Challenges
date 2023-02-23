@@ -1,5 +1,7 @@
 package it.glubschiii.Challenges.listeners;
 
+import it.glubschiii.Challenges.Main;
+import it.glubschiii.Challenges.timer.Timer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
@@ -19,7 +21,7 @@ import java.util.Map;
     @since 1.0.2
  */
 public class EntityDamageEvent implements Listener {
-
+    Timer timer = Main.getInstance().getTimer();
     //TODO: In settings inv an/ausschaltbar machen
 
     private String prefix = ChatColor.DARK_GRAY + "[" + ChatColor.LIGHT_PURPLE + "P2YL" + ChatColor.DARK_GRAY + "] ";
@@ -160,7 +162,7 @@ public class EntityDamageEvent implements Listener {
             }
         }
 
-        if(e.getEntityType() == EntityType.PLAYER) {
+        if(e.getEntityType() == EntityType.PLAYER && Timer.isRunning()) {
             Bukkit.broadcastMessage(prefix + ChatColor.WHITE.toString() + ChatColor.BOLD + e.getEntity().getName() + ChatColor.RESET + "" +
                     ChatColor.GREEN + " hat durch " + ChatColor.WHITE + ChatColor.BOLD + damagecause + ChatColor.RESET + " " + ChatColor.GREEN +
                     FinalDamage + ChatColor.GREEN + " Herzen " + ChatColor.GREEN + "Schaden bekommen");

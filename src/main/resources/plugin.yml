@@ -22,3 +22,6 @@ commands:
   gm:
     aliases: gamemode
     permission: challenges.gm
+  skipitem:
+    description: Skips the next item in the "All Items" goal
+    permission: challenges.skipitem

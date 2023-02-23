@@ -12,13 +12,13 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
  */
 public class ChatEvent implements Listener {
 
-    //TODO: CHECK:
     @EventHandler
     private void onMessageSend(AsyncPlayerChatEvent event){
         Player player = event.getPlayer();
         String message = event.getMessage();
+        event.setCancelled(true);
         for(Player all : Bukkit.getOnlinePlayers()) {
-            all.sendMessage(ChatColor.GRAY + player.getDisplayName() + ChatColor.DARK_GRAY + " » " + message);
+            all.sendMessage(ChatColor.GRAY + player.getDisplayName() + ChatColor.DARK_GRAY + " » " + ChatColor.RESET + message);
         }
     }
 }

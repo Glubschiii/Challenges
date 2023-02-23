@@ -12,5 +12,5 @@ public class TablistManager {
 //TODO: //CHECK:
     public void setTablist(Player player) {
         player.setPlayerListHeaderFooter("Hello", "World");
-    }
+    }       //TODO: Design
 }

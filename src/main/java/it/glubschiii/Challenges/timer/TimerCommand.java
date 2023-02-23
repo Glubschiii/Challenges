@@ -23,9 +23,6 @@ public class TimerCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        //TODO: Wenn man /timer oder so eingibt kommt error, usage geht nicht
-        //TODO: Timer toggle buggt, wenn ich nicht als 1. auf den Server joine startet er nicht
-        //TODO: /timer pause, resume, up, down... gibt auch sendUsage Meldung aus
         Timer timer = Main.getInstance().getTimer();
         if (sender instanceof Player) {
             if (args.length == 1) {
@@ -123,7 +120,7 @@ public class TimerCommand implements CommandExecutor {
                         sendUsage(sender);
                 }
             } else if(args.length >= 1) {
-                if (args[0].equalsIgnoreCase("color")) {
+                if (args[0].equalsIgnoreCase("color")) {            //TODO: Colorcodes weg machen und nur noch bestimmte Farben eingeben können
                 try {
                     Main.getInstance().setColor((Player) sender, ChatColor.getByChar(args[1]));
                     timer.sendActionBar();
@@ -189,7 +186,7 @@ public class TimerCommand implements CommandExecutor {
     // TODO: /timer show und /timer hide (Timer in der Actionbar wird eingeblendet - Standardmäßig!)
     private void sendUsage(CommandSender sender) {                                                                      // TODO: /timer disable (Timer in der Actionbar wird ausgeblendet)
         sender.sendMessage(ChatColor.GREEN + "Verwendung: " + ChatColor.WHITE + ChatColor.BOLD +
-                "/timer toggle, /timer set <Zeit>, /timer reset, /timer <up|down>");                                              // TODO: /timer reverse (Timer soll nach unten zählen und wenn bereits aktiv nach oben)
+                "/timer toggle, /timer pause, /timer resume, /timer set <Zeit>, /timer reset, /timer <up|down>, /timer color <colorcode>, ");                                              // TODO: /timer reverse (Timer soll nach unten zählen und wenn bereits aktiv nach oben)
     }                                                                                                                   // TODO: /timer change (Timer soll in Actionbar nicht mehr 3d 20h 5m
 
     private void sendColorUsage(CommandSender sender) {

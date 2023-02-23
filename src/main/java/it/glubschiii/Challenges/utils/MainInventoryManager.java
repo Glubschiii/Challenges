@@ -1,5 +1,6 @@
 package it.glubschiii.Challenges.utils;
 
+import com.sun.jdi.BooleanValue;
 import it.glubschiii.Challenges.Main;
 import it.glubschiii.Challenges.timer.Timer;
 import org.bukkit.Bukkit;
@@ -18,8 +19,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Objects;
 
+import static it.glubschiii.Challenges.gamerules.DifficultyGamerule.prefix;
 import static it.glubschiii.Challenges.gamerules.RegenerationGamerule.getStatus;
+import static it.glubschiii.Challenges.goals.AllItemsGoal.*;
 
 /**
  * @author Glubschiii | https://github.com/glubschiii
@@ -42,7 +47,7 @@ public class MainInventoryManager implements Listener {
             ChatColor.BLUE + "Seite 2");
     public static Inventory timerInv3 = Bukkit.createInventory(null, 36, ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
             ChatColor.BLUE + "Seite 3");
-    public static Inventory goalsInv = Bukkit.createInventory(null, 54, ChatColor.RED + "Herausforderungen" + ChatColor.DARK_GRAY + ChatColor.DARK_GRAY + " • " +
+    public static Inventory goalsInv = Bukkit.createInventory(null, 54, ChatColor.RED + "Herausforderungen" + ChatColor.DARK_GRAY + " • " +
             ChatColor.BLUE + "Seite 1");
     /*
      * Putting items inside the custom /settings inventories and it's repositories
@@ -84,6 +89,18 @@ public class MainInventoryManager implements Listener {
                 .addLoreLine(" ").addLoreLine(ChatColor.GRAY + "Aktuell: " + ChatColor.BOLD + direction.toString() + arrow).toItemStack();
         timerInv3.setItem(13, timerDirection);
     }
+
+    private static void goalChange(String goal, Material material, String status, short slot, String config, boolean bool) throws IOException {
+        for (Player all : Bukkit.getOnlinePlayers()) {
+            if (bool) {
+                all.sendMessage(prefix + ChatColor.GRAY + " Die Herausforderung wurde auf " + ChatColor.GOLD.toString() +
+                        ChatColor.BOLD + goal + ChatColor.RESET + ChatColor.GRAY + " geändert.");
+            }
+            ItemStack dye = new ItemBuilder(material).setName(status).toItemStack();
+            goalsInv.setItem(slot, dye);
+            }
+        Config.set("goals." + config, Boolean.valueOf(bool));
+        }
 
     public static void timeCalculator() {
         /*
@@ -139,7 +156,7 @@ public class MainInventoryManager implements Listener {
         int[] backgroundSlotstimerInv3 = {0, 2, 4, 6, 8, 9, 11, 15, 17, 18, 20, 22, 24, 26, 29, 33, 35};
         int[] background2SlotstimerInv3 = {1, 3, 5, 7, 10, 12, 14, 16, 19, 21, 23, 25, 28, 30, 32, 34};
         int[] backgroundSlotsGoalsInv = {0, 4, 8, 9, 13, 17, 18, 22, 26, 27, 31, 35, 36, 40, 44, 49, 53};
-        int[] background2SlotsGoalsInv = {1, 5, 6, 7, 10, 14, 15, 16, 19, 20, 21, 23, 24, 25, 28, 29, 30, 32, 33, 34, 37, 38, 39, 41, 42, 43, 46, 47, 48, 50, 51, 52};
+        int[] background2SlotsGoalsInv = {1, 5, 10, 14, 19, 20, 21, 23, 24, 25, 28, 32, 33, 34, 37, 38, 39, 41, 42, 43, 46, 47, 48, 50, 51, 52};
 
         puttingItemsHelper(background2SlotsMainInv, settingsInv, background2);
         puttingItemsHelper(backgroundSlotsgamerulesInv, gamerulesInv, background);
@@ -176,6 +193,10 @@ public class MainInventoryManager implements Listener {
         timerInv3.setItem(31, mainMenu);
         goalsInv.setItem(2, dragonGoal);
         goalsInv.setItem(11, elderGuardianGoal);
+        goalsInv.setItem(7, witherGoal);
+        goalsInv.setItem(16, wardenGoal);
+        goalsInv.setItem(29, allItemsGoal);
+        goalsInv.setItem(45, back);
     }
 
     /*
@@ -236,19 +257,29 @@ public class MainInventoryManager implements Listener {
     static ItemStack pause = new ItemBuilder(Material.CHIPPED_ANVIL).setName(ChatColor.GOLD + "Timer pausieren").toItemStack();
     static ItemStack modifytime = new ItemBuilder(Material.ACACIA_BUTTON).setName(ChatColor.GREEN + "+1").addLoreLine(" ")
             .addLoreLine(ChatColor.GREEN + " Shift-Rechtsklick" + ChatColor.GRAY + " für " + ChatColor.GREEN + "+10").toItemStack();
+
     /*
-    * Creating items for the goals inventory
+     * Creating items for the goals inventory
      */
     static ItemStack dragonGoal = new ItemBuilder(Material.DRAGON_EGG).setName(ChatColor.DARK_PURPLE + "Enderdrache").addLoreLine(" ")
             .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.DARK_PURPLE + "absolviert" + ChatColor.GRAY + ",")
-            .addLoreLine(" sobald der " + ChatColor.DARK_PURPLE + "Enderdrache" + ChatColor.GRAY + "getötet wurde.").toItemStack();
-    static ItemStack elderGuardianGoal = new ItemBuilder(Material.TRIDENT).setName(ChatColor.DARK_BLUE + "Großer Wächter").addLoreLine(" ")
-            .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.DARK_BLUE + "absolviert" + ChatColor.GRAY + ",")
-            .addLoreLine(" sobald der " + ChatColor.DARK_BLUE + "Große Wächter" + ChatColor.GRAY + "getötet wurde.").toItemStack();
+            .addLoreLine(ChatColor.GRAY + " sobald der " + ChatColor.DARK_PURPLE + "Enderdrache " + ChatColor.GRAY + "getötet wurde.").toItemStack();
+    static ItemStack elderGuardianGoal = new ItemBuilder(Material.TRIDENT).setName(ChatColor.BLUE + "Großer Wächter").addLoreLine(" ")      //TODO: In der Haupthand... ItemFlag entfernen
+            .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.BLUE + "absolviert" + ChatColor.GRAY + ",")
+            .addLoreLine(ChatColor.GRAY + " sobald der " + ChatColor.BLUE + "Große Wächter " + ChatColor.GRAY + "getötet wurde.").toItemStack();
+    static ItemStack witherGoal = new ItemBuilder(Material.WITHER_SKELETON_SKULL).setName(ChatColor.DARK_GRAY + "Wither").addLoreLine(" ")
+            .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.DARK_GRAY + "absolviert" + ChatColor.GRAY + ",")
+            .addLoreLine(ChatColor.GRAY + " sobald der " + ChatColor.DARK_GRAY + "Wither " + ChatColor.GRAY + "getötet wurde.").toItemStack();
+    static ItemStack wardenGoal = new ItemBuilder(Material.SCULK_SENSOR).setName(ChatColor.AQUA + "Wärter").addLoreLine(" ")
+            .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.AQUA + "absolviert" + ChatColor.GRAY + ",")
+            .addLoreLine(ChatColor.GRAY + " sobald der " + ChatColor.AQUA + "Wärter " + ChatColor.GRAY + "getötet wurde.").toItemStack();
+    static ItemStack allItemsGoal = new ItemBuilder(Material.GRASS_BLOCK).setName(ChatColor.GREEN + "Alle Items").addLoreLine(" ")
+            .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.GREEN + "absolviert" + ChatColor.GRAY + ",")
+            .addLoreLine(ChatColor.GRAY + " sobald " + ChatColor.GREEN + "alle Items " + ChatColor.GRAY + "gesammelt wurden.").toItemStack();
 
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
+    public void onInventoryClick(InventoryClickEvent event) throws IOException {
         Player player = (Player) event.getWhoClicked();
 
         /*
@@ -277,7 +308,7 @@ public class MainInventoryManager implements Listener {
                      * Putting custom text and dyes into the inventories
                      */
                     if (Bukkit.getWorld("world").getDifficulty() == Difficulty.PEACEFUL) {
-                        ItemStack difficultydye = new ItemBuilder(Material.WHITE_DYE, 1).setName("Friedlich").toItemStack();
+                        ItemStack difficultydye = new ItemBuilder(Material.WHITE_DYE, 1).setName("Friedlich").toItemStack();            //TODO: Design
                         gamerulesInv.setItem(3, difficultydye);
                     } else if (Bukkit.getWorld("world").getDifficulty() == Difficulty.EASY) {
                         ItemStack difficultydye = new ItemBuilder(Material.GREEN_DYE, 1).setName("Einfach").toItemStack();
@@ -306,15 +337,50 @@ public class MainInventoryManager implements Listener {
                     player.openInventory(timerInv);
                     buildNextPage((byte) 2, timerInv);
                 }
-            } else if(event.getCurrentItem().getType().equals(Material.DRAGON_HEAD)) {
-                if(event.isLeftClick()) {
+            } else if (event.getCurrentItem().getType().equals(Material.DRAGON_HEAD)) {
+                if (event.isLeftClick()) {
+                    if(Config.getBoolean("goals.enderdragon").booleanValue()) {
+                        ItemStack dye = new ItemBuilder(Material.GREEN_DYE).setName(ChatColor.GREEN + "Aktiviert").toItemStack();
+                        goalsInv.setItem(3, dye);
+                    } else {
+                        ItemStack dye = new ItemBuilder(Material.RED_DYE).setName(ChatColor.RED + "Deaktiviert").toItemStack();
+                        goalsInv.setItem(3, dye);
+                    }
+                    if(Config.getBoolean("goals.elderguardian").booleanValue()) {
+                        ItemStack dye = new ItemBuilder(Material.GREEN_DYE).setName(ChatColor.GREEN + "Aktiviert").toItemStack();
+                        goalsInv.setItem(12, dye);
+                    } else {
+                        ItemStack dye = new ItemBuilder(Material.RED_DYE).setName(ChatColor.RED + "Deaktiviert").toItemStack();
+                        goalsInv.setItem(12, dye);
+                    }
+                    if(Config.getBoolean("goals.wither").booleanValue()) {
+                        ItemStack dye = new ItemBuilder(Material.GREEN_DYE).setName(ChatColor.GREEN + "Aktiviert").toItemStack();
+                        goalsInv.setItem(6, dye);
+                    } else {
+                        ItemStack dye = new ItemBuilder(Material.RED_DYE).setName(ChatColor.RED + "Deaktiviert").toItemStack();
+                        goalsInv.setItem(6, dye);
+                    }
+                    if(Config.getBoolean("goals.warden").booleanValue()) {
+                        ItemStack dye = new ItemBuilder(Material.GREEN_DYE).setName(ChatColor.GREEN + "Aktiviert").toItemStack();
+                        goalsInv.setItem(15, dye);
+                    } else {
+                        ItemStack dye = new ItemBuilder(Material.RED_DYE).setName(ChatColor.RED + "Deaktiviert").toItemStack();
+                        goalsInv.setItem(15, dye);
+                    }
+                    if(Config.getBoolean("goals.allitems").booleanValue()) {
+                        ItemStack dye = new ItemBuilder(Material.GREEN_DYE).setName(ChatColor.GREEN + "Aktiviert").toItemStack();
+                        goalsInv.setItem(30, dye);
+                    } else {
+                        ItemStack dye = new ItemBuilder(Material.RED_DYE).setName(ChatColor.RED + "Deaktiviert").toItemStack();
+                        goalsInv.setItem(30, dye);
+                    }
                     player.openInventory(goalsInv);
                 }
             }
         } else if (event.getView().getTitle().equalsIgnoreCase(ChatColor.GREEN + "Spielregeln" + ChatColor.DARK_GRAY + " • " +
                 ChatColor.BLUE + "Seite 1")) {
-            if (event.getCurrentItem().equals(Material.DARK_OAK_DOOR)) {
-                if(event.isLeftClick()) {
+            if (event.getCurrentItem().getType().equals(Material.DARK_OAK_DOOR)) {
+                if (event.isLeftClick()) {
                     player.openInventory(settingsInv);
                 }
             }
@@ -337,11 +403,15 @@ public class MainInventoryManager implements Listener {
                     Bukkit.dispatchCommand(player, "timer pause");
                 }
             } else if (event.getCurrentItem().getType().equals(Material.IRON_DOOR)) {
-                player.openInventory(timerInv2);
-                buildNextPage((byte) 3, timerInv2);
-                timeCalculator();
+                if (event.isLeftClick()) {
+                    player.openInventory(timerInv2);
+                    buildNextPage((byte) 3, timerInv2);
+                    timeCalculator();
+                }
             } else if (event.getCurrentItem().getType().equals(Material.DARK_OAK_DOOR)) {
-                player.openInventory(settingsInv);
+                if (event.isLeftClick()) {
+                    player.openInventory(settingsInv);
+                }
             }
         } else if (event.getView().getTitle().equalsIgnoreCase(ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
                 ChatColor.BLUE + "Seite 2")) {
@@ -389,7 +459,9 @@ public class MainInventoryManager implements Listener {
                     }
                 }
             } else if (event.getCurrentItem().getType().equals(Material.DARK_OAK_DOOR)) {
-                player.openInventory(timerInv);
+                if (event.isLeftClick()) {
+                    player.openInventory(timerInv);
+                }
             }
         } else if (event.getView().getTitle().equalsIgnoreCase(ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
                 ChatColor.BLUE + "Seite 3")) {
@@ -402,7 +474,69 @@ public class MainInventoryManager implements Listener {
                     Bukkit.dispatchCommand(player, "timer down");
                 }
             } else if (event.getCurrentItem().getType().equals(Material.DARK_OAK_DOOR)) {
-                player.openInventory(timerInv2);
+                if (event.isLeftClick()) {
+                    player.openInventory(timerInv2);
+                }
+            }
+        } else if (event.getView().getTitle().equalsIgnoreCase(ChatColor.RED + "Herausforderungen" + ChatColor.DARK_GRAY + " • " +
+                ChatColor.BLUE + "Seite 1")) {
+            if (Objects.requireNonNull(event.getCurrentItem()).getType().equals(Material.DRAGON_EGG) || event.getSlot() == 3) {
+                if (event.isLeftClick()) {
+                    if (!Config.getBoolean("goals.enderdragon").booleanValue()) {
+                        goalChange("Enderdrache", Material.GREEN_DYE, ChatColor.GREEN + "Aktiviert", (short) 3, "enderdragon", true);
+                    }
+                } else if (event.isRightClick()) {
+                    if (Config.getBoolean("goals.enderdragon").booleanValue()) {
+                        goalChange("Enderdrache", Material.RED_DYE, ChatColor.RED + "Deaktiviert", (short) 3, "enderdragon", false);
+                    }
+                }
+            } else if(event.getCurrentItem().getType().equals(Material.TRIDENT) || event.getSlot() == 12) {
+                if (event.isLeftClick()) {
+                    if (!Config.getBoolean("goals.elderguardian").booleanValue()) {
+                        goalChange("Großer Wächter", Material.GREEN_DYE, ChatColor.GREEN + "Aktiviert", (short) 12, "elderguardian", true);
+                    }
+                } else if (event.isRightClick()) {
+                    if (Config.getBoolean("goals.elderguardian").booleanValue()) {
+                        goalChange("Großer Wächter", Material.RED_DYE, ChatColor.RED + "Deaktiviert", (short) 12, "elderguardian", false);
+                    }
+                }
+            } else if(event.getCurrentItem().getType().equals(Material.WITHER_SKELETON_SKULL) || event.getSlot() == 6) {
+                if (event.isLeftClick()) {
+                    if (!Config.getBoolean("goals.wither").booleanValue()) {
+                        goalChange("Wither", Material.GREEN_DYE, ChatColor.GREEN + "Aktiviert", (short) 6, "wither", true);
+                    }
+                } else if (event.isRightClick()) {
+                    if (Config.getBoolean("goals.wither").booleanValue()) {
+                        goalChange("Wither", Material.RED_DYE, ChatColor.RED + "Deaktiviert", (short) 6, "wither", false);
+                    }
+                }
+            } else if(event.getCurrentItem().getType().equals(Material.SCULK_SENSOR) || event.getSlot() == 15) {
+                if (event.isLeftClick()) {
+                    if (!Config.getBoolean("goals.warden").booleanValue()) {
+                        goalChange("Wärter", Material.GREEN_DYE, ChatColor.GREEN + "Aktiviert", (short) 15, "warden", true);
+                    }
+                } else if (event.isRightClick()) {
+                    if (Config.getBoolean("goals.warden").booleanValue()) {
+                        goalChange("Wärter", Material.RED_DYE, ChatColor.RED + "Deaktiviert", (short) 15, "warden", false);
+                    }
+                }
+            } else if(event.getCurrentItem().getType().equals(Material.GRASS_BLOCK) || event.getSlot() == 30) {
+                if (event.isLeftClick()) {
+                    if (!Config.getBoolean("goals.allitems").booleanValue()) {
+                        goalChange("Alle Items", Material.GREEN_DYE, ChatColor.GREEN + "Aktiviert", (short) 30, "allitems", true);
+                        allItems();
+                        updateItems(false);
+                    }
+                } else if (event.isRightClick()) {
+                    if (Config.getBoolean("goals.allitems").booleanValue()) {
+                        goalChange("Alle Items", Material.RED_DYE, ChatColor.RED + "Deaktiviert", (short) 30, "allitems", false);
+                        deactivateAllItems();
+                    }
+                }
+            } else if (event.getCurrentItem().getType().equals(Material.DARK_OAK_DOOR)) {
+                if (event.isLeftClick()) {
+                    player.openInventory(settingsInv);
+                }
             }
         }
     }

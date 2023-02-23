@@ -39,8 +39,6 @@ public class DifficultyGamerule implements Listener {
         Config.set("difficulty", Bukkit.getWorld("world").getDifficulty().toString());
     }
 
-    //TODO: CHECK: Setzt man mit /difficulty <diff> den Schwierigkeitsgrad, ist der Dye immer grün
-
     public static String prefix = ChatColor.DARK_GRAY + "[" + ChatColor.LIGHT_PURPLE + "P2YL" + ChatColor.DARK_GRAY + "] ";
 
     @EventHandler
@@ -48,7 +46,10 @@ public class DifficultyGamerule implements Listener {
         Player player = (Player) event.getWhoClicked();
         if (event.getView().getTitle().equalsIgnoreCase(ChatColor.GREEN + "Spielregeln" + ChatColor.DARK_GRAY + " • " +
                 ChatColor.BLUE + "Seite 1")) {
-            if (event.getCurrentItem().getType().equals(Material.SHIELD) || event.getSlot() == 3) {
+            if (event.getCurrentItem() == null) {
+                return;
+            }
+            if (Objects.requireNonNull(event.getCurrentItem()).getType().equals(Material.SHIELD) || event.getSlot() == 3) {
                 if (event.isLeftClick()) {
                     if (Objects.requireNonNull(Bukkit.getWorld("world")).getDifficulty() == Difficulty.PEACEFUL) {
                         diff(Difficulty.EASY, "Einfach", Material.GREEN_DYE);

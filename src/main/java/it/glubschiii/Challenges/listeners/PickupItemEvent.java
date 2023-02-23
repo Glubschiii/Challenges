@@ -18,7 +18,7 @@ public class PickupItemEvent implements Listener {
 
         if(event.getEntityType() == EntityType.PLAYER) {
             for(Player all : Bukkit.getOnlinePlayers()) {
-                // TODO: Auch noch machen, wenn Spieler etwas aus einer Chest rausnimmt
+                //TODO: Auch noch machen, wenn Spieler etwas aus einer Chest rausnimmt
                 all.sendMessage(ChatColor.DARK_GRAY + "» " + ChatColor.GOLD.toString() + ChatColor.BOLD + event.getEntity().getName() + " " +
                         ChatColor.RESET + "" + ChatColor.GRAY + "hat " + ChatColor.GOLD.toString() + ChatColor.BOLD +
                         event.getItem().getItemStack().getType() + " x" + event.getItem().getItemStack().getAmount()

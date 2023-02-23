@@ -30,9 +30,7 @@ public class NoJumpChallenge implements Listener {
     @EventHandler
     public void onJump(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        // TODO: CHECK: Auf vines stirbt man usw
-        // TODO: CHECK: Im Wasser, Lava stirbt man oft random
-        // TODO: Wenn man angegriffen wird, stirbt man auch mit dem Jump grund
+        // TODO: Wenn man angegriffen wird, stirbt man mit dem Jump grund
         if (player.getVelocity().getY() > 0) {
             double jumpVelocity = (double) 0.42F;
             if (player.hasPotionEffect(PotionEffectType.JUMP)) {

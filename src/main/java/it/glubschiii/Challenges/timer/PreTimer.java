@@ -21,6 +21,7 @@ import org.bukkit.event.weather.WeatherChangeEvent;
 public class PreTimer implements Listener {
 
     //TODO: Ingame-Zeit(Tag-Nacht Zyklus) soll sich nicht ändern
+    //TODO: WEnn man brennt kriegt man schaden
     @EventHandler
     private void onPlayerInteract(PlayerInteractEvent event) {
         if(!Timer.isRunning()) {
@@ -77,7 +78,7 @@ public class PreTimer implements Listener {
     @EventHandler
     private void onPlayerAdvancement(PlayerAdvancementCriterionGrantEvent event) {
         if(!Timer.isRunning()) {
-            event.setCancelled(true);       //TODO //CHECK
+            event.setCancelled(true);
         }
     }
 }

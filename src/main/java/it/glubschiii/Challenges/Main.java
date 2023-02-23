@@ -1,10 +1,11 @@
 package it.glubschiii.Challenges;
 
+import it.glubschiii.Challenges.challenges.NoJumpChallenge;
+import it.glubschiii.Challenges.challenges.NoSneakChallenge;
 import it.glubschiii.Challenges.commands.*;
 import it.glubschiii.Challenges.gamerules.DifficultyGamerule;
 import it.glubschiii.Challenges.gamerules.RegenerationGamerule;
-import it.glubschiii.Challenges.goals.DragonKillGoal;
-import it.glubschiii.Challenges.goals.ElderGuardianKillGoal;
+import it.glubschiii.Challenges.goals.*;
 import it.glubschiii.Challenges.listeners.*;
 import it.glubschiii.Challenges.timer.Timer;
 import it.glubschiii.Challenges.timer.TimerCommand;
@@ -14,6 +15,7 @@ import it.glubschiii.Challenges.timer.PreTimer;
 import it.glubschiii.Challenges.utils.TablistManager;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Wither;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -47,6 +49,9 @@ public final class Main extends JavaPlugin {
 
     public static boolean deletedFolders = false;
 
+    //TODO: Wenn man einen Wert manuell in der Config ändert dann speichert es das nicht in das custom inv
+    //TODO: Eng Übersetzung machen
+
     public void onLoad() {
         Config config = new Config();
         instance = this;
@@ -55,7 +60,7 @@ public final class Main extends JavaPlugin {
             Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + "Welten gelöscht!");
             try {
                 Config.set("reset.confirm", Boolean.valueOf(false));
-                timer = new Timer(false, 0);
+                timer = new Timer(false, 0);               //TODO: Auch contents vom Backpack löschen (aber contents werden sowieso noch nicht in config gesaved)
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart");       //TODO: Geht nicht mehr wenn man den Timer in der obrigen Zeile auf 0 setzt. WTF?
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -75,13 +80,16 @@ public final class Main extends JavaPlugin {
         manager.registerEvents(new QuitEvent(), this);
         manager.registerEvents(new DeathEvent(), this);
         manager.registerEvents(new EntityDamageEvent(), this);
-        //manager.registerEvents(new NoJumpChallenge(), this);
-        //manager.registerEvents(new NoSneakChallenge(), this);
+        manager.registerEvents(new NoJumpChallenge(), this);
+        manager.registerEvents(new NoSneakChallenge(), this);
         manager.registerEvents(new DifficultyGamerule(), this);
         manager.registerEvents(new RegenerationGamerule(), this);
-        manager.registerEvents(new PickupItemEvent(), this);
+        //manager.registerEvents(new PickupItemEvent(), this);              //TODO: Wäre für ABC-Challenge damals gedacht gewesen
         manager.registerEvents(new DragonKillGoal(), this);
         manager.registerEvents(new ElderGuardianKillGoal(), this);
+        manager.registerEvents(new WitherKillGoal(), this);
+        manager.registerEvents(new WardenKillGoal(), this);
+        manager.registerEvents(new AllItemsGoal(), this);
         manager.registerEvents(new MainInventoryManager(), this);
         manager.registerEvents(new ChatEvent(), this);
 
@@ -91,6 +99,7 @@ public final class Main extends JavaPlugin {
         getCommand("settings").setExecutor(new SettingsCommand());
         getCommand("reset").setExecutor(new ResetCommand());
         getCommand("gm").setExecutor(new GamemodeCommand());
+        getCommand("skipitem").setExecutor(new AllItemsGoal());
 
         tablistManager = new TablistManager();
 
@@ -117,7 +126,7 @@ public final class Main extends JavaPlugin {
         }
 
         if(Config.get("command.backpack.backpack-contents") != null) {
-            Config.get("command.backpack.backpack-contents");
+            Config.get("command.backpack.backpack-contents");           //TODO: Funktioniert nicht
         }
 
         if(Config.get("difficulty") != null) {
@@ -149,7 +158,9 @@ public final class Main extends JavaPlugin {
 
         if(getConfig().contains("goals.enderdragon") && Config.getBoolean("goals.enderdragon").booleanValue()) {
             Config.getBoolean("goals.enderdragon").booleanValue();
-        } else if(!getConfig().contains("goals.elderguardian") && !Config.getBoolean("goals.elderguardian").booleanValue()) {
+        } else if(!getConfig().contains("goals.elderguardian") && !Config.getBoolean("goals.elderguardian").booleanValue() &&
+                !getConfig().contains("goals.wither") && !Config.getBoolean("goals.wither").booleanValue() &&
+                !getConfig().contains("goals.warden") && !Config.getBoolean("goals.warden").booleanValue()) {
             try {
                 Config.set("goals.enderdragon", Boolean.valueOf(true));
             } catch (IOException e) {
@@ -159,6 +170,15 @@ public final class Main extends JavaPlugin {
 
         if(getConfig().contains("goals.elderguardian") && Config.getBoolean("goals.elderguardian").booleanValue()) {
             Config.getBoolean("goals.elderguardian").booleanValue();
+        }
+        if(getConfig().contains("goals.wither") && Config.getBoolean("goals.wither").booleanValue()) {
+            Config.getBoolean("goals.wither").booleanValue();
+        }
+        if(getConfig().contains("goals.warden") && Config.getBoolean("goals.warden").booleanValue()) {
+            Config.getBoolean("goals.warden").booleanValue();
+        }
+        if(getConfig().contains("goals.allitems") && Config.getBoolean("goals.allitems").booleanValue()) {
+            Config.getBoolean("goals.allitems").booleanValue();
         }
     }
 

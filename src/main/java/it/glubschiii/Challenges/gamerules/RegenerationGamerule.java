@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
 import java.util.EnumSet;
+import java.util.Objects;
 
 /** @author Glubschiii | https://github.com/glubschiii
  @since 1.0.4
@@ -70,7 +71,10 @@ public class RegenerationGamerule implements Listener {
         Player player = (Player) event.getWhoClicked();
         if (event.getView().getTitle().equalsIgnoreCase(ChatColor.GREEN + "Spielregeln" + ChatColor.DARK_GRAY + " • " +
                 ChatColor.BLUE + "Seite 1")) {
-            if (event.getCurrentItem().getType().equals(Material.POTION) || event.getSlot() == 12) {
+            if (event.getCurrentItem() == null) {
+                return;
+            }
+            if (Objects.requireNonNull(event.getCurrentItem()).getType().equals(Material.POTION) || event.getSlot() == 12) {
                 if (event.isLeftClick()) {
                     if(getStatus() == 0 || getStatus() == 1) {
                         setStatus();
