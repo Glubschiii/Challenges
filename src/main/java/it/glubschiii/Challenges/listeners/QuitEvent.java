@@ -12,6 +12,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.io.IOException;
 
+import static it.glubschiii.Challenges.goals.AllItemsGoal.bossBar;
+
 /** @author Glubschiii | https://github.com/glubschiii
  @since 1.0.1
  */
@@ -26,9 +28,12 @@ public class QuitEvent implements Listener {
         Timer timer = Main.getInstance().getTimer();
         Config.set("timer", Timer.getTime()/5);
 
-        if(Bukkit.getOnlinePlayers().size() <=1 &&
-                timer.isRunning()) {
+        if(Bukkit.getOnlinePlayers().size() <=1 && timer.isRunning()) {
                 timer.setRunning(false);
+        }
+
+        if (Config.getBoolean("goals.allitems").booleanValue()) {
+            bossBar.removePlayer(player);
         }
     }
 }

@@ -15,10 +15,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
+import static it.glubschiii.Challenges.utils.MainInventoryManager.settingsInv;
+
 /** @author Glubschiii | https://github.com/glubschiii
  @since 1.0.3
  */
-public class SettingsCommand extends MainInventoryManager implements CommandExecutor {
+public class SettingsCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(sender instanceof Player) {

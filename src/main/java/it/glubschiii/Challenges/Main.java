@@ -25,12 +25,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-    /** @author Glubschiii | https://github.com/glubschiii
+import static it.glubschiii.Challenges.goals.AllItemsGoal.*;
+
+/** @author Glubschiii | https://github.com/glubschiii
         @since 1.0
      */
 public final class Main extends JavaPlugin {
 
     //TODO: Prefixe ändern / neues Design
+    //TODO: /reset confirm fixxen!!
+    //TODO: TabCompleter für alle Commands machen
 
     public static Main instance;
 
@@ -99,7 +103,7 @@ public final class Main extends JavaPlugin {
         getCommand("settings").setExecutor(new SettingsCommand());
         getCommand("reset").setExecutor(new ResetCommand());
         getCommand("gm").setExecutor(new GamemodeCommand());
-        getCommand("skipitem").setExecutor(new AllItemsGoal());
+        getCommand("allitems").setExecutor(new AllItemsGoal());
 
         tablistManager = new TablistManager();
 
@@ -150,6 +154,8 @@ public final class Main extends JavaPlugin {
             }
         }
 
+
+
         if(getConfig().getInt("regeneration-status") == 0) {
             Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.NATURAL_REGENERATION, true));
         } else {
@@ -179,6 +185,22 @@ public final class Main extends JavaPlugin {
         }
         if(getConfig().contains("goals.allitems") && Config.getBoolean("goals.allitems").booleanValue()) {
             Config.getBoolean("goals.allitems").booleanValue();
+            loadConfig();
+            try {
+                updateItems(false);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if(Config.get("allitems.items") != null) {
+            Config.get("allitems.items");
+        }
+        if(Config.get("allitems.current") != null) {
+            Config.get("allitems.current");
+        }
+        if(Config.get("allitems.progress") != null) {
+            Config.get("allitems.progress");
         }
     }
 
@@ -196,6 +218,9 @@ public final class Main extends JavaPlugin {
             Config.set("regeneration-status", RegenerationGamerule.getStatus());
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        if(bossBar != null) {
+            bossBar.hide();
         }
     }
 

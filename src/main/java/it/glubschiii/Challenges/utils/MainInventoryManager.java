@@ -49,11 +49,21 @@ public class MainInventoryManager implements Listener {
             ChatColor.BLUE + "Seite 3");
     public static Inventory goalsInv = Bukkit.createInventory(null, 54, ChatColor.RED + "Herausforderungen" + ChatColor.DARK_GRAY + " • " +
             ChatColor.BLUE + "Seite 1");
+
     /*
-     * Putting items inside the custom /settings inventories and it's repositories
+    * Creating custom "/allitems overview" inventories
+    */
+    public static Inventory allItemsOverviewInv = Bukkit.createInventory(null, 54, ChatColor.DARK_GRAY + "Alle Items Overview");
+
+    /*
+     * Putting items inside the custom /settings inventories, /allitems overview inventories and it's repositories
      */
     static ItemStack background = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName(" ").toItemStack();
     static ItemStack background2 = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").toItemStack();
+    static ItemStack background3 = new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).setName(" ").toItemStack();
+    static ItemStack backgroundPurple = new ItemBuilder(Material.PURPLE_STAINED_GLASS_PANE).setName(" ").toItemStack();
+    static ItemStack backgroundGreen = new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE).setName(" ").toItemStack();
+    static ItemStack backgroundRed = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(" ").toItemStack();
     static ItemStack back = new ItemBuilder(Material.DARK_OAK_DOOR).setName(ChatColor.AQUA + "Zurück").toItemStack();
     static ItemStack mainMenu = new ItemBuilder(Material.COMPARATOR).setName(ChatColor.RED + "Zurück zum Hauptmenü").toItemStack();
 
@@ -88,6 +98,10 @@ public class MainInventoryManager implements Listener {
                 .addLoreLine(" ").addLoreLine(direction + " Nach oben: " + ChatColor.BLUE + "Linksklick").addLoreLine(direction + " Nach unten: " + ChatColor.BLUE + "Rechtsklick")
                 .addLoreLine(" ").addLoreLine(ChatColor.GRAY + "Aktuell: " + ChatColor.BOLD + direction.toString() + arrow).toItemStack();
         timerInv3.setItem(13, timerDirection);
+    }
+    public static void currentItem(Material item, String current) {
+        ItemStack currentItem = new ItemBuilder(item).setName(ChatColor.DARK_PURPLE + current).toItemStack();
+        allItemsOverviewInv.setItem(22, currentItem);
     }
 
     private static void goalChange(String goal, Material material, String status, short slot, String config, boolean bool) throws IOException {
@@ -144,6 +158,9 @@ public class MainInventoryManager implements Listener {
         }
     }
 
+    /*
+    * Puts background items in the inventories
+     */
     public static void puttingItems() throws IOException {
         int[] background2SlotsMainInv = {0, 1, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 43, 44};
         int[] backgroundSlotsgamerulesInv = {0, 4, 8, 9, 13, 17, 18, 22, 26, 27, 31, 35, 36, 40, 44, 49, 53};
@@ -157,6 +174,9 @@ public class MainInventoryManager implements Listener {
         int[] background2SlotstimerInv3 = {1, 3, 5, 7, 10, 12, 14, 16, 19, 21, 23, 25, 28, 30, 32, 34};
         int[] backgroundSlotsGoalsInv = {0, 4, 8, 9, 13, 17, 18, 22, 26, 27, 31, 35, 36, 40, 44, 49, 53};
         int[] background2SlotsGoalsInv = {1, 5, 10, 14, 19, 20, 21, 23, 24, 25, 28, 32, 33, 34, 37, 38, 39, 41, 42, 43, 46, 47, 48, 50, 51, 52};
+        int[] backgroundPurpleSlotsAllItemsOverviewInv = {12, 13, 14, 21, 23, 30, 31, 32};
+        int[] backgroundGreenSlotsAllItemsOverviewInv = {18, 19, 20, 27, 29, 36, 37, 38};
+        int[] backgroundRedSlotsAllItemsOverviewInv = {24, 25, 26, 33, 35, 42, 43, 44};
 
         puttingItemsHelper(background2SlotsMainInv, settingsInv, background2);
         puttingItemsHelper(backgroundSlotsgamerulesInv, gamerulesInv, background);
@@ -170,11 +190,23 @@ public class MainInventoryManager implements Listener {
         puttingItemsHelper(background2SlotstimerInv3, timerInv3, background2);
         puttingItemsHelper(backgroundSlotsGoalsInv, goalsInv, background);
         puttingItemsHelper(background2SlotsGoalsInv, goalsInv, background2);
+        puttingItemsHelper(backgroundPurpleSlotsAllItemsOverviewInv, allItemsOverviewInv, backgroundPurple);
+        puttingItemsHelper(backgroundGreenSlotsAllItemsOverviewInv, allItemsOverviewInv, backgroundGreen);
+        puttingItemsHelper(backgroundRedSlotsAllItemsOverviewInv, allItemsOverviewInv, backgroundRed);
         for (int i = 2; i <= 44; i++) {
             if (i <= 3 || i == 5 || i == 6 || (i >= 10 && i <= 16) || i == 19 || i == 21 || i == 23 || i == 25 || (i >= 28 && i <= 34) || (i >= 38 && i <= 39) || i == 41 || i == 42) {
                 settingsInv.setItem(i, background);
             }
         }
+        for(int i = 0; i <= 53; i++) {
+            if(i <= 11 || (i >= 15 && i <= 17) || (i >= 39 && i <= 41) || i >= 45) {
+                allItemsOverviewInv.setItem(i, background3);
+            }
+        }
+
+        /*
+         * Puts important items in the inventories
+         */
         settingsInv.setItem(4, timer);
         settingsInv.setItem(20, herausforderungen);
         settingsInv.setItem(22, challenges);
@@ -197,6 +229,8 @@ public class MainInventoryManager implements Listener {
         goalsInv.setItem(16, wardenGoal);
         goalsInv.setItem(29, allItemsGoal);
         goalsInv.setItem(45, back);
+        allItemsOverviewInv.setItem(28, registeredItems);
+        allItemsOverviewInv.setItem(34, pendingItems);
     }
 
     /*
@@ -277,6 +311,13 @@ public class MainInventoryManager implements Listener {
             .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.GREEN + "absolviert" + ChatColor.GRAY + ",")
             .addLoreLine(ChatColor.GRAY + " sobald " + ChatColor.GREEN + "alle Items " + ChatColor.GRAY + "gesammelt wurden.").toItemStack();
 
+    /*
+    * Creating items for the "/allitems overview" inventory
+     */
+    public static ItemStack allItemsDefault = new ItemBuilder(Material.OAK_SIGN).setName(ChatColor.RED + "Dieses Item hat keine Vorschau").toItemStack();
+    static ItemStack registeredItems = new ItemBuilder(Material.CHEST).setName(ChatColor.GREEN + "Registrierte Items").toItemStack();
+    static ItemStack pendingItems = new ItemBuilder(Material.CAULDRON).setName(ChatColor.RED + "Ausstehende Items").toItemStack();
+
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) throws IOException {
@@ -291,7 +332,7 @@ public class MainInventoryManager implements Listener {
                 ChatColor.BLUE + "Seite 1") || event.getView().getTitle().equalsIgnoreCase(ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
                 ChatColor.BLUE + "Seite 2") || event.getView().getTitle().equalsIgnoreCase(ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
                 ChatColor.BLUE + "Seite 3") || event.getView().getTitle().equalsIgnoreCase(ChatColor.RED + "Herausforderungen" + ChatColor.DARK_GRAY + " • " +
-                ChatColor.BLUE + "Seite 1")) {
+                ChatColor.BLUE + "Seite 1") || event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Alle Items Overview")) {
             if (event.getCurrentItem() == null) {
                 return;
             }
@@ -476,6 +517,10 @@ public class MainInventoryManager implements Listener {
             } else if (event.getCurrentItem().getType().equals(Material.DARK_OAK_DOOR)) {
                 if (event.isLeftClick()) {
                     player.openInventory(timerInv2);
+                }
+            } else if(event.getCurrentItem().getType().equals(Material.COMPARATOR)) {
+                if(event.isLeftClick()) {
+                    player.openInventory(settingsInv);
                 }
             }
         } else if (event.getView().getTitle().equalsIgnoreCase(ChatColor.RED + "Herausforderungen" + ChatColor.DARK_GRAY + " • " +

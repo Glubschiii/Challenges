@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Config {
 
     private static File file;
-    private static YamlConfiguration config;
+    public static YamlConfiguration config;
 
     public Config() {
         File dir = new File("./plugins/Challenges/");
@@ -49,11 +49,6 @@ public class Config {
         return config.get(path);
     }
 
-    public void delete(String path) throws IOException {
-        config.set(path, null);
-        config.save(file);
-    }
-
     public static int getInt(String path) {
         return config.getInt(path);
     }
@@ -77,15 +72,4 @@ public class Config {
         return file;
     }
 
-    public void clearConfig() {
-        Field[] fields = Config.class.getDeclaredFields();
-        for(Field field : fields) {
-            field.setAccessible(true);
-            try {
-                field.set(this, null);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
