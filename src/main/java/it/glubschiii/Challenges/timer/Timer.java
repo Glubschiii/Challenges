@@ -70,10 +70,10 @@ public class Timer extends TimerCommand {
                     if(count >= 1) {
                         count = -1;
                     }
-                    for(Player all : Bukkit.getOnlinePlayers()) {
+                    /*for(Player all : Bukkit.getOnlinePlayers()) {
                         Location playerLoc = all.getLocation();
-                        all.getWorld().spawnParticle(Particle.HEART, playerLoc, 10);
-                    }
+                        all.getWorld().spawnParticle(Particle.HEART, playerLoc, 10);            //TODO: Change particle effects
+                    }*/
                     return;
                 }
                 if(((String) Config.get("timer-direction")).contains("up")) {

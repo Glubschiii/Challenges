@@ -27,7 +27,7 @@ import java.util.Objects;
 import static it.glubschiii.Challenges.utils.Config.config;
 import static it.glubschiii.Challenges.utils.MainInventoryManager.*;
 
-//TODO: Inventar mit /allitems machen (Fehlende Blöcke - Derzeit Item - bereits gesammelte Bläcke (Mit Zeitangabe) - etc)
+//TODO: Inventar mit /allitems machen (Fehlende Blöcke - Derzeit Item (Mit crafting recipe wie auf Gomme) - bereits gesammelte Bläcke (Mit Zeitangabe) - etc)
 
 /** @author Glubschiii | https://github.com/glubschiii
  @since 1.0.8
@@ -46,7 +46,9 @@ public class AllItemsGoal implements Listener, CommandExecutor {
     public static void allItems() throws IOException {
         materials = new ArrayList<String>();
         for (Material material : Material.values()) {
-            materials.add(String.valueOf(material));
+            if(material != Material.AIR) {
+                materials.add(String.valueOf(material));
+            }
         }
         size = materials.size();
         Collections.shuffle(materials);
@@ -66,8 +68,11 @@ public class AllItemsGoal implements Listener, CommandExecutor {
             }
             materials.remove(0);
         }
-        current = Material.valueOf(materials.get(0));
-        if (materials.size() != 0) {                     //TODO: java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
+        if(materials.size() != 0) {
+            current = Material.valueOf(materials.get(0));
+        }
+        Bukkit.getConsoleSender().sendMessage(currentMessage(String.valueOf(current)));
+        if (materials.size() != 0) {
             bossBar = Bukkit.createBossBar(ChatColor.GRAY + "Item" + ChatColor.DARK_GRAY + " » " + ChatColor.WHITE + currentMessage(String.valueOf(current)) + " #"
                     + sizeProgress + "/" + size, BarColor.WHITE, BarStyle.SOLID);
         } else {
@@ -136,28 +141,32 @@ public class AllItemsGoal implements Listener, CommandExecutor {
                      */
                     case "skip":
                         if (Config.getBoolean("goals.allitems").booleanValue()) {
-                            if (Timer.isRunning()) {
-                                sizeProgress += 1;
-                                for (Player all : Bukkit.getOnlinePlayers()) {
-                                    if (!(sizeProgress == size)) {
-                                        all.sendMessage(ChatColor.GRAY + "Item geskippt. Neues Item: " + ChatColor.GREEN.toString()
-                                                + ChatColor.BOLD + currentMessage(materials.get(1)) + ChatColor.RESET + ChatColor.DARK_GRAY + " ("
-                                                + ChatColor.GRAY + "Es fehlen noch " + ChatColor.WHITE.toString() + ChatColor.BOLD
-                                                + (size - sizeProgress) + ChatColor.RESET + ChatColor.GRAY + " Items" + ChatColor.DARK_GRAY + ")");
-                                        all.sendTitle("#" + sizeProgress, "", 10, 17, 10);
-                                    } else {        //TODO: Funktionalität überprüfen
-                                        all.sendMessage(ChatColor.GRAY + "Item geskippt. Du hast alle" + ChatColor.GREEN.toString() + ChatColor.BOLD
-                                                + " Items " + ChatColor.GRAY + "gesammelt!");
-                                        all.sendTitle(ChatColor.UNDERLINE + "FERTIG!", "", 10, 60, 30);
+                            if(materials.size() != 0) {
+                                if (Timer.isRunning()) {
+                                    sizeProgress += 1;
+                                    for (Player all : Bukkit.getOnlinePlayers()) {
+                                        if (!(sizeProgress == size)) {
+                                            all.sendMessage(ChatColor.GRAY + "Item geskippt. Neues Item: " + ChatColor.GREEN.toString()
+                                                    + ChatColor.BOLD + currentMessage(materials.get(1)) + ChatColor.RESET + ChatColor.DARK_GRAY + " ("
+                                                    + ChatColor.GRAY + "Es fehlen noch " + ChatColor.WHITE.toString() + ChatColor.BOLD
+                                                    + (size - sizeProgress) + ChatColor.RESET + ChatColor.GRAY + " Items" + ChatColor.DARK_GRAY + ")");
+                                            all.sendTitle("#" + sizeProgress, "", 10, 17, 10);
+                                        } else {        //TODO: Funktionalität überprüfen
+                                            all.sendMessage(ChatColor.GRAY + "Item geskippt. Du hast alle" + ChatColor.GREEN.toString() + ChatColor.BOLD
+                                                    + " Items " + ChatColor.GRAY + "gesammelt!");
+                                            all.sendTitle(ChatColor.UNDERLINE + "FERTIG!", "", 10, 60, 30);
+                                        }
                                     }
-                                }
-                                try {
-                                    updateItems(true);
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
+                                    try {
+                                        updateItems(true);
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                } else {
+                                    player.sendMessage(ChatColor.RED + "Der Timer ist noch pausiert!");      //TODO: Diese Message kommt nicht, instead kommt Fehler wenn Challenge aktiviert ist aber man rejoint und man "/allitems skip" eingibt
                                 }
                             } else {
-                                player.sendMessage(ChatColor.RED + "Der Timer ist noch pausiert!");      //TODO: Diese Message kommt nicht, instead kommt Fehler wenn Challenge aktiviert ist aber man rejoint und man "/allitems skip" eingibt
+                                player.sendMessage(ChatColor.RED + "Die Alle Items Herausforderung wurde bereits absolviert!");
                             }
                         } else {
                             player.sendMessage(ChatColor.RED + "Die Alle Items Herausforderung ist derzeit deaktiviert!");      //TODO: Diese Message kommt nicht, instead kommt Fehler wenn Challenge aktiviert ist aber man rejoint und man "/allitems skip" eingibt

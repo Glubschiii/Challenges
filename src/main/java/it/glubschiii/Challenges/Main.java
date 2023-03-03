@@ -61,16 +61,18 @@ public final class Main extends JavaPlugin {
         instance = this;
         if(Config.contains("reset.confirm") && Config.getBoolean("reset.confirm").booleanValue()) {
             deleteWorlds();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + "Welten gelöscht!");
+            Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + "Welten gelöscht! Server wird nochmal restartet!");
+            Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + "Welten gelöscht! Server wird nochmal restartet!");
+            Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + "Welten gelöscht! Server wird nochmal restartet!");
             try {
                 Config.set("reset.confirm", Boolean.valueOf(false));
-                timer = new Timer(false, 0);               //TODO: Auch contents vom Backpack löschen (aber contents werden sowieso noch nicht in config gesaved)
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart");       //TODO: Geht nicht mehr wenn man den Timer in der obrigen Zeile auf 0 setzt. WTF?
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            deletedFolders = true;
+            Config.delete();
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart");
         }
-        deletedFolders = true;
     }
 
     @Override
@@ -84,8 +86,8 @@ public final class Main extends JavaPlugin {
         manager.registerEvents(new QuitEvent(), this);
         manager.registerEvents(new DeathEvent(), this);
         manager.registerEvents(new EntityDamageEvent(), this);
-        manager.registerEvents(new NoJumpChallenge(), this);
-        manager.registerEvents(new NoSneakChallenge(), this);
+        //manager.registerEvents(new NoJumpChallenge(), this);
+        //manager.registerEvents(new NoSneakChallenge(), this);
         manager.registerEvents(new DifficultyGamerule(), this);
         manager.registerEvents(new RegenerationGamerule(), this);
         //manager.registerEvents(new PickupItemEvent(), this);              //TODO: Wäre für ABC-Challenge damals gedacht gewesen

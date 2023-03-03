@@ -25,7 +25,8 @@ public class NoJumpChallenge implements Listener {
 
     private final HashSet<@Nullable Object> prevPlayersOnGround = Sets.newHashSet();
     private Set<Material> excludedMaterials = new HashSet<>(Arrays.asList(Material.LADDER, Material.VINE, Material.TWISTING_VINES, Material.TWISTING_VINES_PLANT,
-            Material.WEEPING_VINES, Material.WEEPING_VINES_PLANT, Material.CAVE_VINES, Material.CAVE_VINES_PLANT, Material.SCAFFOLDING, Material.WATER, Material.LAVA));
+            Material.WEEPING_VINES, Material.WEEPING_VINES_PLANT, Material.CAVE_VINES, Material.CAVE_VINES_PLANT, Material.SCAFFOLDING, Material.WATER, Material.LAVA,
+            Material.POWDER_SNOW));
 
     @EventHandler
     public void onJump(PlayerMoveEvent event) {

@@ -15,6 +15,7 @@ public class Config {
     private static File file;
     public static YamlConfiguration config;
 
+
     public Config() {
         File dir = new File("./plugins/Challenges/");
         if (!dir.exists()) {
@@ -72,4 +73,12 @@ public class Config {
         return file;
     }
 
+    public static void delete() {
+        config = new YamlConfiguration(); // create a new empty configuration
+        try {
+            config.save(file); // save the empty configuration to the file
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
