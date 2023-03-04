@@ -68,15 +68,15 @@ public class AllItemsGoal implements Listener, CommandExecutor {
             }
             materials.remove(0);
         }
-        if(materials.size() != 0) {
+        if (materials.size() != 0) {
             current = Material.valueOf(materials.get(0));
         }
         Bukkit.getConsoleSender().sendMessage(currentMessage(String.valueOf(current)));
         if (materials.size() != 0) {
             bossBar = Bukkit.createBossBar(ChatColor.GRAY + "Item" + ChatColor.DARK_GRAY + " » " + ChatColor.WHITE + currentMessage(String.valueOf(current)) + " #"
-                    + sizeProgress + "/" + size, BarColor.WHITE, BarStyle.SOLID);
+                    + sizeProgress + "/" + size, BarColor.WHITE, BarStyle.SOLID);       //TODO: BossBar Progress geht immer Stückweise höher machen?
         } else {
-            bossBar = Bukkit.createBossBar(ChatColor.GREEN + "Alle Items wurden registriert! (" + size + "/" + size + ")", BarColor.GREEN, BarStyle.SOLID);               //TODO: Wird nicht ausgeführt
+            bossBar = Bukkit.createBossBar(ChatColor.GREEN + "Alle Items wurden registriert! (" + size + "/" + size + ")", BarColor.GREEN, BarStyle.SOLID);
         }
         for (Player all : Bukkit.getOnlinePlayers()) {
             bossBar.addPlayer(all);
@@ -84,7 +84,11 @@ public class AllItemsGoal implements Listener, CommandExecutor {
         Config.set("allitems.current", current.toString());
         Config.set("allitems.items", materials);
         Config.set("allitems.progress", sizeProgress);
-        currentItem(current, currentMessage(String.valueOf(current)));
+        if (materials.size() != 0) {
+            currentItem(current, currentMessage(String.valueOf(current)));          //TODO: Überprüfen ob bei jedem direkt das geöffnete! Inv geupdated wird
+        } else {
+            currentItem(Material.OAK_SIGN, ChatColor.RED + "Die Alle Items Herausforderung wurde bereits absolviert!");
+        }
     }
 
     /*
@@ -133,43 +137,47 @@ public class AllItemsGoal implements Listener, CommandExecutor {
                             }
                             player.openInventory(allItemsOverviewInv);
                         } else {
-                            player.sendMessage(ChatColor.RED + "Die Alle Items Herausforderung ist derzeit deaktiviert!");      //TODO: Diese Message kommt nicht, instead kommt Fehler wenn Challenge aktiviert ist aber man rejoint und man "/allitems skip" eingibt
+                            player.sendMessage(ChatColor.RED + "Die Alle Items Herausforderung ist derzeit deaktiviert!");
                         }
                         break;
                     /*
                      * If you can't get an item in Survival, you can use it to skip it
                      */
                     case "skip":
-                        if (Config.getBoolean("goals.allitems").booleanValue()) {
-                            if(materials.size() != 0) {
-                                if (Timer.isRunning()) {
-                                    sizeProgress += 1;
-                                    for (Player all : Bukkit.getOnlinePlayers()) {
-                                        if (!(sizeProgress == size)) {
-                                            all.sendMessage(ChatColor.GRAY + "Item geskippt. Neues Item: " + ChatColor.GREEN.toString()
-                                                    + ChatColor.BOLD + currentMessage(materials.get(1)) + ChatColor.RESET + ChatColor.DARK_GRAY + " ("
-                                                    + ChatColor.GRAY + "Es fehlen noch " + ChatColor.WHITE.toString() + ChatColor.BOLD
-                                                    + (size - sizeProgress) + ChatColor.RESET + ChatColor.GRAY + " Items" + ChatColor.DARK_GRAY + ")");
-                                            all.sendTitle("#" + sizeProgress, "", 10, 17, 10);
-                                        } else {        //TODO: Funktionalität überprüfen
-                                            all.sendMessage(ChatColor.GRAY + "Item geskippt. Du hast alle" + ChatColor.GREEN.toString() + ChatColor.BOLD
-                                                    + " Items " + ChatColor.GRAY + "gesammelt!");
-                                            all.sendTitle(ChatColor.UNDERLINE + "FERTIG!", "", 10, 60, 30);
+                        if(player.hasPermission("challenges.allitems")) {
+                            if (Config.getBoolean("goals.allitems").booleanValue()) {
+                                if (materials.size() != 0) {
+                                    if (Timer.isRunning()) {
+                                        sizeProgress += 1;
+                                        for (Player all : Bukkit.getOnlinePlayers()) {
+                                            if (!(sizeProgress == size)) {
+                                                all.sendMessage(ChatColor.GRAY + "Item geskippt. Neues Item: " + ChatColor.GREEN.toString()
+                                                        + ChatColor.BOLD + currentMessage(materials.get(1)) + ChatColor.RESET + ChatColor.DARK_GRAY + " ("
+                                                        + ChatColor.GRAY + "Es fehlen noch " + ChatColor.WHITE.toString() + ChatColor.BOLD
+                                                        + (size - sizeProgress) + ChatColor.RESET + ChatColor.GRAY + " Items" + ChatColor.DARK_GRAY + ")");
+                                                all.sendTitle("#" + sizeProgress, "", 10, 17, 10);
+                                            } else {        //TODO: Funktionalität überprüfen
+                                                all.sendMessage(ChatColor.GRAY + "Item geskippt. Du hast alle" + ChatColor.GREEN.toString() + ChatColor.BOLD
+                                                        + " Items " + ChatColor.GRAY + "gesammelt!");
+                                                all.sendTitle(ChatColor.UNDERLINE + "FERTIG!", "", 10, 60, 30);
+                                            }
                                         }
-                                    }
-                                    try {
-                                        updateItems(true);
-                                    } catch (IOException e) {
-                                        throw new RuntimeException(e);
+                                        try {
+                                            updateItems(true);
+                                        } catch (IOException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    } else {
+                                        player.sendMessage(ChatColor.RED + "Der Timer ist noch pausiert!");
                                     }
                                 } else {
-                                    player.sendMessage(ChatColor.RED + "Der Timer ist noch pausiert!");      //TODO: Diese Message kommt nicht, instead kommt Fehler wenn Challenge aktiviert ist aber man rejoint und man "/allitems skip" eingibt
+                                    player.sendMessage(ChatColor.RED + "Die Alle Items Herausforderung wurde bereits absolviert!");
                                 }
                             } else {
-                                player.sendMessage(ChatColor.RED + "Die Alle Items Herausforderung wurde bereits absolviert!");
+                                player.sendMessage(ChatColor.RED + "Die Alle Items Herausforderung ist derzeit deaktiviert!");
                             }
                         } else {
-                            player.sendMessage(ChatColor.RED + "Die Alle Items Herausforderung ist derzeit deaktiviert!");      //TODO: Diese Message kommt nicht, instead kommt Fehler wenn Challenge aktiviert ist aber man rejoint und man "/allitems skip" eingibt
+                            player.sendMessage(ChatColor.RED + "Dazu hast du keine Rechte!");
                         }
                         break;
                     default:

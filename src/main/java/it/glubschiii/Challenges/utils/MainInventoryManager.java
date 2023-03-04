@@ -49,6 +49,7 @@ public class MainInventoryManager implements Listener {
             ChatColor.BLUE + "Seite 3");
     public static Inventory goalsInv = Bukkit.createInventory(null, 54, ChatColor.RED + "Herausforderungen" + ChatColor.DARK_GRAY + " • " +
             ChatColor.BLUE + "Seite 1");
+    public static Inventory challengesInv = Bukkit.createInventory(null, 36, ChatColor.AQUA + "Challenges");
 
     /*
     * Creating custom "/allitems overview" inventories
@@ -147,6 +148,7 @@ public class MainInventoryManager implements Listener {
         } else {
             timeMinutes((short) 1);
         }
+        //TODO: Minuten werden nicht als Itemmenge angezeigt
         /*
          * Calculating all the remaining seconds in the timer
          */
@@ -231,6 +233,8 @@ public class MainInventoryManager implements Listener {
         goalsInv.setItem(45, back);
         allItemsOverviewInv.setItem(28, registeredItems);
         allItemsOverviewInv.setItem(34, pendingItems);
+        challengesInv.setItem(11, minecraftChallenges);
+        challengesInv.setItem(15, randomizerChallenges);
     }
 
     /*
@@ -318,6 +322,12 @@ public class MainInventoryManager implements Listener {
     static ItemStack registeredItems = new ItemBuilder(Material.CHEST).setName(ChatColor.GREEN + "Registrierte Items").toItemStack();
     static ItemStack pendingItems = new ItemBuilder(Material.CAULDRON).setName(ChatColor.RED + "Ausstehende Items").toItemStack();
 
+    /*
+     * Creating items for the challenges inventory
+     */
+    static ItemStack minecraftChallenges = new ItemBuilder(Material.CRAFTING_TABLE).setName(ChatColor.GREEN + "Minecraft-Challenges").toItemStack();    //TODO: Beschreibung
+    static ItemStack randomizerChallenges = new ItemBuilder(Material.CHAIN_COMMAND_BLOCK).setName(ChatColor.BLUE + "Randomizer-Challenges").addLoreLine(" ")
+            .addLoreLine(ChatColor.RED + " Coming Soon...").toItemStack();     //TODO: Beschreibung
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) throws IOException {
@@ -332,7 +342,8 @@ public class MainInventoryManager implements Listener {
                 ChatColor.BLUE + "Seite 1") || event.getView().getTitle().equalsIgnoreCase(ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
                 ChatColor.BLUE + "Seite 2") || event.getView().getTitle().equalsIgnoreCase(ChatColor.YELLOW + "Timer" + ChatColor.DARK_GRAY + " • " +
                 ChatColor.BLUE + "Seite 3") || event.getView().getTitle().equalsIgnoreCase(ChatColor.RED + "Herausforderungen" + ChatColor.DARK_GRAY + " • " +
-                ChatColor.BLUE + "Seite 1") || event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Alle Items Overview")) {
+                ChatColor.BLUE + "Seite 1") || event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Alle Items Overview") ||
+                event.getView().getTitle().equalsIgnoreCase(ChatColor.AQUA + "Challenges")) {
             if (event.getCurrentItem() == null) {
                 return;
             }
@@ -416,6 +427,10 @@ public class MainInventoryManager implements Listener {
                         goalsInv.setItem(30, dye);
                     }
                     player.openInventory(goalsInv);
+                }
+            } else if (event.getCurrentItem().getType().equals(Material.GRASS_BLOCK)) {
+                if(event.isLeftClick()) {
+                    player.openInventory(challengesInv);
                 }
             }
         } else if (event.getView().getTitle().equalsIgnoreCase(ChatColor.GREEN + "Spielregeln" + ChatColor.DARK_GRAY + " • " +
@@ -581,6 +596,12 @@ public class MainInventoryManager implements Listener {
             } else if (event.getCurrentItem().getType().equals(Material.DARK_OAK_DOOR)) {
                 if (event.isLeftClick()) {
                     player.openInventory(settingsInv);
+                }
+            }
+        } else if(event.getView().getTitle().equalsIgnoreCase(ChatColor.AQUA + "Challenges")) {
+            if(event.getCurrentItem().getType().equals(Material.CRAFTING_TABLE)) {
+                if(event.isLeftClick()) {
+
                 }
             }
         }
