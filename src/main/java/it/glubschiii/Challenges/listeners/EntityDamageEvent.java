@@ -161,11 +161,11 @@ public class EntityDamageEvent implements Listener {
                 damagecause += " [Wither]";
             }
         }
-
+            //TODO: Wird nicht gerundet (z.B. bei /kill)
         if(e.getEntityType() == EntityType.PLAYER && Timer.isRunning()) {
             Bukkit.broadcastMessage(prefix + ChatColor.WHITE.toString() + ChatColor.BOLD + e.getEntity().getName() + ChatColor.RESET + "" +
                     ChatColor.GREEN + " hat durch " + ChatColor.WHITE + ChatColor.BOLD + damagecause + ChatColor.RESET + " " + ChatColor.GREEN +
-                    FinalDamage + ChatColor.GREEN + " Herzen " + ChatColor.GREEN + "Schaden bekommen");
+                    FinalDamage + ChatColor.GREEN + " ❤ " + ChatColor.GREEN + "Schaden bekommen");     //TODO: Design changen
         }
     }
 }

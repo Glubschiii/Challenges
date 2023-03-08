@@ -39,11 +39,13 @@ public class DeathEvent implements Listener {
                     all.setHealth(0);
                 }
             }
+            Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "══════════════════════════════");
             Bukkit.getServer().broadcastMessage(ChatColor.RED + "Die Challenge wurde gescheitert! " + ChatColor.GOLD + "#FeelsBadMan ✞");
             Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "Zeit verschwendet: " + ChatColor.GREEN.toString() + ChatColor.BOLD +
                     TimeCalculator.format(getTime()/5, ""));
             Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "Seed: " + ChatColor.YELLOW.toString() + ChatColor.BOLD
                     + Bukkit.getWorld("world").getSeed());
+            Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "══════════════════════════════");
             timer.setRunning(false);
         }
         event.setDeathMessage(null);

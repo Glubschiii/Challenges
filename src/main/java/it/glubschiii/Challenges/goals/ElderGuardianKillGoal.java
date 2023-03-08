@@ -41,11 +41,13 @@ public class ElderGuardianKillGoal implements Listener {
     }
 
     static void challengeCompleted(Timer timer) {
+        Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "══════════════════════════════");
         Bukkit.getServer().broadcastMessage(ChatColor.GREEN + "Die Challenge wurde geschafft!");
         Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "Absolviert in folgender Zeit: " + ChatColor.GREEN.toString() + ChatColor.BOLD +
                 TimeCalculator.format(getTime() / 5, ""));
         Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "Seed: " + ChatColor.YELLOW.toString() + ChatColor.BOLD
                 + Bukkit.getWorld("world").getSeed());
+        Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "══════════════════════════════");
         timer.setRunning(false);
     }
 }

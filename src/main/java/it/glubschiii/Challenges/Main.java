@@ -1,5 +1,6 @@
 package it.glubschiii.Challenges;
 
+import it.glubschiii.Challenges.challenges.NoFallDamageChallenge;
 import it.glubschiii.Challenges.challenges.NoJumpChallenge;
 import it.glubschiii.Challenges.challenges.NoSneakChallenge;
 import it.glubschiii.Challenges.commands.*;
@@ -33,7 +34,6 @@ import static it.glubschiii.Challenges.goals.AllItemsGoal.*;
 public final class Main extends JavaPlugin {
 
     //TODO: Prefixe ändern / neues Design
-    //TODO: /reset confirm fixxen!!
     //TODO: TabCompleter für alle Commands machen
 
     public static Main instance;
@@ -86,8 +86,9 @@ public final class Main extends JavaPlugin {
         manager.registerEvents(new QuitEvent(), this);
         manager.registerEvents(new DeathEvent(), this);
         manager.registerEvents(new EntityDamageEvent(), this);
-        //manager.registerEvents(new NoJumpChallenge(), this);
-        //manager.registerEvents(new NoSneakChallenge(), this);
+        manager.registerEvents(new NoJumpChallenge(), this);
+        manager.registerEvents(new NoSneakChallenge(), this);
+        manager.registerEvents(new NoFallDamageChallenge(), this);
         manager.registerEvents(new DifficultyGamerule(), this);
         manager.registerEvents(new RegenerationGamerule(), this);
         //manager.registerEvents(new PickupItemEvent(), this);              //TODO: Wäre für ABC-Challenge damals gedacht gewesen
@@ -204,6 +205,32 @@ public final class Main extends JavaPlugin {
         if(Config.get("allitems.progress") != null) {
             Config.get("allitems.progress");
         }
+
+        if(getConfig().contains("challenges.nocraftingtable") && Config.getBoolean("challenges.nocraftingtable").booleanValue()) {
+            Config.getBoolean("challenges.nocraftingtable").booleanValue();
+        }
+        if(getConfig().contains("challenges.nofalldamage") && Config.getBoolean("challenges.nofalldamage").booleanValue()) {
+            Config.getBoolean("challenges.nofalldamage").booleanValue();
+        }
+        if(getConfig().contains("challenges.noarmor") && Config.getBoolean("challenges.noarmor").booleanValue()) {
+            Config.getBoolean("challenges.noarmor").booleanValue();
+        }
+        if(getConfig().contains("challenges.limitedhealth") && Config.getBoolean("challenges.limitedhealth").booleanValue()) {
+            Config.getBoolean("challenges.limitedhealth").booleanValue();
+        }
+        if(getConfig().contains("challenges.nojump") && Config.getBoolean("challenges.nojump").booleanValue()) {
+            Config.getBoolean("challenges.nojump").booleanValue();
+        }
+        if(getConfig().contains("challenges.nosneak") && Config.getBoolean("challenges.nosneak").booleanValue()) {
+            Config.getBoolean("challenges.nosneak").booleanValue();
+        }
+        if(getConfig().contains("challenges.wolfi") && Config.getBoolean("challenges.wolfi").booleanValue()) {
+            Config.getBoolean("challenges.wolfi").booleanValue();
+        }
+        if(getConfig().contains("challenges.dividedhearts") && Config.getBoolean("challenges.dividedhearts").booleanValue()) {
+            Config.getBoolean("challenges.dividedhearts").booleanValue();
+        }
+
     }
 
     @Override

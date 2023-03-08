@@ -1,12 +1,14 @@
 package it.glubschiii.Challenges.utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
@@ -235,6 +237,13 @@ public class ItemBuilder {
         }
         return this;
     }
+    /**
+     * Add an effect to an arrow
+     * @param type   The potion effect type
+     * @param strength   The strength of the potion effect
+     * @param duration  The duration of the potion effect
+     * @param overwrite Overwrite the current potion effect
+    */
     public ItemBuilder addArrowEffect(final PotionEffectType type, final int strength, final int duration,
                                       final boolean overwrite) {
         ItemMeta im = is.getItemMeta();
@@ -246,6 +255,25 @@ public class ItemBuilder {
         }
         return this;
     }
+
+    /**
+     * Add dye color to leather armor
+     * @param color   The dye color
+     */
+    public ItemBuilder setColor(Color color) {
+        LeatherArmorMeta meta = (LeatherArmorMeta) is.getItemMeta();
+        meta.setColor(color);
+        is.setItemMeta(meta);
+        return this;
+    }
+
+    public ItemBuilder addItemFlag(ItemFlag itemFlag) {
+        ItemMeta im = is.getItemMeta();
+        im.addItemFlags(itemFlag);
+        is.setItemMeta(im);
+        return this;
+    }
+
     /**
      * Retrieves the itemstack from the ItemBuilder.
      * @return The itemstack created/modified by the ItemBuilder instance.

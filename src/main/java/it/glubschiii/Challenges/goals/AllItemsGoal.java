@@ -1,5 +1,6 @@
 package it.glubschiii.Challenges.goals;
 
+import it.glubschiii.Challenges.Main;
 import it.glubschiii.Challenges.timer.Timer;
 import it.glubschiii.Challenges.utils.Config;
 import org.bukkit.Bukkit;
@@ -34,6 +35,7 @@ import static it.glubschiii.Challenges.utils.MainInventoryManager.*;
  */
 
 public class AllItemsGoal implements Listener, CommandExecutor {
+    Timer timer = Main.getInstance().getTimer();
     public static BossBar bossBar;
     public static Material current;
     private static List<String> materials;
@@ -71,7 +73,6 @@ public class AllItemsGoal implements Listener, CommandExecutor {
         if (materials.size() != 0) {
             current = Material.valueOf(materials.get(0));
         }
-        Bukkit.getConsoleSender().sendMessage(currentMessage(String.valueOf(current)));
         if (materials.size() != 0) {
             bossBar = Bukkit.createBossBar(ChatColor.GRAY + "Item" + ChatColor.DARK_GRAY + " » " + ChatColor.WHITE + currentMessage(String.valueOf(current)) + " #"
                     + sizeProgress + "/" + size, BarColor.WHITE, BarStyle.SOLID);       //TODO: BossBar Progress geht immer Stückweise höher machen?
@@ -112,6 +113,7 @@ public class AllItemsGoal implements Listener, CommandExecutor {
                             + ChatColor.RESET + ChatColor.GRAY + ". Du hast alle" + ChatColor.GREEN.toString() + ChatColor.BOLD
                             + " Items " + ChatColor.GRAY + "gesammelt!");
                     all.sendTitle(ChatColor.UNDERLINE + "FERTIG!", "", 10, 60, 30);
+                    ElderGuardianKillGoal.challengeCompleted(timer);
                 }
             }
             updateItems(true);
@@ -160,6 +162,7 @@ public class AllItemsGoal implements Listener, CommandExecutor {
                                                 all.sendMessage(ChatColor.GRAY + "Item geskippt. Du hast alle" + ChatColor.GREEN.toString() + ChatColor.BOLD
                                                         + " Items " + ChatColor.GRAY + "gesammelt!");
                                                 all.sendTitle(ChatColor.UNDERLINE + "FERTIG!", "", 10, 60, 30);
+                                                ElderGuardianKillGoal.challengeCompleted(timer);
                                             }
                                         }
                                         try {

@@ -1,8 +1,12 @@
 package it.glubschiii.Challenges.challenges;
 
 import com.google.common.collect.Sets;
+import it.glubschiii.Challenges.Main;
+import it.glubschiii.Challenges.timer.Timer;
+import it.glubschiii.Challenges.utils.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,27 +34,33 @@ public class NoJumpChallenge implements Listener {
 
     @EventHandler
     public void onJump(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        // TODO: Wenn man angegriffen wird, stirbt man mit dem Jump grund
-        if (player.getVelocity().getY() > 0) {
-            double jumpVelocity = (double) 0.42F;
-            if (player.hasPotionEffect(PotionEffectType.JUMP)) {
-                jumpVelocity += (double) ((float) (player.getPotionEffect(PotionEffectType.JUMP).getAmplifier() + 1) * 0.1F);
-            }
-            if(!excludedMaterials.contains(event.getPlayer().getLocation().getBlock().getType()) && prevPlayersOnGround.contains(player.getUniqueId())) {
-                if (!player.isOnGround() && Double.compare(player.getVelocity().getY(), jumpVelocity) == 0) {
-                    for (Player all : Bukkit.getOnlinePlayers()) {
-                        all.sendMessage(ChatColor.DARK_GRAY + "» " + ChatColor.GOLD.toString() + ChatColor.BOLD + player.getDisplayName() + " " +
-                                ChatColor.RESET + "" + ChatColor.GRAY + "ist gesprungen.");
+        if (Config.contains("challenges.nojump") && Config.getBoolean("challenges.nojump").booleanValue()) {
+            if (Timer.isRunning()) {
+                Player player = event.getPlayer();
+                // TODO: Wenn man angegriffen wird, stirbt man mit dem Jump grund
+                if (player.getGameMode() != GameMode.CREATIVE || player.getGameMode() != GameMode.SPECTATOR) {
+                    if (player.getVelocity().getY() > 0) {
+                        double jumpVelocity = (double) 0.42F;
+                        if (player.hasPotionEffect(PotionEffectType.JUMP)) {
+                            jumpVelocity += (double) ((float) (player.getPotionEffect(PotionEffectType.JUMP).getAmplifier() + 1) * 0.1F);
+                        }
+                        if (!excludedMaterials.contains(event.getPlayer().getLocation().getBlock().getType()) && prevPlayersOnGround.contains(player.getUniqueId())) {
+                            if (!player.isOnGround() && Double.compare(player.getVelocity().getY(), jumpVelocity) == 0) {
+                                for (Player all : Bukkit.getOnlinePlayers()) {
+                                    all.sendMessage(ChatColor.DARK_GRAY + "» " + ChatColor.GOLD.toString() + ChatColor.BOLD + player.getDisplayName() + " " +
+                                            ChatColor.RESET + "" + ChatColor.GRAY + "ist gesprungen.");
+                                }
+                                player.setHealth(0);
+                            }
+                        }
                     }
-                    player.setHealth(0);
+                    if (player.isOnGround()) {
+                        prevPlayersOnGround.add(player.getUniqueId());
+                    } else {
+                        prevPlayersOnGround.remove(player.getUniqueId());
+                    }
                 }
             }
-        }
-        if (player.isOnGround()) {
-            prevPlayersOnGround.add(player.getUniqueId());
-        } else {
-            prevPlayersOnGround.remove(player.getUniqueId());
         }
     }
 }
