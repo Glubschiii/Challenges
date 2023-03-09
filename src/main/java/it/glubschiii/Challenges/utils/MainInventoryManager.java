@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import static it.glubschiii.Challenges.challenges.WolfiChallenge.removeWolfi;
+import static it.glubschiii.Challenges.challenges.WolfiChallenge.spawnWolfi;
 import static it.glubschiii.Challenges.gamerules.DifficultyGamerule.prefix;
 import static it.glubschiii.Challenges.gamerules.RegenerationGamerule.getStatus;
 import static it.glubschiii.Challenges.goals.AllItemsGoal.*;
@@ -742,10 +744,12 @@ public class MainInventoryManager implements Listener {
                 if (event.isLeftClick()) {
                     if (!Config.getBoolean("challenges.wolfi").booleanValue()) {
                         challengeChange("Wolfi", Material.GREEN_DYE, ChatColor.GREEN + "Aktiviert", (short) 31, "wolfi", true);
+                        spawnWolfi();
                     }
                 } else if(event.isRightClick()) {
                     if (Config.getBoolean("challenges.wolfi").booleanValue()) {
                         challengeChange("Wolfi", Material.RED_DYE, ChatColor.RED + "Deaktiviert", (short) 31, "wolfi", false);
+                        removeWolfi();
                     }
                 }
             } else if(event.getCurrentItem().getType().equals(Material.HEART_OF_THE_SEA) || event.getSlot() == 32) {

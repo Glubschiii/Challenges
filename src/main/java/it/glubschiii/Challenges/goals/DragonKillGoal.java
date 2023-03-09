@@ -28,6 +28,8 @@ import static it.glubschiii.Challenges.timer.Timer.getTime;
  */
 public class DragonKillGoal implements Listener {
 
+    //TODO: Bei diesem Goal, aber auch beim ElderGuardianKillGoal, WardenKillGoal und WitherKillGoal message einbauen, dass dieser besiegt wurde
+
     @EventHandler
     public void onDragonKill(EntityDeathEvent event) {
         @NotNull EntityType entity = event.getEntityType();

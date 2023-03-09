@@ -1,8 +1,6 @@
 package it.glubschiii.Challenges;
 
-import it.glubschiii.Challenges.challenges.NoFallDamageChallenge;
-import it.glubschiii.Challenges.challenges.NoJumpChallenge;
-import it.glubschiii.Challenges.challenges.NoSneakChallenge;
+import it.glubschiii.Challenges.challenges.*;
 import it.glubschiii.Challenges.commands.*;
 import it.glubschiii.Challenges.gamerules.DifficultyGamerule;
 import it.glubschiii.Challenges.gamerules.RegenerationGamerule;
@@ -89,6 +87,9 @@ public final class Main extends JavaPlugin {
         manager.registerEvents(new NoJumpChallenge(), this);
         manager.registerEvents(new NoSneakChallenge(), this);
         manager.registerEvents(new NoFallDamageChallenge(), this);
+        manager.registerEvents(new NoArmorChallenge(), this);
+        manager.registerEvents(new WolfiChallenge(), this);
+        manager.registerEvents(new NoCraftingTableChallenge(), this);
         manager.registerEvents(new DifficultyGamerule(), this);
         manager.registerEvents(new RegenerationGamerule(), this);
         //manager.registerEvents(new PickupItemEvent(), this);              //TODO: Wäre für ABC-Challenge damals gedacht gewesen
