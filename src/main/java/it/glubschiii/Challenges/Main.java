@@ -11,8 +11,10 @@ import it.glubschiii.Challenges.timer.TimerCommand;
 import it.glubschiii.Challenges.utils.Config;
 import it.glubschiii.Challenges.utils.MainInventoryManager;
 import it.glubschiii.Challenges.timer.PreTimer;
+import it.glubschiii.Challenges.utils.TabCompleteManager;
 import it.glubschiii.Challenges.utils.TablistManager;
 import org.bukkit.*;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
 import org.bukkit.plugin.PluginManager;
@@ -38,6 +40,7 @@ public final class Main extends JavaPlugin {
 
     private Timer timer;
     private TablistManager tablistManager;
+    private TabCompleteManager tabComplete;
 
     private HashMap<Player, ChatColor> color = new HashMap<>();
     private HashMap<Player, Integer> stage = new HashMap<Player, Integer>();
@@ -110,6 +113,21 @@ public final class Main extends JavaPlugin {
         getCommand("allitems").setExecutor(new AllItemsGoal());
 
         tablistManager = new TablistManager();
+        tabComplete = new TabCompleteManager();
+        PluginCommand timerCommand = getCommand("timer");
+        PluginCommand allItemsCommand = getCommand("allitems");
+        PluginCommand gmCommand = getCommand("gm");
+        PluginCommand healCommand = getCommand("heal");
+        PluginCommand settingsCommand = getCommand("settings");
+        PluginCommand backpackCommand = getCommand("backpack");
+        PluginCommand resetCommand = getCommand("reset");
+        timerCommand.setTabCompleter(tabComplete);
+        allItemsCommand.setTabCompleter(tabComplete);
+        gmCommand.setTabCompleter(tabComplete);
+        healCommand.setTabCompleter(tabComplete);
+        settingsCommand.setTabCompleter(tabComplete);
+        backpackCommand.setTabCompleter(tabComplete);
+        resetCommand.setTabCompleter(tabComplete);
 
         try {
             MainInventoryManager.puttingItems();

@@ -9,19 +9,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import static it.glubschiii.Challenges.challenges.WolfiChallenge.removeWolfi;
-import static it.glubschiii.Challenges.challenges.WolfiChallenge.spawnWolfi;
+import static it.glubschiii.Challenges.challenges.WolfiChallenge.*;
 import static it.glubschiii.Challenges.gamerules.DifficultyGamerule.prefix;
 import static it.glubschiii.Challenges.gamerules.RegenerationGamerule.getStatus;
 import static it.glubschiii.Challenges.goals.AllItemsGoal.*;
@@ -36,7 +38,6 @@ public class MainInventoryManager implements Listener {
     /*
      * Creating custom /settings inventories
      */
-    //TODO: Namen und Farben ändern..
     public static Inventory settingsInv = Bukkit.createInventory(null, 45, ChatColor.GOLD + "Settings" + ChatColor.DARK_GRAY + " • " +
             ChatColor.BLUE + "Übersicht");
     public static Inventory gamerulesInv = Bukkit.createInventory(null, 54, ChatColor.GREEN + "Spielregeln" + ChatColor.DARK_GRAY + " • " +
@@ -59,7 +60,15 @@ public class MainInventoryManager implements Listener {
     public static Inventory allItemsOverviewInv = Bukkit.createInventory(null, 54, ChatColor.DARK_GRAY + "Alle Items Overview");
 
     /*
-     * Putting items inside the custom /settings inventories, /allitems overview inventories and it's repositories
+     * Creating custom "Wolfi Challenge" inventories
+     */
+    public static Inventory wolfiChallengeInv = Bukkit.createInventory(null, 9, ChatColor.GREEN + "Wolfi"
+            + ChatColor.DARK_GRAY + " • " + ChatColor.BLUE + "Anpassungsmenü");
+    public static Inventory wolfiNameChangeInv = Bukkit.createInventory(null, InventoryType.ANVIL, ChatColor.DARK_GRAY + "Namen ändern");
+    public static Inventory wolfiCollarColorChangeInv = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "Halsbandfarbe ändern");
+
+    /*
+     * Putting items inside the custom /settings inventories, /allitems overview, wolfi inventories and it's repositories
      */
     static ItemStack background = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName(" ").toItemStack();
     static ItemStack background2 = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").toItemStack();
@@ -164,7 +173,6 @@ public class MainInventoryManager implements Listener {
         } else {
             timeMinutes((short) 1);
         }
-        //TODO: Minuten werden nicht als Itemmenge angezeigt
         /*
          * Calculating all the remaining seconds in the timer
          */
@@ -212,6 +220,8 @@ public class MainInventoryManager implements Listener {
         int[] backgroundSlotsChallengesInv = {9, 10, 12, 13, 14, 16, 17, 27, 28, 29, 30, 31, 32, 33, 34, 35};
         int[] background2SlotsMinecraftChallengesInv = {0, 1, 7, 8, 18, 19, 20, 24, 25, 26, 36, 37, 38, 39, 40, 41, 42, 43, 44};
         int[] backgroundSlotsMinecraftChallengesInv = {9, 10, 16, 17, 27, 28, 29, 33, 34, 35, 46, 47, 48, 50, 51, 52, 53};
+        int[] backgroundSlotsWolfiChallengeInv = {1, 7};
+        int[] background2SlotsWolfiChallengeInv = {2, 4, 6};
 
         puttingItemsHelper(background2SlotsMainInv, settingsInv, background2);
         puttingItemsHelper(backgroundSlotsgamerulesInv, gamerulesInv, background);
@@ -232,6 +242,9 @@ public class MainInventoryManager implements Listener {
         puttingItemsHelper(backgroundSlotsChallengesInv, challengesInv, background);
         puttingItemsHelper(background2SlotsMinecraftChallengesInv, minecraftChallengesInv, background2);
         puttingItemsHelper(backgroundSlotsMinecraftChallengesInv, minecraftChallengesInv, background);
+        puttingItemsHelper(backgroundSlotsWolfiChallengeInv, wolfiChallengeInv, background);
+        puttingItemsHelper(background2SlotsWolfiChallengeInv, wolfiChallengeInv, background2);
+
         for (int i = 2; i <= 44; i++) {
             if (i <= 3 || i == 5 || i == 6 || (i >= 10 && i <= 16) || i == 19 || i == 21 || i == 23 || i == 25 || (i >= 28 && i <= 34) || (i >= 38 && i <= 39) || i == 41 || i == 42) {
                 settingsInv.setItem(i, background);
@@ -283,6 +296,29 @@ public class MainInventoryManager implements Listener {
         minecraftChallengesInv.setItem(23, dividedHearts);
         minecraftChallengesInv.setItem(45, back);
         minecraftChallengesInv.setItem(49, mainMenu);
+        wolfiChallengeInv.setItem(0, back);
+        wolfiChallengeInv.setItem(3, nameChange);
+        wolfiChallengeInv.setItem(5, collarColor);
+        wolfiChallengeInv.setItem(8, back);
+        wolfiNameChangeInv.setItem(0, nameChangeInput);
+        wolfiCollarColorChangeInv.setItem(0, whiteCollarColor);
+        wolfiCollarColorChangeInv.setItem(1, lightGrayCollarColor);
+        wolfiCollarColorChangeInv.setItem(2, grayCollarColor);
+        wolfiCollarColorChangeInv.setItem(3, blackCollarColor);
+        wolfiCollarColorChangeInv.setItem(4, brownCollarColor);
+        wolfiCollarColorChangeInv.setItem(5, redCollarColor);
+        wolfiCollarColorChangeInv.setItem(6, orangeCollarColor);
+        wolfiCollarColorChangeInv.setItem(7, yellowCollarColor);
+        wolfiCollarColorChangeInv.setItem(8, limeCollarColor);
+        wolfiCollarColorChangeInv.setItem(9, greenCollarColor);
+        wolfiCollarColorChangeInv.setItem(10, cyanCollarColor);
+        wolfiCollarColorChangeInv.setItem(11, lightBlueCollarColor);
+        wolfiCollarColorChangeInv.setItem(12, blueCollarColor);
+        wolfiCollarColorChangeInv.setItem(13, purpleCollarColor);
+        wolfiCollarColorChangeInv.setItem(14, magentaCollarColor);
+        wolfiCollarColorChangeInv.setItem(15, pinkCollarColor);
+        wolfiCollarColorChangeInv.setItem(16, background2);
+        wolfiCollarColorChangeInv.setItem(17, back);
     }
 
     /*
@@ -406,6 +442,29 @@ public class MainInventoryManager implements Listener {
             .addLoreLine(ChatColor.GRAY + " Die " + ChatColor.AQUA + "Einschränkung" + ChatColor.GRAY + " dieser Challenge besteht darin,")
             .addLoreLine(ChatColor.GRAY + " das Spielgeschehen " + ChatColor.AQUA + "mit geteilten Herzen" + ChatColor.GRAY + " zu bewältigen.").toItemStack();
 
+    /*
+     * Creating items for the Wolfi Challenge inventory
+     */
+    static ItemStack nameChange = new ItemBuilder(Material.NAME_TAG).setName(ChatColor.BLUE + "Namen ändern").toItemStack();
+    static ItemStack collarColor = new ItemBuilder(Material.ARMOR_STAND).setName(ChatColor.DARK_GREEN + "Halsbandfarbe ändern").toItemStack();
+    static ItemStack nameChangeInput = new ItemBuilder(Material.NAME_TAG).toItemStack();
+    static ItemStack whiteCollarColor = new ItemBuilder(Material.WHITE_DYE).setName(ChatColor.WHITE + "Weiß").toItemStack();
+    static ItemStack lightGrayCollarColor = new ItemBuilder(Material.LIGHT_GRAY_DYE).setName(ChatColor.GRAY + "Hellgrau").toItemStack();
+    static ItemStack grayCollarColor = new ItemBuilder(Material.GRAY_DYE).setName(ChatColor.DARK_GRAY + "Grau").toItemStack();
+    static ItemStack blackCollarColor = new ItemBuilder(Material.BLACK_DYE).setName(ChatColor.BLACK + "Schwarz").toItemStack();
+    static ItemStack brownCollarColor = new ItemBuilder(Material.BROWN_DYE).setName(ChatColor.GOLD + "Braun").toItemStack();            //TODO: Hex Color code benutzen
+    static ItemStack redCollarColor = new ItemBuilder(Material.RED_DYE).setName(ChatColor.RED + "Rot").toItemStack();
+    static ItemStack orangeCollarColor = new ItemBuilder(Material.ORANGE_DYE).setName(ChatColor.GOLD + "Orange").toItemStack();
+    static ItemStack yellowCollarColor = new ItemBuilder(Material.YELLOW_DYE).setName(ChatColor.YELLOW + "Gelb").toItemStack();
+    static ItemStack limeCollarColor = new ItemBuilder(Material.LIME_DYE).setName(ChatColor.GREEN + "Hellgrün").toItemStack();
+    static ItemStack greenCollarColor = new ItemBuilder(Material.GREEN_DYE).setName(ChatColor.DARK_GREEN + "Grün").toItemStack();
+    static ItemStack cyanCollarColor = new ItemBuilder(Material.CYAN_DYE).setName(ChatColor.AQUA + "Türkis").toItemStack();
+    static ItemStack lightBlueCollarColor = new ItemBuilder(Material.LIGHT_BLUE_DYE).setName(ChatColor.BLUE + "Hellblau").toItemStack();
+    static ItemStack blueCollarColor = new ItemBuilder(Material.BLUE_DYE).setName(ChatColor.DARK_BLUE + "Blau").toItemStack();
+    static ItemStack purpleCollarColor = new ItemBuilder(Material.PURPLE_DYE).setName(ChatColor.DARK_PURPLE + "Violett").toItemStack();
+    static ItemStack magentaCollarColor = new ItemBuilder(Material.MAGENTA_DYE).setName(ChatColor.DARK_PURPLE + "Magenta").toItemStack();       //TODO: Hex Color code benutzen
+    static ItemStack pinkCollarColor = new ItemBuilder(Material.PINK_DYE).setName(ChatColor.LIGHT_PURPLE + "Rosa").toItemStack();
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) throws IOException {
         Player player = (Player) event.getWhoClicked();
@@ -422,7 +481,9 @@ public class MainInventoryManager implements Listener {
                 ChatColor.BLUE + "Seite 1") || event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Alle Items Overview") ||
                 event.getView().getTitle().equalsIgnoreCase(ChatColor.AQUA + "Challenges") ||
                 event.getView().getTitle().equalsIgnoreCase(ChatColor.GREEN + "Minecraft-Challenges" + ChatColor.DARK_GRAY + " • " +
-                        ChatColor.BLUE + "Seite 1")) {
+                        ChatColor.BLUE + "Seite 1") || event.getView().getTitle().equalsIgnoreCase(ChatColor.GREEN + "Wolfi"
+                + ChatColor.DARK_GRAY + " • " + ChatColor.BLUE + "Anpassungsmenü") || event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Namen ändern")
+                || event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Halsbandfarbe ändern")) {
             if (event.getCurrentItem() == null) {
                 return;
             }
@@ -685,7 +746,7 @@ public class MainInventoryManager implements Listener {
                     if (!Config.getBoolean("challenges.nocraftingtable").booleanValue()) {
                         challengeChange("Ohne Werkbank", Material.GREEN_DYE, ChatColor.GREEN + "Aktiviert", (short) 11, "nocraftingtable", true);
                     }
-                } else if(event.isRightClick()) {
+                } else if (event.isRightClick()) {
                     if (Config.getBoolean("challenges.nocraftingtable").booleanValue()) {
                         challengeChange("Ohne Werkbank", Material.RED_DYE, ChatColor.RED + "Deaktiviert", (short) 11, "nocraftingtable", false);
                     }
@@ -695,7 +756,7 @@ public class MainInventoryManager implements Listener {
                     if (!Config.getBoolean("challenges.nofalldamage").booleanValue()) {
                         challengeChange("Ohne Fallschaden", Material.GREEN_DYE, ChatColor.GREEN + "Aktiviert", (short) 12, "nofalldamage", true);
                     }
-                } else if(event.isRightClick()) {
+                } else if (event.isRightClick()) {
                     if (Config.getBoolean("challenges.nofalldamage").booleanValue()) {
                         challengeChange("Ohne Fallschaden", Material.RED_DYE, ChatColor.RED + "Deaktiviert", (short) 12, "nofalldamage", false);
                     }
@@ -705,7 +766,7 @@ public class MainInventoryManager implements Listener {
                     if (!Config.getBoolean("challenges.noarmor").booleanValue()) {
                         challengeChange("Ohne Rüstung", Material.GREEN_DYE, ChatColor.GREEN + "Aktiviert", (short) 13, "noarmor", true);
                     }
-                } else if(event.isRightClick()) {
+                } else if (event.isRightClick()) {
                     if (Config.getBoolean("challenges.noarmor").booleanValue()) {
                         challengeChange("Ohne Rüstung", Material.RED_DYE, ChatColor.RED + "Deaktiviert", (short) 13, "noarmor", false);
                     }
@@ -715,7 +776,7 @@ public class MainInventoryManager implements Listener {
                     if (!Config.getBoolean("challenges.limitedhealth").booleanValue()) {
                         challengeChange("Limitierte Herzen", Material.GREEN_DYE, ChatColor.GREEN + "Aktiviert", (short) 14, "limitedhealth", true);
                     }
-                } else if(event.isRightClick()) {
+                } else if (event.isRightClick()) {
                     if (Config.getBoolean("challenges.limitedhealth").booleanValue()) {
                         challengeChange("Limitierte Herzen", Material.RED_DYE, ChatColor.RED + "Deaktiviert", (short) 14, "limitedhealth", false);
                     }
@@ -725,43 +786,129 @@ public class MainInventoryManager implements Listener {
                     if (!Config.getBoolean("challenges.nojump").booleanValue()) {
                         challengeChange("Ohne Springen", Material.GREEN_DYE, ChatColor.GREEN + "Aktiviert", (short) 15, "nojump", true);
                     }
-                } else if(event.isRightClick()) {
+                } else if (event.isRightClick()) {
                     if (Config.getBoolean("challenges.nojump").booleanValue()) {
                         challengeChange("Ohne Springen", Material.RED_DYE, ChatColor.RED + "Deaktiviert", (short) 15, "nojump", false);
                     }
                 }
-            } else if(event.getCurrentItem().getType().equals(Material.DIAMOND_BOOTS) || event.getSlot() == 30) {
+            } else if (event.getCurrentItem().getType().equals(Material.DIAMOND_BOOTS) || event.getSlot() == 30) {
                 if (event.isLeftClick()) {
                     if (!Config.getBoolean("challenges.nosneak").booleanValue()) {
                         challengeChange("Ohne Sneaken", Material.GREEN_DYE, ChatColor.GREEN + "Aktiviert", (short) 30, "nosneak", true);
                     }
-                } else if(event.isRightClick()) {
+                } else if (event.isRightClick()) {
                     if (Config.getBoolean("challenges.nosneak").booleanValue()) {
                         challengeChange("Ohne Sneaken", Material.RED_DYE, ChatColor.RED + "Deaktiviert", (short) 30, "nosneak", false);
                     }
                 }
-            } else if(event.getCurrentItem().getType().equals(Material.BONE) || event.getSlot() == 31) {
+            } else if (event.getCurrentItem().getType().equals(Material.BONE) || event.getSlot() == 31) {
                 if (event.isLeftClick()) {
                     if (!Config.getBoolean("challenges.wolfi").booleanValue()) {
                         challengeChange("Wolfi", Material.GREEN_DYE, ChatColor.GREEN + "Aktiviert", (short) 31, "wolfi", true);
                         spawnWolfi();
                     }
-                } else if(event.isRightClick()) {
+                } else if (event.isRightClick()) {
                     if (Config.getBoolean("challenges.wolfi").booleanValue()) {
                         challengeChange("Wolfi", Material.RED_DYE, ChatColor.RED + "Deaktiviert", (short) 31, "wolfi", false);
                         removeWolfi();
                     }
                 }
-            } else if(event.getCurrentItem().getType().equals(Material.HEART_OF_THE_SEA) || event.getSlot() == 32) {
+            } else if (event.getCurrentItem().getType().equals(Material.HEART_OF_THE_SEA) || event.getSlot() == 32) {
                 if (event.isLeftClick()) {
                     if (!Config.getBoolean("challenges.dividedhearts").booleanValue()) {
                         challengeChange("Geteilte Herzen", Material.GREEN_DYE, ChatColor.GREEN + "Aktiviert", (short) 32, "dividedhearts", true);
                     }
-                } else if(event.isRightClick()) {
+                } else if (event.isRightClick()) {
                     if (Config.getBoolean("challenges.dividedhearts").booleanValue()) {
                         challengeChange("Geteilte Herzen", Material.RED_DYE, ChatColor.RED + "Deaktiviert", (short) 32, "dividedhearts", false);
                     }
                 }
+            }
+        } else if (event.getView().getTitle().equalsIgnoreCase(ChatColor.GREEN + "Wolfi"
+                + ChatColor.DARK_GRAY + " • " + ChatColor.BLUE + "Anpassungsmenü")) {
+            if (event.getCurrentItem().getType().equals(Material.DARK_OAK_DOOR)) {
+                if (event.isLeftClick()) {
+                    player.closeInventory();
+                }
+            } else if (event.getCurrentItem().getType().equals(Material.NAME_TAG)) {
+                if (event.isLeftClick()) {
+                    player.openInventory(wolfiNameChangeInv);
+                }
+            } else if (event.getCurrentItem().getType().equals(Material.ARMOR_STAND)) {
+                if (event.isLeftClick()) {
+                    player.openInventory(wolfiCollarColorChangeInv);
+                }
+            }
+        } else if (event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Namen ändern")) { //TODO: geht alles nach nem reload nicht mehr
+            Inventory inventory = event.getInventory();
+            if(event.getSlot() == 0) {
+                player.sendMessage("test1");
+            }
+            if(event.getSlot() == 2) {
+                player.sendMessage("test2");
+            }
+            if(event.getRawSlot() == 2) {
+                player.sendMessage("test3");
+            }
+            if(inventory instanceof AnvilInventory) {
+                player.sendMessage("1");
+                InventoryView view = event.getView();
+                int rawSlot = event.getRawSlot();
+                if(rawSlot == view.convertSlot(rawSlot)) {
+                    player.sendMessage("2");
+                    if(rawSlot == 2) {
+                        player.sendMessage("3");
+                        ItemStack item = event.getCurrentItem();
+                        if(item != null) {
+                            player.sendMessage("4");
+                            ItemMeta meta = item.getItemMeta();
+                            if(meta != null) {
+                                player.sendMessage("5");            //TODO: Funktioniert alles nicht
+                                if(meta.hasDisplayName()) {
+                                    player.sendMessage("6");
+                                    String displayName = meta.getDisplayName();
+                                    player.sendMessage(displayName);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else if(event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Halsbandfarbe ändern")) {
+            if(event.getSlot() == 17) {         //TODO: geht alles nach nem reload nicht mehr
+                player.openInventory(wolfiChallengeInv);
+            } else if(event.getSlot() == 0) {
+                wolf.setCollarColor(DyeColor.WHITE);
+            } else if(event.getSlot() == 1) {
+                wolf.setCollarColor(DyeColor.LIGHT_GRAY);
+            } else if(event.getSlot() == 2) {
+                wolf.setCollarColor(DyeColor.GRAY);
+            } else if(event.getSlot() == 3) {
+                wolf.setCollarColor(DyeColor.BLACK);
+            } else if(event.getSlot() == 4) {
+                wolf.setCollarColor(DyeColor.BROWN);
+            } else if(event.getSlot() == 5) {
+                wolf.setCollarColor(DyeColor.RED);
+            } else if(event.getSlot() == 6) {
+                wolf.setCollarColor(DyeColor.ORANGE);
+            } else if(event.getSlot() == 7) {
+                wolf.setCollarColor(DyeColor.YELLOW);
+            } else if(event.getSlot() == 8) {
+                wolf.setCollarColor(DyeColor.LIME);
+            } else if(event.getSlot() == 9) {
+                wolf.setCollarColor(DyeColor.GREEN);
+            } else if(event.getSlot() == 10) {
+                wolf.setCollarColor(DyeColor.CYAN);
+            } else if(event.getSlot() == 11) {
+                wolf.setCollarColor(DyeColor.LIGHT_BLUE);
+            } else if(event.getSlot() == 12) {
+                wolf.setCollarColor(DyeColor.BLUE);
+            } else if(event.getSlot() == 13) {
+                wolf.setCollarColor(DyeColor.PURPLE);
+            } else if(event.getSlot() == 14) {
+                wolf.setCollarColor(DyeColor.MAGENTA);
+            } else if(event.getSlot() == 15) {
+                wolf.setCollarColor(DyeColor.PINK);
             }
         }
     }
