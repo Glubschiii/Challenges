@@ -20,7 +20,8 @@ public class ResetCommand implements CommandExecutor {
             switch (args[0].toLowerCase()) {
                 case "confirm":
                     for (Player player : Bukkit.getOnlinePlayers()) {
-                        player.kickPlayer("Server restart");        //TODO: Nachricht hinzufügen
+                        player.kickPlayer(ChatColor.RED + "Die Welt wird nun zurückgesetzt.\n\n" + ChatColor.GREEN + "Der Server startet neu.\n\n"
+                        + ChatColor.GOLD + "Die Welt wird nicht archiviert.");
                     }
                     try {
                         Config.set("reset.confirm", Boolean.valueOf(true));

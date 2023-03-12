@@ -18,6 +18,7 @@ commands:
     aliases: feed
     permission: challenges.heal
   reset:
+    aliases: resetandrestart
     permission: challenges.reset
   gm:
     aliases: gamemode

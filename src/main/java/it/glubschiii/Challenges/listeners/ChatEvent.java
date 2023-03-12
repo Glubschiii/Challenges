@@ -18,7 +18,11 @@ public class ChatEvent implements Listener {
         String message = event.getMessage();
         event.setCancelled(true);
         for(Player all : Bukkit.getOnlinePlayers()) {
-            all.sendMessage(ChatColor.GRAY + player.getDisplayName() + ChatColor.DARK_GRAY + " » " + ChatColor.RESET + message);
+            if (player.hasPermission("challenges.*")) {
+                all.sendMessage(ChatColor.DARK_RED + player.getDisplayName() + ChatColor.DARK_GRAY + " » " + ChatColor.RESET + message);
+            } else {
+                all.sendMessage(ChatColor.GRAY + player.getDisplayName() + ChatColor.DARK_GRAY + " » " + ChatColor.RESET + message);
+            }
         }
     }
 }

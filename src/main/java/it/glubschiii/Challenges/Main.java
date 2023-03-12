@@ -176,6 +176,10 @@ public final class Main extends JavaPlugin {
             }
         }
 
+        if(Config.get("wolfi") != null) {
+            Config.get("wolfi");
+        }
+
 
 
         if(getConfig().getInt("regeneration-status") == 0) {

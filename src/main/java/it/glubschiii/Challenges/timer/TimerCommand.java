@@ -29,21 +29,9 @@ public class TimerCommand implements CommandExecutor {
                 switch (args[0].toLowerCase()) {
                     case "toggle": {
                         if (Timer.isRunning()) {
-                            timer.setRunning(false);
-                            for (Player all : Bukkit.getOnlinePlayers()) {
-                                all.sendMessage(prefix + ChatColor.YELLOW + "Der Timer wurde von " + ChatColor.WHITE + ChatColor.BOLD +
-                                        ((Player) sender).getDisplayName() + "" + ChatColor.RESET + "" + ChatColor.YELLOW + " pausiert!");
-                                //TODO: Sound ändern
-                                all.playSound(all.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_DEATH, 3.0F, 0.5F);
-                            }
+                            runningFalse((Player) sender, timer);
                         } else {
-                            timer.setRunning(true);
-                            for (Player all : Bukkit.getOnlinePlayers()) {
-                                all.sendMessage(prefix + ChatColor.GREEN + "Der Timer wurde von " + ChatColor.WHITE + ChatColor.BOLD +
-                                        ((Player) sender).getDisplayName() + "" + ChatColor.RESET + "" + ChatColor.GREEN + " fortgesetzt!");
-                                //TODO: Sound ändern
-                                all.playSound(all.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_YES, 3.0F, 0.5F);
-                            }
+                            checkStart((Player) sender, timer);
                         }
                         break;
                     }
@@ -89,13 +77,7 @@ public class TimerCommand implements CommandExecutor {
 
                     case "pause": {
                         if (Timer.isRunning()) {
-                            timer.setRunning(false);
-                            for (Player all : Bukkit.getOnlinePlayers()) {
-                                all.sendMessage(prefix + ChatColor.YELLOW + "Der Timer wurde von " + ChatColor.WHITE + ChatColor.BOLD +
-                                        ((Player) sender).getDisplayName() + "" + ChatColor.RESET + "" + ChatColor.YELLOW + " pausiert!");
-                                //TODO: Sound ändern
-                                all.playSound(all.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_DEATH, 3.0F, 0.5F);
-                            }
+                            runningFalse((Player) sender, timer);
                         } else {
                             sender.sendMessage(prefix + ChatColor.GREEN + "Der Timer ist bereits pausiert!");
                         }
@@ -104,13 +86,7 @@ public class TimerCommand implements CommandExecutor {
 
                     case "resume": {
                         if (!Timer.isRunning()) {
-                            timer.setRunning(true);
-                            for (Player all : Bukkit.getOnlinePlayers()) {
-                                all.sendMessage(prefix + ChatColor.GREEN + "Der Timer wurde von " + ChatColor.WHITE + ChatColor.BOLD +
-                                        ((Player) sender).getDisplayName() + "" + ChatColor.RESET + "" + ChatColor.GREEN + " fortgesetzt!");
-                                //TODO: Sound ändern
-                                all.playSound(all.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_YES, 3.0F, 0.5F);
-                            }
+                            checkStart((Player) sender, timer);
                         } else {
                             sender.sendMessage(prefix + ChatColor.GREEN + "Der Timer wurde bereits fortgesetzt!");
                         }
@@ -181,6 +157,36 @@ public class TimerCommand implements CommandExecutor {
             }
         }
         return false;
+    }
+
+    private void runningFalse(Player sender, Timer timer) {
+        timer.setRunning(false);
+        for (Player all : Bukkit.getOnlinePlayers()) {
+            all.sendMessage(prefix + ChatColor.YELLOW + "Der Timer wurde von " + ChatColor.WHITE + ChatColor.BOLD +
+                    sender.getDisplayName() + "" + ChatColor.RESET + "" + ChatColor.YELLOW + " pausiert!");
+            //TODO: Sound ändern
+            all.playSound(all.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_DEATH, 3.0F, 0.5F);
+        }
+    }
+
+    private void checkStart(Player sender, Timer timer) {
+        if(!Config.getBoolean("challenge.started").booleanValue()) {
+            try {
+                Config.set("challenge.started", Boolean.valueOf(true));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            for(Player all : Bukkit.getOnlinePlayers()) {
+                all.getInventory().clear();
+            }
+        }
+        timer.setRunning(true);
+        for (Player all : Bukkit.getOnlinePlayers()) {
+            all.sendMessage(prefix + ChatColor.GREEN + "Der Timer wurde von " + ChatColor.WHITE + ChatColor.BOLD +
+                    sender.getDisplayName() + "" + ChatColor.RESET + "" + ChatColor.GREEN + " fortgesetzt!");
+            //TODO: Sound ändern
+            all.playSound(all.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_YES, 3.0F, 0.5F);
+        }
     }
 
     // TODO: /timer show und /timer hide (Timer in der Actionbar wird eingeblendet - Standardmäßig!)

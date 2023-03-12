@@ -23,7 +23,11 @@ public class QuitEvent implements Listener {
     public void onQuit(PlayerQuitEvent event) throws IOException {
         Player player = event.getPlayer();
 
-        event.setQuitMessage(ChatColor.RED + "« " + ChatColor.GRAY + "" + player.getDisplayName());
+        if(player.hasPermission("challenges.*")) {
+            event.setQuitMessage(ChatColor.RED + "« " + ChatColor.DARK_RED + "" + player.getDisplayName());
+        } else {
+            event.setQuitMessage(ChatColor.RED + "« " + ChatColor.GRAY + "" + player.getDisplayName());
+        }
 
         Timer timer = Main.getInstance().getTimer();
         Config.set("timer", Timer.getTime()/5);

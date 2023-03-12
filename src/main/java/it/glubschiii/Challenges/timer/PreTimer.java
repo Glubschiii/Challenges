@@ -2,12 +2,14 @@ package it.glubschiii.Challenges.timer;
 
 import com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent;
 import io.papermc.paper.event.entity.EntityMoveEvent;
+import it.glubschiii.Challenges.utils.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
@@ -20,6 +22,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+
+import static it.glubschiii.Challenges.utils.MainInventoryManager.*;
 
 /**
  * @author Glubschiii | https://github.com/glubschiii
@@ -33,6 +39,18 @@ public class PreTimer implements Listener {
     private void onPlayerInteract(PlayerInteractEvent event) {
         if (!Timer.isRunning()) {
             event.setCancelled(true);
+        }
+        Player player = event.getPlayer();
+        if(!Config.getBoolean("challenges.started").booleanValue()) {
+            if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if(player.getItemInHand().getType().equals(Material.ENDER_CHEST)) {
+                    player.openInventory(playerSettingsInv);        //TODO: Animation hinzufügen, zumindest erstmal bei dem Inv (maybe)
+                } else if(player.getItemInHand().getType().equals(Material.BOOK) && player.hasPermission("challenges.*")) {
+                    player.openInventory(settingsInv);
+                } else if(player.getItemInHand().getType().equals(Material.CLOCK) && player.hasPermission("challenges.*")) {
+                    player.openInventory(timerInv);
+                }
+            }
         }
     }
 
@@ -108,4 +126,5 @@ public class PreTimer implements Listener {
             event.setCancelled(true);           //TODO: geht nicht
         }
     }
+
 }

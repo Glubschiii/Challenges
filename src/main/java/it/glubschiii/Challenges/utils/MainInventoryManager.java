@@ -68,6 +68,12 @@ public class MainInventoryManager implements Listener {
     public static Inventory wolfiCollarColorChangeInv = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "Halsbandfarbe ändern");
 
     /*
+     * Creating custom cosmetics inventories
+     */
+    public static Inventory playerSettingsInv = Bukkit.createInventory(null, 27, ChatColor.GRAY + "〣 " + ChatColor.LIGHT_PURPLE + "Cosmetics");
+    public static Inventory cosmeticsCategoriesInv = Bukkit.createInventory(null, 27, ChatColor.DARK_GRAY + "Kategorien");
+
+    /*
      * Putting items inside the custom /settings inventories, /allitems overview, wolfi inventories and it's repositories
      */
     static ItemStack background = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName(" ").toItemStack();
@@ -222,6 +228,8 @@ public class MainInventoryManager implements Listener {
         int[] backgroundSlotsMinecraftChallengesInv = {9, 10, 16, 17, 27, 28, 29, 33, 34, 35, 46, 47, 48, 50, 51, 52, 53};
         int[] backgroundSlotsWolfiChallengeInv = {1, 7};
         int[] background2SlotsWolfiChallengeInv = {2, 4, 6};
+        int[] backgroundSlotsPlayerSettingsInv = {1,3,5,7,9,11,15,17,19,21,23,25};
+        int[] background2SlotsPlayerSettingsInv = {0,2,4,6,8,10,12,14,16,18,20,22,24,26};
 
         puttingItemsHelper(background2SlotsMainInv, settingsInv, background2);
         puttingItemsHelper(backgroundSlotsgamerulesInv, gamerulesInv, background);
@@ -244,6 +252,10 @@ public class MainInventoryManager implements Listener {
         puttingItemsHelper(backgroundSlotsMinecraftChallengesInv, minecraftChallengesInv, background);
         puttingItemsHelper(backgroundSlotsWolfiChallengeInv, wolfiChallengeInv, background);
         puttingItemsHelper(background2SlotsWolfiChallengeInv, wolfiChallengeInv, background2);
+        puttingItemsHelper(backgroundSlotsPlayerSettingsInv, playerSettingsInv, background);
+        puttingItemsHelper(background2SlotsPlayerSettingsInv, playerSettingsInv, background2);
+        puttingItemsHelper(backgroundSlotsPlayerSettingsInv, cosmeticsCategoriesInv, background);
+        puttingItemsHelper(background2SlotsPlayerSettingsInv, cosmeticsCategoriesInv, background2);
 
         for (int i = 2; i <= 44; i++) {
             if (i <= 3 || i == 5 || i == 6 || (i >= 10 && i <= 16) || i == 19 || i == 21 || i == 23 || i == 25 || (i >= 28 && i <= 34) || (i >= 38 && i <= 39) || i == 41 || i == 42) {
@@ -319,6 +331,8 @@ public class MainInventoryManager implements Listener {
         wolfiCollarColorChangeInv.setItem(15, pinkCollarColor);
         wolfiCollarColorChangeInv.setItem(16, background2);
         wolfiCollarColorChangeInv.setItem(17, back);
+        playerSettingsInv.setItem(13, timerCosmetics);
+        cosmeticsCategoriesInv.setItem(13, timerColorCosmetics);
     }
 
     /*
@@ -465,6 +479,12 @@ public class MainInventoryManager implements Listener {
     static ItemStack magentaCollarColor = new ItemBuilder(Material.MAGENTA_DYE).setName(ChatColor.DARK_PURPLE + "Magenta").toItemStack();       //TODO: Hex Color code benutzen
     static ItemStack pinkCollarColor = new ItemBuilder(Material.PINK_DYE).setName(ChatColor.LIGHT_PURPLE + "Rosa").toItemStack();
 
+    /*
+     * Creating items for the playerSettings inventories
+     */
+    static ItemStack timerCosmetics = new ItemBuilder(Material.CLOCK).setName(ChatColor.GOLD + "Timer").toItemStack();
+    static ItemStack timerColorCosmetics = new ItemBuilder(Material.CLOCK).setName(ChatColor.GOLD + "Farben").toItemStack();
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) throws IOException {
         Player player = (Player) event.getWhoClicked();
@@ -483,7 +503,9 @@ public class MainInventoryManager implements Listener {
                 event.getView().getTitle().equalsIgnoreCase(ChatColor.GREEN + "Minecraft-Challenges" + ChatColor.DARK_GRAY + " • " +
                         ChatColor.BLUE + "Seite 1") || event.getView().getTitle().equalsIgnoreCase(ChatColor.GREEN + "Wolfi"
                 + ChatColor.DARK_GRAY + " • " + ChatColor.BLUE + "Anpassungsmenü") || event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Namen ändern")
-                || event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Halsbandfarbe ändern")) {
+                || event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Halsbandfarbe ändern") || event.getView().getTitle().equalsIgnoreCase(
+                ChatColor.GRAY + "〣 " + ChatColor.LIGHT_PURPLE + "Cosmetics") || event.getView().getTitle().equalsIgnoreCase(
+                ChatColor.DARK_GRAY + "Kategorien")) {
             if (event.getCurrentItem() == null) {
                 return;
             }
@@ -909,6 +931,12 @@ public class MainInventoryManager implements Listener {
                 wolf.setCollarColor(DyeColor.MAGENTA);
             } else if(event.getSlot() == 15) {
                 wolf.setCollarColor(DyeColor.PINK);
+            }
+        } else if(event.getView().getTitle().equalsIgnoreCase(ChatColor.GRAY + "〣 " + ChatColor.LIGHT_PURPLE + "Cosmetics")) {
+            if(event.getCurrentItem().getType().equals(Material.CLOCK)) {
+                if(event.isLeftClick()) {
+                    player.openInventory(cosmeticsCategoriesInv);       //TODO: Weiter machen
+                }
             }
         }
     }
