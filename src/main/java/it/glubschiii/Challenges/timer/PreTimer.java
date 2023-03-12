@@ -15,6 +15,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -127,4 +128,12 @@ public class PreTimer implements Listener {
         }
     }
 
+    @EventHandler
+    private void onInvClick(InventoryClickEvent event) {
+        if(!Timer.isRunning()) {
+            if(event.getClickedInventory().getType() == InventoryType.PLAYER || event.getClickedInventory().getType() == InventoryType.CHEST) {
+                event.setCancelled(true);
+            }
+        }
+    }
 }
