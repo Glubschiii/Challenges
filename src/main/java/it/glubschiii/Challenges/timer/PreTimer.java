@@ -35,7 +35,7 @@ import static it.glubschiii.Challenges.utils.MainInventoryManager.*;
 public class PreTimer implements Listener {
 
     //TODO: Ingame-Zeit(Tag-Nacht Zyklus) soll sich nicht ändern
-    //TODO: WEnn man brennt kriegt man schaden
+
     @EventHandler
     private void onPlayerInteract(PlayerInteractEvent event) {
         if (!Timer.isRunning()) {

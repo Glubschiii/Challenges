@@ -34,7 +34,6 @@ import static it.glubschiii.Challenges.goals.AllItemsGoal.*;
 public final class Main extends JavaPlugin {
 
     //TODO: Prefixe ändern / neues Design
-    //TODO: TabCompleter für alle Commands machen
 
     public static Main instance;
 

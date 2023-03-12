@@ -127,7 +127,7 @@ public class MainInventoryManager implements Listener {
     private static void goalChange(String goal, Material material, String status, short slot, String config, boolean bool) throws IOException {
         for (Player all : Bukkit.getOnlinePlayers()) {
             if (bool) {
-                all.sendMessage(prefix + ChatColor.GRAY + " Die Herausforderung wurde auf " + ChatColor.GOLD.toString() +
+                all.sendMessage(prefix + ChatColor.GRAY + "Die Herausforderung wurde auf " + ChatColor.GOLD.toString() +
                         ChatColor.BOLD + goal + ChatColor.RESET + ChatColor.GRAY + " geändert.");
             }
             ItemStack dye = new ItemBuilder(material).setName(status).toItemStack();
@@ -400,7 +400,8 @@ public class MainInventoryManager implements Listener {
     static ItemStack dragonGoal = new ItemBuilder(Material.DRAGON_EGG).setName(ChatColor.DARK_PURPLE + "Enderdrache").addLoreLine(" ")
             .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.DARK_PURPLE + "absolviert" + ChatColor.GRAY + ",")
             .addLoreLine(ChatColor.GRAY + " sobald der " + ChatColor.DARK_PURPLE + "Enderdrache " + ChatColor.GRAY + "getötet wurde.").toItemStack();
-    static ItemStack elderGuardianGoal = new ItemBuilder(Material.TRIDENT).setName(ChatColor.BLUE + "Großer Wächter").addLoreLine(" ")      //TODO: In der Haupthand... ItemFlag entfernen
+    static ItemStack elderGuardianGoal = new ItemBuilder(Material.TRIDENT).setName(ChatColor.BLUE + "Großer Wächter").addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
+            .addLoreLine(" ")      //TODO: ÜBERPRÜFEN: In der Haupthand... ItemFlag entfernen
             .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.BLUE + "absolviert" + ChatColor.GRAY + ",")
             .addLoreLine(ChatColor.GRAY + " sobald der " + ChatColor.BLUE + "Große Wächter " + ChatColor.GRAY + "getötet wurde.").toItemStack();
     static ItemStack witherGoal = new ItemBuilder(Material.WITHER_SKELETON_SKULL).setName(ChatColor.DARK_GRAY + "Wither").addLoreLine(" ")
