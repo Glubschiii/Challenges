@@ -25,3 +25,6 @@ commands:
     permission: challenges.gm
   allitems:
     description: with /allitems skip the player can skip the current item; with /allitems overview the players see an inventory with the current item
+  info:
+    aliases: [dev, developer, help]
+    description: get informations about the plugin and the developer

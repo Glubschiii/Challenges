@@ -110,6 +110,7 @@ public final class Main extends JavaPlugin {
         getCommand("reset").setExecutor(new ResetCommand());
         getCommand("gm").setExecutor(new GamemodeCommand());
         getCommand("allitems").setExecutor(new AllItemsGoal());
+        getCommand("info").setExecutor(new InfoCommand());
 
         tablistManager = new TablistManager();
         tabComplete = new TabCompleteManager();
