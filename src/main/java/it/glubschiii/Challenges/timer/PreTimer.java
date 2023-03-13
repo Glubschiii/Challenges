@@ -35,6 +35,7 @@ import static it.glubschiii.Challenges.utils.MainInventoryManager.*;
 public class PreTimer implements Listener {
 
     //TODO: Ingame-Zeit(Tag-Nacht Zyklus) soll sich nicht ändern
+    //TODO: Nur innerhalb 50 Blöcke gehen können
 
     @EventHandler
     private void onPlayerInteract(PlayerInteractEvent event) {
@@ -130,9 +131,12 @@ public class PreTimer implements Listener {
 
     @EventHandler
     private void onInvClick(InventoryClickEvent event) {
+        Inventory inventory = event.getClickedInventory();
         if(!Timer.isRunning()) {
-            if(event.getClickedInventory().getType() == InventoryType.PLAYER || event.getClickedInventory().getType() == InventoryType.CHEST) {
-                event.setCancelled(true);
+            if(inventory != null) {
+                if (inventory.getType() == InventoryType.PLAYER || event.getClickedInventory().getType() == InventoryType.CHEST) {
+                    event.setCancelled(true);
+                }
             }
         }
     }

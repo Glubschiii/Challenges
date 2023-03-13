@@ -15,6 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import static it.glubschiii.Challenges.commands.InfoCommand.runInfoCommand;
 import static it.glubschiii.Challenges.goals.AllItemsGoal.bossBar;
 
 /** @author Glubschiii | https://github.com/glubschiii
@@ -25,6 +26,7 @@ public class JoinEvent implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) throws IOException {
         Player player = event.getPlayer();
+        runInfoCommand(player);
 
         if(player.hasPermission("challenges.*")) {
             event.setJoinMessage(ChatColor.GREEN + "» " + ChatColor.DARK_RED + "" + player.getDisplayName());

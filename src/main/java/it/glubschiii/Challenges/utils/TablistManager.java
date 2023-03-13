@@ -24,7 +24,7 @@ public class TablistManager {
                 ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD + "P2YL.tk\n" +         //TODO: Für andere deren IP anzeigen lassen? (In Config einstellbar machen?)
                 ChatColor.GRAY + "Online" + ChatColor.DARK_GRAY + " » " + ChatColor.GREEN + Bukkit.getOnlinePlayers().size() + ChatColor.DARK_GRAY + "/" + ChatColor.GRAY +
                 Bukkit.getServer().getMaxPlayers() + "\n" + ChatColor.GRAY + "Server" + ChatColor.DARK_GRAY + " » " + ChatColor.LIGHT_PURPLE + "Challenges\n",
-                "\n" + ChatColor.GRAY + "Plugin" + ChatColor.DARK_GRAY + " » " + ChatColor.LIGHT_PURPLE + "/info\n" + /*//TODO: Command*/
+                "\n" + ChatColor.GRAY + "Plugin" + ChatColor.DARK_GRAY + " » " + ChatColor.LIGHT_PURPLE + "/info\n" +
                 ChatColor.GRAY + "Developer" + ChatColor.DARK_GRAY + " » " + ChatColor.LIGHT_PURPLE + "© Glubschiii\n" + ChatColor.DARK_GRAY +
                 "╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾╾");
     }

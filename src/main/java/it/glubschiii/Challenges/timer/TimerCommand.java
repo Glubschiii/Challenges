@@ -165,7 +165,7 @@ public class TimerCommand implements CommandExecutor {
             all.sendMessage(prefix + ChatColor.YELLOW + "Der Timer wurde von " + ChatColor.WHITE + ChatColor.BOLD +
                     sender.getDisplayName() + "" + ChatColor.RESET + "" + ChatColor.YELLOW + " pausiert!");
             //TODO: Sound ändern
-            all.playSound(all.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_DEATH, 3.0F, 0.5F);
+            all.playSound(all.getPlayer().getLocation(), Sound.ENTITY_ARROW_SHOOT, 3.0F, 0.5F);
         }
     }
 

@@ -26,6 +26,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static it.glubschiii.Challenges.commands.BackpackCommand.saveBackpack;
 import static it.glubschiii.Challenges.goals.AllItemsGoal.*;
 
 /** @author Glubschiii | https://github.com/glubschiii
@@ -53,7 +54,6 @@ public final class Main extends JavaPlugin {
 
     public static boolean deletedFolders = false;
 
-    //TODO: Wenn man einen Wert manuell in der Config ändert dann speichert es das nicht in das custom inv
     //TODO: Eng Übersetzung machen
 
     public void onLoad() {
@@ -102,7 +102,6 @@ public final class Main extends JavaPlugin {
         manager.registerEvents(new AllItemsGoal(), this);
         manager.registerEvents(new MainInventoryManager(), this);
         manager.registerEvents(new ChatEvent(), this);
-        manager.registerEvents(new InfoCommand(), this);
 
         getCommand("timer").setExecutor(new TimerCommand());
         getCommand("backpack").setExecutor(new BackpackCommand());
@@ -153,15 +152,15 @@ public final class Main extends JavaPlugin {
         }
 
         if(Config.get("command.backpack.backpack-contents") != null) {
-            Config.get("command.backpack.backpack-contents");           //TODO: Funktioniert nicht
+            Config.get("command.backpack.backpack-contents");
         }
 
         if(Config.get("difficulty") != null) {
             Config.get("difficulty");
         } else {
             try {
-                Config.set("difficulty", "HARD");       //TODO: Wenn es den path "difficulty" in der Config nicht gibt, dann stellt er ihn nicht auf "HARD" wie diese Zeile besagt, sondern auf "EASY"???? WTF?
                 Bukkit.getWorlds().forEach(world -> world.setDifficulty(Difficulty.HARD));
+                Config.set("difficulty", "HARD");       //TODO: Wenn es den path "difficulty" in der Config nicht gibt, dann stellt er ihn nicht auf "HARD" wie diese Zeile besagt, sondern auf "EASY"???? WTF?
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -255,6 +254,12 @@ public final class Main extends JavaPlugin {
             Config.getBoolean("challenges.dividedhearts").booleanValue();
         }
 
+        if(getConfig().contains("settings.backpack") && Config.getBoolean("settings.backpack").booleanValue()) {
+            Config.getBoolean("settings.backpack").booleanValue();
+        }
+        if(getConfig().contains("settings.damage") && Config.getBoolean("settings.damage").booleanValue()) {
+            Config.getBoolean("settings.damage").booleanValue();
+        }
     }
 
     @Override
@@ -267,8 +272,9 @@ public final class Main extends JavaPlugin {
             } else {
                 Config.set("timer-direction", "up");
             }*/
-            Config.set("difficulty", Bukkit.getWorld("world").getDifficulty().toString()); //TODO: Speichern überprüfen, noch hinzufügen beim ändern/enablen
+            Config.set("difficulty", Bukkit.getWorld("world").getDifficulty().toString());
             Config.set("regeneration-status", RegenerationGamerule.getStatus());
+            saveBackpack();
         } catch (IOException e) {
             e.printStackTrace();
         }

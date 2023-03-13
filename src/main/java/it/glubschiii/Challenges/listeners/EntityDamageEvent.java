@@ -2,6 +2,7 @@ package it.glubschiii.Challenges.listeners;
 
 import it.glubschiii.Challenges.Main;
 import it.glubschiii.Challenges.timer.Timer;
+import it.glubschiii.Challenges.utils.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
@@ -22,7 +23,6 @@ import java.util.Map;
  */
 public class EntityDamageEvent implements Listener {
     Timer timer = Main.getInstance().getTimer();
-    //TODO: In settings inv an/ausschaltbar machen
 
     private String prefix = ChatColor.DARK_GRAY + "[" + ChatColor.LIGHT_PURPLE + "P2YL" + ChatColor.DARK_GRAY + "] ";
     private Map<org.bukkit.event.entity.EntityDamageEvent.DamageCause, String> damageCauseMap = new HashMap<>();
@@ -162,7 +162,7 @@ public class EntityDamageEvent implements Listener {
             }
         }
             //TODO: Wird nicht gerundet (z.B. bei /kill)
-        if(e.getEntityType() == EntityType.PLAYER && Timer.isRunning()) {
+        if(e.getEntityType() == EntityType.PLAYER && Timer.isRunning() && Config.getBoolean("settings.damage").booleanValue()) {
             Bukkit.broadcastMessage(prefix + ChatColor.WHITE.toString() + ChatColor.BOLD + e.getEntity().getName() + ChatColor.RESET + "" +
                     ChatColor.GREEN + " hat durch " + ChatColor.WHITE + ChatColor.BOLD + damagecause + ChatColor.RESET + " " + ChatColor.GREEN +
                     FinalDamage + ChatColor.GREEN + " ❤ " + ChatColor.GREEN + "Schaden bekommen");     //TODO: Design changen
