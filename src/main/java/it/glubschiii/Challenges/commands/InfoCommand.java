@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +32,7 @@ public class InfoCommand implements CommandExecutor, Listener {
         return false;
     }
 
+    @EventHandler
     private void onClick(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         String message = event.getMessage();

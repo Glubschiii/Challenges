@@ -102,6 +102,7 @@ public final class Main extends JavaPlugin {
         manager.registerEvents(new AllItemsGoal(), this);
         manager.registerEvents(new MainInventoryManager(), this);
         manager.registerEvents(new ChatEvent(), this);
+        manager.registerEvents(new InfoCommand(), this);
 
         getCommand("timer").setExecutor(new TimerCommand());
         getCommand("backpack").setExecutor(new BackpackCommand());
