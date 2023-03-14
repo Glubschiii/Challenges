@@ -28,3 +28,5 @@ commands:
   info:
     aliases: [dev, developer, help]
     description: get informations about the plugin and the developer
+  cosmetics:
+    description: opens the cosmetics inventory

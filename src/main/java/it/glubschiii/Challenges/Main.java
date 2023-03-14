@@ -111,6 +111,7 @@ public final class Main extends JavaPlugin {
         getCommand("gm").setExecutor(new GamemodeCommand());
         getCommand("allitems").setExecutor(new AllItemsGoal());
         getCommand("info").setExecutor(new InfoCommand());
+        getCommand("cosmetics").setExecutor(new CosmeticsCommand());
 
         tablistManager = new TablistManager();
         tabComplete = new TabCompleteManager();

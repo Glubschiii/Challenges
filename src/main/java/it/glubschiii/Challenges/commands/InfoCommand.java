@@ -46,6 +46,9 @@ public class InfoCommand implements CommandExecutor {
         return false;
     }
 
+    /*
+    * Sending the /info command to the online player every 1 1/2 hours.
+     */
     public static void runInfoCommand(Player player) {
         new BukkitRunnable() {
             @Override

@@ -1,26 +1,18 @@
 package it.glubschiii.Challenges.utils;
 
-import com.sun.jdi.BooleanValue;
 import it.glubschiii.Challenges.Main;
 import it.glubschiii.Challenges.timer.Timer;
 import org.bukkit.*;
-import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Objects;
 
 import static it.glubschiii.Challenges.challenges.WolfiChallenge.*;
@@ -77,7 +69,10 @@ public class MainInventoryManager implements Listener {
     public static Inventory playerSettingsInv = Bukkit.createInventory(null, 27, ChatColor.GRAY + "〣 " + ChatColor.LIGHT_PURPLE + "Cosmetics");
     public static Inventory cosmeticsCategoriesInv = Bukkit.createInventory(null, 27, ChatColor.DARK_GRAY + "Kategorien");
     public static Inventory timerColorsInv = Bukkit.createInventory(null, 27, ChatColor.DARK_GRAY + "Timer-Farben");
-
+    /*
+     * Creating items for the "/allitems overview" inventory
+     */
+    public static ItemStack allItemsDefault = new ItemBuilder(Material.OAK_SIGN).setName(ChatColor.RED + "Dieses Item hat keine Vorschau").toItemStack();
     /*
      * Putting items inside the custom /settings inventories, /allitems overview, wolfi inventories and it's repositories
      */
@@ -89,7 +84,166 @@ public class MainInventoryManager implements Listener {
     static ItemStack backgroundRed = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(" ").toItemStack();
     static ItemStack back = new ItemBuilder(Material.DARK_OAK_DOOR).setName(ChatColor.AQUA + "Zurück").toItemStack();
     static ItemStack backArrow = new ItemBuilder(Material.ARROW).setName(ChatColor.AQUA + "Zurück").toItemStack();
+    static ItemStack backGlassPane = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(ChatColor.AQUA + "Zurück").toItemStack();
     static ItemStack mainMenu = new ItemBuilder(Material.COMPARATOR).setName(ChatColor.RED + "Zurück zum Hauptmenü").toItemStack();
+    /*
+     * Creating items for the /settings inventory
+     */
+    static ItemStack timer = new ItemBuilder(Material.CLOCK).setName(ChatColor.YELLOW + "Timer").addLoreLine(" ")
+            .addLoreLine(ChatColor.YELLOW + " Timer" + ChatColor.GRAY + " gibt die" + ChatColor.YELLOW + " Zeit" + ChatColor.GRAY + " an und")
+            .addLoreLine(ChatColor.GRAY + " eine zeitliche" + ChatColor.YELLOW + " Begrenzung" + ChatColor.GRAY + " für")
+            .addLoreLine(ChatColor.YELLOW + " Aufgaben" + ChatColor.GRAY + " und " + ChatColor.YELLOW + "Herausforderungen" + ChatColor.GRAY + ".")
+            .addLoreLine(" ").addLoreLine(ChatColor.YELLOW + "" + ChatColor.ITALIC + "Klick: " + ChatColor.YELLOW + "Übersicht").toItemStack();
+    static ItemStack herausforderungen = new ItemBuilder(Material.DRAGON_HEAD).setName(ChatColor.RED + "Herausforderungen").addLoreLine(" ")
+            .addLoreLine(ChatColor.RED + " Herausforderungen " + ChatColor.GRAY + "geben das " + ChatColor.RED + "Ziel")
+            .addLoreLine(ChatColor.GRAY + " und das " + ChatColor.RED + "Ende " + ChatColor.GRAY + "der " + ChatColor.RED + "Challenge " + ChatColor.GRAY + "vor.")
+            .addLoreLine(" ").addLoreLine(ChatColor.RED + "" + ChatColor.ITALIC + "Klick: " + ChatColor.RED + "Übersicht").toItemStack();
+    static ItemStack challenges = new ItemBuilder(Material.GRASS_BLOCK).setName(ChatColor.AQUA + "Challenges").addLoreLine(" ")
+            .addLoreLine(ChatColor.AQUA + " Challenges " + ChatColor.GRAY + "verändern").addLoreLine(ChatColor.GRAY + " das " + ChatColor.AQUA + "Spielgeschehen " + ChatColor.GRAY + "auf")
+            .addLoreLine(ChatColor.GRAY + " viele " + ChatColor.AQUA + "Arten " + ChatColor.GRAY + "und " + ChatColor.AQUA + "Weisen" + ChatColor.GRAY + ".")
+            .addLoreLine(" ").addLoreLine(ChatColor.AQUA + "" + ChatColor.ITALIC + "Klick: " + ChatColor.AQUA + "Übersicht").toItemStack();
+    static ItemStack gamerules = new ItemBuilder(Material.MAP).setName(ChatColor.GREEN + "Spielregeln").addLoreLine(" ")
+            .addLoreLine(ChatColor.GREEN + " Spielregeln " + ChatColor.GRAY + "sind normale").addLoreLine(ChatColor.GREEN + " /gamerules " + ChatColor.GRAY + "und weitere")
+            .addLoreLine(ChatColor.GREEN + " Veränderungen " + ChatColor.GRAY + "des Spielgeschehens").addLoreLine(ChatColor.GRAY + " mit normalen Mitteln von Minecraft.")
+            .addLoreLine(" ").addLoreLine(ChatColor.GREEN + "" + ChatColor.ITALIC + "Klick: " + ChatColor.GREEN + "Übersicht").toItemStack();
+    static ItemStack settings = new ItemBuilder(Material.REPEATER).setName(ChatColor.LIGHT_PURPLE + "Plugin-Einstellungen").addLoreLine(" ")
+            .addLoreLine(ChatColor.LIGHT_PURPLE + " Plugin-Einstellungen" + ChatColor.GRAY + " passen")
+            .addLoreLine(ChatColor.LIGHT_PURPLE + " Funktionalitäten" + ChatColor.GRAY + " des Plugins an,")
+            .addLoreLine(ChatColor.GRAY + " für eine optimale" + ChatColor.LIGHT_PURPLE + " Spielererfahrung" + ChatColor.GRAY + ".")
+            .addLoreLine(" ").addLoreLine(ChatColor.LIGHT_PURPLE + "" + ChatColor.ITALIC + "Klick: " + ChatColor.LIGHT_PURPLE + "Übersicht").toItemStack();
+    /*
+     * Creating items for the gamerules inventory
+     */
+    static ItemStack difficulty = new ItemBuilder(Material.SHIELD).setName(ChatColor.GREEN + "Schwierigkeitsgrad").addLoreLine(" ")
+            .addLoreLine(ChatColor.GRAY + " Stellt die " + ChatColor.GREEN + "Schwierigkeitsstufe " + ChatColor.GRAY + "ein").addLoreLine(" ")
+            .addLoreLine(ChatColor.GREEN + " Erhöhen:").addLoreLine(ChatColor.DARK_GRAY + "- " + ChatColor.BLUE + "Linksklick")
+            .addLoreLine(ChatColor.GREEN + " Verringern:").addLoreLine(ChatColor.DARK_GRAY + "- " + ChatColor.BLUE + "Rechtsklick").toItemStack();
+    static ItemStack regeneration = new ItemBuilder(Material.POTION, 1).setName(ChatColor.RED + "Regeneration").addPotionEffect(PotionEffectType.REGENERATION, 1, 1, true)
+            .addLoreLine(" ").addLoreLine(ChatColor.GRAY + " Stellt die " + ChatColor.RED + "Regeneration " + ChatColor.GRAY + "ein")
+            .addLoreLine(" ").addLoreLine(ChatColor.RED + " Erhöhen:").addLoreLine(ChatColor.DARK_GRAY + "- " + ChatColor.BLUE + "Linksklick")
+            .addLoreLine(ChatColor.RED + " Verringern:").addLoreLine(ChatColor.DARK_GRAY + "- " + ChatColor.BLUE + "Rechtsklick").toItemStack();
+    /*
+     * Creating items for the timer inventories
+     */
+    static ItemStack toggle = new ItemBuilder(Material.TOTEM_OF_UNDYING).setName(ChatColor.DARK_PURPLE + "Timer toggle").addLoreLine(" ")
+            .addLoreLine(ChatColor.DARK_PURPLE + " Startet" + ChatColor.GRAY + " / " + ChatColor.DARK_PURPLE + "Stoppt")
+            .addLoreLine(ChatColor.GRAY + " den " + ChatColor.DARK_PURPLE + "Timer").toItemStack();
+    static ItemStack resume = new ItemBuilder(Material.ENDER_EYE).setName(ChatColor.DARK_GREEN + "Timer fortsetzen").toItemStack();
+    static ItemStack reset = new ItemBuilder(Material.BARRIER).setName(ChatColor.RED + "Timer zurücksetzen").toItemStack();
+    static ItemStack pause = new ItemBuilder(Material.CHIPPED_ANVIL).setName(ChatColor.GOLD + "Timer pausieren").toItemStack();
+    static ItemStack modifytime = new ItemBuilder(Material.ACACIA_BUTTON).setName(ChatColor.GREEN + "+1").addLoreLine(" ")
+            .addLoreLine(ChatColor.GREEN + " Shift-Rechtsklick" + ChatColor.GRAY + " für " + ChatColor.GREEN + "+10").toItemStack();
+    /*
+     * Creating items for the goals inventory
+     */
+    static ItemStack dragonGoal = new ItemBuilder(Material.DRAGON_EGG).setName(ChatColor.DARK_PURPLE + "Enderdrache").addLoreLine(" ")
+            .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.DARK_PURPLE + "absolviert" + ChatColor.GRAY + ",")
+            .addLoreLine(ChatColor.GRAY + " sobald der " + ChatColor.DARK_PURPLE + "Enderdrache " + ChatColor.GRAY + "getötet wurde.").toItemStack();
+    static ItemStack elderGuardianGoal = new ItemBuilder(Material.TRIDENT).setName(ChatColor.BLUE + "Großer Wächter").addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
+            .addLoreLine(" ")      //TODO: ÜBERPRÜFEN: In der Haupthand... ItemFlag entfernen
+            .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.BLUE + "absolviert" + ChatColor.GRAY + ",")
+            .addLoreLine(ChatColor.GRAY + " sobald der " + ChatColor.BLUE + "Große Wächter " + ChatColor.GRAY + "getötet wurde.").toItemStack();
+    static ItemStack witherGoal = new ItemBuilder(Material.WITHER_SKELETON_SKULL).setName(ChatColor.DARK_GRAY + "Wither").addLoreLine(" ")
+            .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.DARK_GRAY + "absolviert" + ChatColor.GRAY + ",")
+            .addLoreLine(ChatColor.GRAY + " sobald der " + ChatColor.DARK_GRAY + "Wither " + ChatColor.GRAY + "getötet wurde.").toItemStack();
+    static ItemStack wardenGoal = new ItemBuilder(Material.SCULK_SENSOR).setName(ChatColor.AQUA + "Wärter").addLoreLine(" ")
+            .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.AQUA + "absolviert" + ChatColor.GRAY + ",")
+            .addLoreLine(ChatColor.GRAY + " sobald der " + ChatColor.AQUA + "Wärter " + ChatColor.GRAY + "getötet wurde.").toItemStack();
+    static ItemStack allItemsGoal = new ItemBuilder(Material.GRASS_BLOCK).setName(ChatColor.GREEN + "Alle Items").addLoreLine(" ")
+            .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.GREEN + "absolviert" + ChatColor.GRAY + ",")
+            .addLoreLine(ChatColor.GRAY + " sobald " + ChatColor.GREEN + "alle Items " + ChatColor.GRAY + "gesammelt wurden.").toItemStack();
+    /*
+     * Creating items for the pluginSettings inventory
+     */
+    static ItemStack backpack = new ItemBuilder(Material.ENDER_CHEST).setName(ChatColor.DARK_PURPLE + "Backpack").addLoreLine(" ")
+            .addLoreLine(ChatColor.GRAY + " Diese " + ChatColor.DARK_PURPLE + "Plugin-Einstellung" + ChatColor.GRAY + "" +
+                    " stellt").addLoreLine(ChatColor.GRAY + " das" + ChatColor.DARK_PURPLE + " Backpack " + ChatColor.GRAY + "ein.").toItemStack();
+    static ItemStack damageInChat = new ItemBuilder(Material.SPAWNER).setName(ChatColor.RED + "Schaden im Chat").addItemFlag(ItemFlag.HIDE_ITEM_SPECIFICS).addLoreLine(" ")
+            .addLoreLine(ChatColor.GRAY + " Mit dieser " + ChatColor.RED + "Plugin-Einstellung" + ChatColor.GRAY + " wird der").addLoreLine(ChatColor.RED + " erlittene Schaden" +
+                    ChatColor.GRAY + " der Spieler im " + ChatColor.RED + "Chat" + ChatColor.GRAY + " angezeigt.").toItemStack();
+    static ItemStack registeredItems = new ItemBuilder(Material.CHEST).setName(ChatColor.GREEN + "Registrierte Items").toItemStack();
+    static ItemStack pendingItems = new ItemBuilder(Material.CAULDRON).setName(ChatColor.RED + "Ausstehende Items").toItemStack();
+    /*
+     * Creating items for the challenges inventory
+     */
+    static ItemStack minecraftChallenges = new ItemBuilder(Material.CRAFTING_TABLE).setName(ChatColor.GREEN + "Minecraft-Challenges").toItemStack();    //TODO: Beschreibung
+    static ItemStack randomizerChallenges = new ItemBuilder(Material.CHAIN_COMMAND_BLOCK).setName(ChatColor.BLUE + "Randomizer-Challenges").addLoreLine(" ")
+            .addLoreLine(ChatColor.RED + " Coming Soon...").toItemStack();     //TODO: Beschreibung
+    /*
+     * Creating items for the minecraftChallenges inventory
+     */
+    static ItemStack noCraftingTableChallenge = new ItemBuilder(Material.CRAFTING_TABLE).setName(ChatColor.GOLD + "Ohne Werkbank").addLoreLine(" ")
+            .addLoreLine(ChatColor.GRAY + " Die " + ChatColor.GOLD + "Einschränkung" + ChatColor.GRAY + " dieser Challenge besteht darin,")
+            .addLoreLine(ChatColor.GRAY + " das Spielgeschehen " + ChatColor.GOLD + "ohne Werkbank" + ChatColor.GRAY + " zu bewältigen.").toItemStack();
+    static ItemStack noFallDamageChallenge = new ItemBuilder(Material.FEATHER).setName(ChatColor.WHITE + "Ohne Fallschaden").addLoreLine(" ")
+            .addLoreLine(ChatColor.GRAY + " Die " + ChatColor.WHITE + "Einschränkung" + ChatColor.GRAY + " dieser Challenge besteht darin,")
+            .addLoreLine(ChatColor.GRAY + " das Spielgeschehen " + ChatColor.WHITE + "ohne Fallschaden" + ChatColor.GRAY + " zu bewältigen.").toItemStack();
+    static ItemStack noArmorChallenge = new ItemBuilder(Material.LEATHER_CHESTPLATE).addItemFlag(ItemFlag.HIDE_ATTRIBUTES).addItemFlag(ItemFlag.HIDE_DYE).setColor(Color.YELLOW)
+            .setName(ChatColor.YELLOW + "Ohne Rüstung").addLoreLine(" ").addLoreLine(ChatColor.GRAY + " Die " + ChatColor.YELLOW + "Einschränkung" + ChatColor.GRAY + " " +
+                    "dieser Challenge besteht darin,").addLoreLine(ChatColor.GRAY + " das Spielgeschehen " + ChatColor.YELLOW + "ohne Rüstung" + ChatColor.GRAY +
+                    " zu bewältigen.").toItemStack();
+    static ItemStack limitedHealthChallenge = new ItemBuilder(Material.SPECTRAL_ARROW).setName(ChatColor.DARK_RED + "Limitierte Herzen").addLoreLine(" ")
+            .addLoreLine(ChatColor.GRAY + " Die " + ChatColor.DARK_RED + "Einschränkung" + ChatColor.GRAY + " dieser Challenge besteht darin,")
+            .addLoreLine(ChatColor.GRAY + " das Spielgeschehen " + ChatColor.DARK_RED + "mit limitierten Herzen" + ChatColor.GRAY + " zu bewältigen.").toItemStack();
+    static ItemStack noJumpChallenge = new ItemBuilder(Material.FIREWORK_ROCKET).setName(ChatColor.RED + "Ohne Springen").addLoreLine(" ")
+            .addLoreLine(ChatColor.GRAY + " Die " + ChatColor.RED + "Einschränkung" + ChatColor.GRAY + " dieser Challenge besteht darin,")
+            .addLoreLine(ChatColor.GRAY + " das Spielgeschehen " + ChatColor.RED + "ohne Springen" + ChatColor.GRAY + " zu bewältigen.").toItemStack();
+    static ItemStack noSneakChallenge = new ItemBuilder(Material.DIAMOND_BOOTS).addItemFlag(ItemFlag.HIDE_ATTRIBUTES).setName(ChatColor.BLUE + "Ohne Schleichen").addLoreLine(" ")
+            .addLoreLine(ChatColor.GRAY + " Die " + ChatColor.BLUE + "Einschränkung" + ChatColor.GRAY + " dieser Challenge besteht darin,")
+            .addLoreLine(ChatColor.GRAY + " das Spielgeschehen " + ChatColor.BLUE + "ohne Schleichen" + ChatColor.GRAY + " zu bewältigen.").toItemStack();
+    static ItemStack wolfiChallenge = new ItemBuilder(Material.BONE).setName(ChatColor.DARK_GRAY + "Wolfi").addLoreLine(" ")
+            .addLoreLine(ChatColor.GRAY + " Die " + ChatColor.DARK_GRAY + "Einschränkung" + ChatColor.GRAY + " dieser Challenge besteht darin,")
+            .addLoreLine(ChatColor.GRAY + " das Spielgeschehen " + ChatColor.DARK_GRAY + "mit Wolfi" + ChatColor.GRAY + " zu bewältigen.").toItemStack();
+    static ItemStack dividedHearts = new ItemBuilder(Material.HEART_OF_THE_SEA).setName(ChatColor.AQUA + "Geteilte Herzen").addLoreLine(" ")
+            .addLoreLine(ChatColor.GRAY + " Die " + ChatColor.AQUA + "Einschränkung" + ChatColor.GRAY + " dieser Challenge besteht darin,")
+            .addLoreLine(ChatColor.GRAY + " das Spielgeschehen " + ChatColor.AQUA + "mit geteilten Herzen" + ChatColor.GRAY + " zu bewältigen.").toItemStack();
+    /*
+     * Creating items for the Wolfi Challenge inventory
+     */
+    static ItemStack nameChange = new ItemBuilder(Material.NAME_TAG).setName(ChatColor.BLUE + "Namen ändern").toItemStack();
+    static ItemStack collarColor = new ItemBuilder(Material.ARMOR_STAND).setName(ChatColor.DARK_GREEN + "Halsbandfarbe ändern").toItemStack();
+    static ItemStack nameChangeInput = new ItemBuilder(Material.NAME_TAG).toItemStack();
+    static ItemStack whiteCollarColor = new ItemBuilder(Material.WHITE_DYE).setName(ChatColor.WHITE + "Weiß").toItemStack();
+    static ItemStack lightGrayCollarColor = new ItemBuilder(Material.LIGHT_GRAY_DYE).setName(ChatColor.GRAY + "Hellgrau").toItemStack();
+    static ItemStack grayCollarColor = new ItemBuilder(Material.GRAY_DYE).setName(ChatColor.DARK_GRAY + "Grau").toItemStack();
+    static ItemStack blackCollarColor = new ItemBuilder(Material.BLACK_DYE).setName(ChatColor.BLACK + "Schwarz").toItemStack();
+    static ItemStack brownCollarColor = new ItemBuilder(Material.BROWN_DYE).setName(ChatColor.GOLD + "Braun").toItemStack();            //TODO: Hex Color code benutzen
+    static ItemStack redCollarColor = new ItemBuilder(Material.RED_DYE).setName(ChatColor.RED + "Rot").toItemStack();
+    static ItemStack orangeCollarColor = new ItemBuilder(Material.ORANGE_DYE).setName(ChatColor.GOLD + "Orange").toItemStack();
+    static ItemStack yellowCollarColor = new ItemBuilder(Material.YELLOW_DYE).setName(ChatColor.YELLOW + "Gelb").toItemStack();
+    static ItemStack limeCollarColor = new ItemBuilder(Material.LIME_DYE).setName(ChatColor.GREEN + "Hellgrün").toItemStack();
+    static ItemStack greenCollarColor = new ItemBuilder(Material.GREEN_DYE).setName(ChatColor.DARK_GREEN + "Grün").toItemStack();
+    static ItemStack cyanCollarColor = new ItemBuilder(Material.CYAN_DYE).setName(ChatColor.AQUA + "Türkis").toItemStack();
+    static ItemStack lightBlueCollarColor = new ItemBuilder(Material.LIGHT_BLUE_DYE).setName(ChatColor.BLUE + "Hellblau").toItemStack();
+    static ItemStack blueCollarColor = new ItemBuilder(Material.BLUE_DYE).setName(ChatColor.DARK_BLUE + "Blau").toItemStack();
+    static ItemStack purpleCollarColor = new ItemBuilder(Material.PURPLE_DYE).setName(ChatColor.DARK_PURPLE + "Violett").toItemStack();
+    static ItemStack magentaCollarColor = new ItemBuilder(Material.MAGENTA_DYE).setName(ChatColor.DARK_PURPLE + "Magenta").toItemStack();       //TODO: Hex Color code benutzen
+    static ItemStack pinkCollarColor = new ItemBuilder(Material.PINK_DYE).setName(ChatColor.LIGHT_PURPLE + "Rosa").toItemStack();
+    /*
+     * Creating items for the playerSettings inventories
+     */
+    static ItemStack timerCosmetics = new ItemBuilder(Material.CLOCK).setName(ChatColor.GOLD + "Timer").toItemStack();
+    static ItemStack timerColorCosmetics = new ItemBuilder(Material.CLOCK).setName(ChatColor.GOLD + "Farben").toItemStack();
+    /*
+     * Creating items for the Cosmetics inventory
+     */
+    //TODO: GRADIENT!!!
+    static ItemStack blackTimerColor = new ItemBuilder(Material.BLACK_SHULKER_BOX).setName(ChatColor.BLACK.toString() + ChatColor.BOLD + "Schwarz").toItemStack();
+    static ItemStack darkBlueTimerColor = new ItemBuilder(Material.BLUE_SHULKER_BOX).setName(ChatColor.DARK_BLUE.toString() + ChatColor.BOLD + "Blau").toItemStack();
+    static ItemStack darkGreenTimerColor = new ItemBuilder(Material.GREEN_SHULKER_BOX).setName(ChatColor.DARK_GREEN.toString() + ChatColor.BOLD + "Dunkelgrün").toItemStack();
+    static ItemStack darkTurquoiseTimerColor = new ItemBuilder(Material.CYAN_SHULKER_BOX).setName(ChatColor.DARK_AQUA.toString() + ChatColor.BOLD + "Türkis").toItemStack();
+    static ItemStack darkRedTimerColor = new ItemBuilder(Material.RED_SHULKER_BOX).setName(ChatColor.DARK_RED.toString() + ChatColor.BOLD + "Dunkelrot").toItemStack();
+    static ItemStack purpleTimerColor = new ItemBuilder(Material.PURPLE_SHULKER_BOX).setName(ChatColor.DARK_PURPLE.toString() + ChatColor.BOLD + "Violett").toItemStack();
+    static ItemStack darkYellowTimerColor = new ItemBuilder(Material.ORANGE_SHULKER_BOX).setName(ChatColor.GOLD.toString() + ChatColor.BOLD + "Orange").toItemStack();
+    static ItemStack lightGrayTimerColor = new ItemBuilder(Material.LIGHT_GRAY_SHULKER_BOX).setName(ChatColor.GRAY.toString() + ChatColor.BOLD + "Hellgrau").toItemStack();
+    static ItemStack darkGrayTimerColor = new ItemBuilder(Material.GRAY_SHULKER_BOX).setName(ChatColor.DARK_GRAY.toString() + ChatColor.BOLD + "Grau").toItemStack();
+    static ItemStack lightBlueTimerColor = new ItemBuilder(Material.LIGHT_BLUE_SHULKER_BOX).setName(ChatColor.BLUE.toString() + ChatColor.BOLD + "Hellblau").toItemStack();
+    static ItemStack lightGreenTimerColor = new ItemBuilder(Material.LIME_SHULKER_BOX).setName(ChatColor.GREEN.toString() + ChatColor.BOLD + "Grün").toItemStack();
+    static ItemStack lightTurquoiseTimerColor = new ItemBuilder(Material.CYAN_SHULKER_BOX).setName(ChatColor.AQUA.toString() + ChatColor.BOLD + "Aqua").toItemStack();
+    static ItemStack lightRedTimerColor = new ItemBuilder(Material.PINK_SHULKER_BOX).setName(ChatColor.RED.toString() + ChatColor.BOLD + "Rot").toItemStack();
+    static ItemStack magentaTimerColor = new ItemBuilder(Material.MAGENTA_SHULKER_BOX).setName(ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD + "Magenta").toItemStack();
+    static ItemStack yellowTimerColor = new ItemBuilder(Material.YELLOW_SHULKER_BOX).setName(ChatColor.YELLOW.toString() + ChatColor.BOLD + "Gelb").toItemStack();
+    static ItemStack whiteTimerColor = new ItemBuilder(Material.WHITE_SHULKER_BOX).setName(ChatColor.WHITE.toString() + ChatColor.BOLD + "Weiß").toItemStack();
 
     private static void buildNextPage(byte page, Inventory invtype) {
         ItemStack next = new ItemBuilder(Material.IRON_DOOR).setName(ChatColor.GRAY + "Seite " + page).toItemStack();
@@ -132,7 +286,7 @@ public class MainInventoryManager implements Listener {
     private static void goalChange(String goal, Material material, String status, short slot, String config, boolean bool) throws IOException {
         for (Player all : Bukkit.getOnlinePlayers()) {
             if (bool) {
-                all.sendMessage(prefix + ChatColor.GRAY + "Die Herausforderung wurde auf " + ChatColor.GOLD.toString() +
+                all.sendMessage(prefix + ChatColor.GRAY + "Die Herausforderung wurde auf " + ChatColor.GOLD +
                         ChatColor.BOLD + goal + ChatColor.RESET + ChatColor.GRAY + " geändert.");
             }
             ItemStack dye = new ItemBuilder(material).setName(status).toItemStack();
@@ -142,20 +296,20 @@ public class MainInventoryManager implements Listener {
     }
 
     private static void settingsChange(Boolean bool, String message, Material material, String status, byte slot, String config) throws IOException {
-        for(Player all : Bukkit.getOnlinePlayers()) {
-            if(bool) {
+        for (Player all : Bukkit.getOnlinePlayers()) {
+            if (bool) {
                 all.sendMessage(prefix + ChatColor.GRAY + message);
             }
             ItemStack dye = new ItemBuilder(material).setName(status).toItemStack();
             pluginSettingsInv.setItem(slot, dye);
         }
-        Config.set("settings." + config, Boolean.valueOf(bool));
+        Config.set("settings." + config, bool);
     }
 
     private static void challengeChange(String challenge, Material material, String status, short slot, String config, boolean bool) throws IOException {
         for (Player all : Bukkit.getOnlinePlayers()) {
             if (bool) {
-                all.sendMessage(prefix + ChatColor.GRAY + " Die Challenge wurde auf " + ChatColor.GOLD.toString() +
+                all.sendMessage(prefix + ChatColor.GRAY + " Die Challenge wurde auf " + ChatColor.GOLD +
                         ChatColor.BOLD + challenge + ChatColor.RESET + ChatColor.GRAY + " geändert.");
             }
             ItemStack dye = new ItemBuilder(material).setName(status).toItemStack();
@@ -207,26 +361,13 @@ public class MainInventoryManager implements Listener {
     }
 
     /*
-     * Checks if the config has a certain path set to true, if yes, dye color is green, if not, dye color is red
-     */
-    public void dyeColorCheck(String path, Inventory inventory, short slot) {
-        if (Config.getBoolean(path).booleanValue()) {
-            ItemStack dye = new ItemBuilder(Material.GREEN_DYE).setName(ChatColor.GREEN + "Aktiviert").toItemStack();
-            inventory.setItem(slot, dye);
-        } else {
-            ItemStack dye = new ItemBuilder(Material.RED_DYE).setName(ChatColor.RED + "Deaktiviert").toItemStack();
-            inventory.setItem(slot, dye);
-        }
-    }
-
-    /*
      * Puts background items in the inventories
      */
     public static void puttingItems() throws IOException {
         int[] background2SlotsMainInv = {0, 1, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 43, 44};
 
         int[] backgroundSlotsgamerulesInv = {0, 4, 8, 9, 13, 17, 18, 22, 26, 27, 31, 35, 36, 40, 44, 49, 53};
-        int[] background2SlotsgamerulesInv = {1, 5, 6, 7, 10, 14, 15, 16, 19, 20, 21, 23, 24, 25, 28, 29, 30, 32, 33, 34, 37, 38, 39, 41, 42, 43, 46,47,48, 50, 51, 52};
+        int[] background2SlotsgamerulesInv = {1, 5, 6, 7, 10, 14, 15, 16, 19, 20, 21, 23, 24, 25, 28, 29, 30, 32, 33, 34, 37, 38, 39, 41, 42, 43, 46, 47, 48, 50, 51, 52};
 
         int[] backgroundSlotstimerInv = {0, 2, 6, 8, 9, 11, 13, 15, 17, 18, 26, 29, 31, 33};
         int[] background2SlotstimerInv = {1, 3, 5, 7, 10, 12, 14, 16, 19, 21, 23, 25, 28, 30, 32, 34};
@@ -254,8 +395,10 @@ public class MainInventoryManager implements Listener {
         int[] backgroundSlotsWolfiChallengeInv = {1, 7};
         int[] background2SlotsWolfiChallengeInv = {2, 4, 6};
 
-        int[] backgroundSlotsPlayerSettingsInv = {1,3,5,7,9,11,15,17,19,21,23,25};
-        int[] background2SlotsPlayerSettingsInv = {0,2,4,6,8,10,12,14,16,18,20,22,24,26};
+        int[] backgroundSlotsPlayerSettingsInv = {1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25};
+        int[] background2SlotsPlayerSettingsInv = {0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26};
+
+        int[] background2SlotsTimerColorInv = {9, 10, 16, 17, 19, 20, 24, 25};
 
         int[] backgroundSlotsPluginSettingsInv = {0, 2, 4, 6, 8, 9, 13, 17, 18, 22, 27, 26, 29, 33, 35};
         int[] background2SlotsPluginSettingsInv = {1, 3, 5, 7, 10, 12, 14, 16, 19, 21, 23, 25, 28, 30, 32, 34};
@@ -287,6 +430,7 @@ public class MainInventoryManager implements Listener {
         puttingItemsHelper(background2SlotsPlayerSettingsInv, cosmeticsCategoriesInv, background2);
         puttingItemsHelper(backgroundSlotsPluginSettingsInv, pluginSettingsInv, background);
         puttingItemsHelper(background2SlotsPluginSettingsInv, pluginSettingsInv, background2);
+        puttingItemsHelper(background2SlotsTimerColorInv, timerColorsInv, background2);
 
 
         for (int i = 2; i <= 44; i++) {
@@ -382,22 +526,24 @@ public class MainInventoryManager implements Listener {
         pluginSettingsInv.setItem(15, damageInChat);
         pluginSettingsInv.setItem(31, backArrow);
 
-        timerColorsInv.setItem(1, blackTimerColor);
-        timerColorsInv.setItem(2, darkBlueTimerColor);
-        timerColorsInv.setItem(3, darkGreenTimerColor);
-        timerColorsInv.setItem(4, darkTurquoiseTimerColor);
-        timerColorsInv.setItem(5, darkRedTimerColor);
-        timerColorsInv.setItem(6, purpleTimerColor);
-        timerColorsInv.setItem(7, darkYellowTimerColor);
-        timerColorsInv.setItem(8, lightGrayTimerColor);
-        timerColorsInv.setItem(9, darkGrayTimerColor);
-        timerColorsInv.setItem(10, lightBlueTimerColor);
-        timerColorsInv.setItem(11, lightGreenTimerColor);
-        timerColorsInv.setItem(12, lightTurquoiseTimerColor);
-        timerColorsInv.setItem(13, lightRedTimerColor);
-        timerColorsInv.setItem(14, magentaTimerColor);
-        timerColorsInv.setItem(15, yellowTimerColor);
-        timerColorsInv.setItem(16, whiteTimerColor);
+        timerColorsInv.setItem(0, blackTimerColor);
+        timerColorsInv.setItem(1, darkBlueTimerColor);
+        timerColorsInv.setItem(2, darkGreenTimerColor);
+        timerColorsInv.setItem(3, darkTurquoiseTimerColor);
+        timerColorsInv.setItem(4, darkRedTimerColor);
+        timerColorsInv.setItem(5, purpleTimerColor);
+        timerColorsInv.setItem(6, darkYellowTimerColor);
+        timerColorsInv.setItem(7, lightGrayTimerColor);
+        timerColorsInv.setItem(8, darkGrayTimerColor);
+        timerColorsInv.setItem(11, lightBlueTimerColor);
+        timerColorsInv.setItem(12, lightGreenTimerColor);
+        timerColorsInv.setItem(14, lightTurquoiseTimerColor);
+        timerColorsInv.setItem(15, lightRedTimerColor);
+        timerColorsInv.setItem(21, magentaTimerColor);
+        timerColorsInv.setItem(22, yellowTimerColor);
+        timerColorsInv.setItem(23, whiteTimerColor);
+        timerColorsInv.setItem(18, backGlassPane);
+        timerColorsInv.setItem(26, backGlassPane);
     }
 
     /*
@@ -410,179 +556,19 @@ public class MainInventoryManager implements Listener {
     }
 
     /*
-     * Creating items for the /settings inventory
+     * Checks if the config has a certain path set to true, if yes, dye color is green, if not, dye color is red
      */
-    static ItemStack timer = new ItemBuilder(Material.CLOCK).setName(ChatColor.YELLOW + "Timer").addLoreLine(" ")
-            .addLoreLine(ChatColor.YELLOW + " Timer" + ChatColor.GRAY + " gibt die" + ChatColor.YELLOW + " Zeit" + ChatColor.GRAY + " an und")
-            .addLoreLine(ChatColor.GRAY + " eine zeitliche" + ChatColor.YELLOW + " Begrenzung" + ChatColor.GRAY + " für")
-            .addLoreLine(ChatColor.YELLOW + " Aufgaben" + ChatColor.GRAY + " und " + ChatColor.YELLOW + "Herausforderungen" + ChatColor.GRAY + ".")
-            .addLoreLine(" ").addLoreLine(ChatColor.YELLOW + "" + ChatColor.ITALIC + "Klick: " + ChatColor.YELLOW + "Übersicht").toItemStack();
-    static ItemStack herausforderungen = new ItemBuilder(Material.DRAGON_HEAD).setName(ChatColor.RED + "Herausforderungen").addLoreLine(" ")
-            .addLoreLine(ChatColor.RED + " Herausforderungen " + ChatColor.GRAY + "geben das " + ChatColor.RED + "Ziel")
-            .addLoreLine(ChatColor.GRAY + " und das " + ChatColor.RED + "Ende " + ChatColor.GRAY + "der " + ChatColor.RED + "Challenge " + ChatColor.GRAY + "vor.")
-            .addLoreLine(" ").addLoreLine(ChatColor.RED + "" + ChatColor.ITALIC + "Klick: " + ChatColor.RED + "Übersicht").toItemStack();
-    static ItemStack challenges = new ItemBuilder(Material.GRASS_BLOCK).setName(ChatColor.AQUA + "Challenges").addLoreLine(" ")
-            .addLoreLine(ChatColor.AQUA + " Challenges " + ChatColor.GRAY + "verändern").addLoreLine(ChatColor.GRAY + " das " + ChatColor.AQUA + "Spielgeschehen " + ChatColor.GRAY + "auf")
-            .addLoreLine(ChatColor.GRAY + " viele " + ChatColor.AQUA + "Arten " + ChatColor.GRAY + "und " + ChatColor.AQUA + "Weisen" + ChatColor.GRAY + ".")
-            .addLoreLine(" ").addLoreLine(ChatColor.AQUA + "" + ChatColor.ITALIC + "Klick: " + ChatColor.AQUA + "Übersicht").toItemStack();
-    static ItemStack gamerules = new ItemBuilder(Material.MAP).setName(ChatColor.GREEN + "Spielregeln").addLoreLine(" ")
-            .addLoreLine(ChatColor.GREEN + " Spielregeln " + ChatColor.GRAY + "sind normale").addLoreLine(ChatColor.GREEN + " /gamerules " + ChatColor.GRAY + "und weitere")
-            .addLoreLine(ChatColor.GREEN + " Veränderungen " + ChatColor.GRAY + "des Spielgeschehens").addLoreLine(ChatColor.GRAY + " mit normalen Mitteln von Minecraft.")
-            .addLoreLine(" ").addLoreLine(ChatColor.GREEN + "" + ChatColor.ITALIC + "Klick: " + ChatColor.GREEN + "Übersicht").toItemStack();
-    static ItemStack settings = new ItemBuilder(Material.REPEATER).setName(ChatColor.LIGHT_PURPLE + "Plugin-Einstellungen").addLoreLine(" ")
-            .addLoreLine(ChatColor.LIGHT_PURPLE + " Plugin-Einstellungen" + ChatColor.GRAY + " passen")
-            .addLoreLine(ChatColor.LIGHT_PURPLE + " Funktionalitäten" + ChatColor.GRAY + " des Plugins an,")
-            .addLoreLine(ChatColor.GRAY + " für eine optimale" + ChatColor.LIGHT_PURPLE + " Spielererfahrung" + ChatColor.GRAY + ".")
-            .addLoreLine(" ").addLoreLine(ChatColor.LIGHT_PURPLE + "" + ChatColor.ITALIC + "Klick: " + ChatColor.LIGHT_PURPLE + "Übersicht").toItemStack();
+    public void dyeColorCheck(String path, Inventory inventory, short slot) {
+        if (Config.getBoolean(path).booleanValue()) {
+            ItemStack dye = new ItemBuilder(Material.GREEN_DYE).setName(ChatColor.GREEN + "Aktiviert").toItemStack();
+            inventory.setItem(slot, dye);
+        } else {
+            ItemStack dye = new ItemBuilder(Material.RED_DYE).setName(ChatColor.RED + "Deaktiviert").toItemStack();
+            inventory.setItem(slot, dye);
+        }
+    }
 
-    /*
-     * Creating items for the gamerules inventory
-     */
-    static ItemStack difficulty = new ItemBuilder(Material.SHIELD).setName(ChatColor.GREEN + "Schwierigkeitsgrad").addLoreLine(" ")
-            .addLoreLine(ChatColor.GRAY + " Stellt die " + ChatColor.GREEN + "Schwierigkeitsstufe " + ChatColor.GRAY + "ein").addLoreLine(" ")
-            .addLoreLine(ChatColor.GREEN + " Erhöhen:").addLoreLine(ChatColor.DARK_GRAY + "- " + ChatColor.BLUE + "Linksklick")
-            .addLoreLine(ChatColor.GREEN + " Verringern:").addLoreLine(ChatColor.DARK_GRAY + "- " + ChatColor.BLUE + "Rechtsklick").toItemStack();
-    static ItemStack regeneration = new ItemBuilder(Material.POTION, 1).setName(ChatColor.RED + "Regeneration").addPotionEffect(PotionEffectType.REGENERATION, 1, 1, true)
-            .addLoreLine(" ").addLoreLine(ChatColor.GRAY + " Stellt die " + ChatColor.RED + "Regeneration " + ChatColor.GRAY + "ein")
-            .addLoreLine(" ").addLoreLine(ChatColor.RED + " Erhöhen:").addLoreLine(ChatColor.DARK_GRAY + "- " + ChatColor.BLUE + "Linksklick")
-            .addLoreLine(ChatColor.RED + " Verringern:").addLoreLine(ChatColor.DARK_GRAY + "- " + ChatColor.BLUE + "Rechtsklick").toItemStack();
-
-    /*
-     * Creating items for the timer inventories
-     */
-    static ItemStack toggle = new ItemBuilder(Material.TOTEM_OF_UNDYING).setName(ChatColor.DARK_PURPLE + "Timer toggle").addLoreLine(" ")
-            .addLoreLine(ChatColor.DARK_PURPLE + " Startet" + ChatColor.GRAY + " / " + ChatColor.DARK_PURPLE + "Stoppt")
-            .addLoreLine(ChatColor.GRAY + " den " + ChatColor.DARK_PURPLE + "Timer").toItemStack();
-    static ItemStack resume = new ItemBuilder(Material.ENDER_EYE).setName(ChatColor.DARK_GREEN + "Timer fortsetzen").toItemStack();
-    static ItemStack reset = new ItemBuilder(Material.BARRIER).setName(ChatColor.RED + "Timer zurücksetzen").toItemStack();
-    static ItemStack pause = new ItemBuilder(Material.CHIPPED_ANVIL).setName(ChatColor.GOLD + "Timer pausieren").toItemStack();
-    static ItemStack modifytime = new ItemBuilder(Material.ACACIA_BUTTON).setName(ChatColor.GREEN + "+1").addLoreLine(" ")
-            .addLoreLine(ChatColor.GREEN + " Shift-Rechtsklick" + ChatColor.GRAY + " für " + ChatColor.GREEN + "+10").toItemStack();
-
-    /*
-     * Creating items for the goals inventory
-     */
-    static ItemStack dragonGoal = new ItemBuilder(Material.DRAGON_EGG).setName(ChatColor.DARK_PURPLE + "Enderdrache").addLoreLine(" ")
-            .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.DARK_PURPLE + "absolviert" + ChatColor.GRAY + ",")
-            .addLoreLine(ChatColor.GRAY + " sobald der " + ChatColor.DARK_PURPLE + "Enderdrache " + ChatColor.GRAY + "getötet wurde.").toItemStack();
-    static ItemStack elderGuardianGoal = new ItemBuilder(Material.TRIDENT).setName(ChatColor.BLUE + "Großer Wächter").addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
-            .addLoreLine(" ")      //TODO: ÜBERPRÜFEN: In der Haupthand... ItemFlag entfernen
-            .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.BLUE + "absolviert" + ChatColor.GRAY + ",")
-            .addLoreLine(ChatColor.GRAY + " sobald der " + ChatColor.BLUE + "Große Wächter " + ChatColor.GRAY + "getötet wurde.").toItemStack();
-    static ItemStack witherGoal = new ItemBuilder(Material.WITHER_SKELETON_SKULL).setName(ChatColor.DARK_GRAY + "Wither").addLoreLine(" ")
-            .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.DARK_GRAY + "absolviert" + ChatColor.GRAY + ",")
-            .addLoreLine(ChatColor.GRAY + " sobald der " + ChatColor.DARK_GRAY + "Wither " + ChatColor.GRAY + "getötet wurde.").toItemStack();
-    static ItemStack wardenGoal = new ItemBuilder(Material.SCULK_SENSOR).setName(ChatColor.AQUA + "Wärter").addLoreLine(" ")
-            .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.AQUA + "absolviert" + ChatColor.GRAY + ",")
-            .addLoreLine(ChatColor.GRAY + " sobald der " + ChatColor.AQUA + "Wärter " + ChatColor.GRAY + "getötet wurde.").toItemStack();
-    static ItemStack allItemsGoal = new ItemBuilder(Material.GRASS_BLOCK).setName(ChatColor.GREEN + "Alle Items").addLoreLine(" ")
-            .addLoreLine(ChatColor.GRAY + " Die Challenge ist " + ChatColor.GREEN + "absolviert" + ChatColor.GRAY + ",")
-            .addLoreLine(ChatColor.GRAY + " sobald " + ChatColor.GREEN + "alle Items " + ChatColor.GRAY + "gesammelt wurden.").toItemStack();
-
-    /*
-     * Creating items for the pluginSettings inventory
-     */
-    static ItemStack backpack = new ItemBuilder(Material.ENDER_CHEST).setName(ChatColor.DARK_PURPLE + "Backpack").addLoreLine(" ")
-            .addLoreLine(ChatColor.GRAY + " Diese " + ChatColor.DARK_PURPLE + "Plugin-Einstellung" + ChatColor.GRAY + "" +
-                    " stellt").addLoreLine(ChatColor.GRAY + " das" + ChatColor.DARK_PURPLE + " Backpack " + ChatColor.GRAY + "ein.").toItemStack();
-    static ItemStack damageInChat = new ItemBuilder(Material.SPAWNER).setName(ChatColor.RED + "Schaden im Chat").addItemFlag(ItemFlag.HIDE_ITEM_SPECIFICS).addLoreLine(" ")
-            .addLoreLine(ChatColor.GRAY + " Mit dieser " + ChatColor.RED + "Plugin-Einstellung" + ChatColor.GRAY + " wird der").addLoreLine(ChatColor.RED + " erlittene Schaden" +
-                    ChatColor.GRAY + " der Spieler im " + ChatColor.RED + "Chat" + ChatColor.GRAY + " angezeigt.").toItemStack();
-
-    /*
-     * Creating items for the "/allitems overview" inventory
-     */
-    public static ItemStack allItemsDefault = new ItemBuilder(Material.OAK_SIGN).setName(ChatColor.RED + "Dieses Item hat keine Vorschau").toItemStack();
-    static ItemStack registeredItems = new ItemBuilder(Material.CHEST).setName(ChatColor.GREEN + "Registrierte Items").toItemStack();
-    static ItemStack pendingItems = new ItemBuilder(Material.CAULDRON).setName(ChatColor.RED + "Ausstehende Items").toItemStack();
-
-    /*
-     * Creating items for the challenges inventory
-     */
-    static ItemStack minecraftChallenges = new ItemBuilder(Material.CRAFTING_TABLE).setName(ChatColor.GREEN + "Minecraft-Challenges").toItemStack();    //TODO: Beschreibung
-    static ItemStack randomizerChallenges = new ItemBuilder(Material.CHAIN_COMMAND_BLOCK).setName(ChatColor.BLUE + "Randomizer-Challenges").addLoreLine(" ")
-            .addLoreLine(ChatColor.RED + " Coming Soon...").toItemStack();     //TODO: Beschreibung
-
-    /*
-     * Creating items for the minecraftChallenges inventory
-     */
-    static ItemStack noCraftingTableChallenge = new ItemBuilder(Material.CRAFTING_TABLE).setName(ChatColor.GOLD + "Ohne Werkbank").addLoreLine(" ")
-            .addLoreLine(ChatColor.GRAY + " Die " + ChatColor.GOLD + "Einschränkung" + ChatColor.GRAY + " dieser Challenge besteht darin,")
-            .addLoreLine(ChatColor.GRAY + " das Spielgeschehen " + ChatColor.GOLD + "ohne Werkbank" + ChatColor.GRAY + " zu bewältigen.").toItemStack();
-    static ItemStack noFallDamageChallenge = new ItemBuilder(Material.FEATHER).setName(ChatColor.WHITE + "Ohne Fallschaden").addLoreLine(" ")
-            .addLoreLine(ChatColor.GRAY + " Die " + ChatColor.WHITE + "Einschränkung" + ChatColor.GRAY + " dieser Challenge besteht darin,")
-            .addLoreLine(ChatColor.GRAY + " das Spielgeschehen " + ChatColor.WHITE + "ohne Fallschaden" + ChatColor.GRAY + " zu bewältigen.").toItemStack();
-    static ItemStack noArmorChallenge = new ItemBuilder(Material.LEATHER_CHESTPLATE).addItemFlag(ItemFlag.HIDE_ATTRIBUTES).addItemFlag(ItemFlag.HIDE_DYE).setColor(Color.YELLOW)
-            .setName(ChatColor.YELLOW + "Ohne Rüstung").addLoreLine(" ").addLoreLine(ChatColor.GRAY + " Die " + ChatColor.YELLOW + "Einschränkung" + ChatColor.GRAY + " " +
-                    "dieser Challenge besteht darin,").addLoreLine(ChatColor.GRAY + " das Spielgeschehen " + ChatColor.YELLOW + "ohne Rüstung" + ChatColor.GRAY +
-                    " zu bewältigen.").toItemStack();
-    static ItemStack limitedHealthChallenge = new ItemBuilder(Material.SPECTRAL_ARROW).setName(ChatColor.DARK_RED + "Limitierte Herzen").addLoreLine(" ")
-            .addLoreLine(ChatColor.GRAY + " Die " + ChatColor.DARK_RED + "Einschränkung" + ChatColor.GRAY + " dieser Challenge besteht darin,")
-            .addLoreLine(ChatColor.GRAY + " das Spielgeschehen " + ChatColor.DARK_RED + "mit limitierten Herzen" + ChatColor.GRAY + " zu bewältigen.").toItemStack();
-    static ItemStack noJumpChallenge = new ItemBuilder(Material.FIREWORK_ROCKET).setName(ChatColor.RED + "Ohne Springen").addLoreLine(" ")
-            .addLoreLine(ChatColor.GRAY + " Die " + ChatColor.RED + "Einschränkung" + ChatColor.GRAY + " dieser Challenge besteht darin,")
-            .addLoreLine(ChatColor.GRAY + " das Spielgeschehen " + ChatColor.RED + "ohne Springen" + ChatColor.GRAY + " zu bewältigen.").toItemStack();
-    static ItemStack noSneakChallenge = new ItemBuilder(Material.DIAMOND_BOOTS).addItemFlag(ItemFlag.HIDE_ATTRIBUTES).setName(ChatColor.BLUE + "Ohne Schleichen").addLoreLine(" ")
-            .addLoreLine(ChatColor.GRAY + " Die " + ChatColor.BLUE + "Einschränkung" + ChatColor.GRAY + " dieser Challenge besteht darin,")
-            .addLoreLine(ChatColor.GRAY + " das Spielgeschehen " + ChatColor.BLUE + "ohne Schleichen" + ChatColor.GRAY + " zu bewältigen.").toItemStack();
-    static ItemStack wolfiChallenge = new ItemBuilder(Material.BONE).setName(ChatColor.DARK_GRAY + "Wolfi").addLoreLine(" ")
-            .addLoreLine(ChatColor.GRAY + " Die " + ChatColor.DARK_GRAY + "Einschränkung" + ChatColor.GRAY + " dieser Challenge besteht darin,")
-            .addLoreLine(ChatColor.GRAY + " das Spielgeschehen " + ChatColor.DARK_GRAY + "mit Wolfi" + ChatColor.GRAY + " zu bewältigen.").toItemStack();
-    static ItemStack dividedHearts = new ItemBuilder(Material.HEART_OF_THE_SEA).setName(ChatColor.AQUA + "Geteilte Herzen").addLoreLine(" ")
-            .addLoreLine(ChatColor.GRAY + " Die " + ChatColor.AQUA + "Einschränkung" + ChatColor.GRAY + " dieser Challenge besteht darin,")
-            .addLoreLine(ChatColor.GRAY + " das Spielgeschehen " + ChatColor.AQUA + "mit geteilten Herzen" + ChatColor.GRAY + " zu bewältigen.").toItemStack();
-
-    /*
-     * Creating items for the Wolfi Challenge inventory
-     */
-    static ItemStack nameChange = new ItemBuilder(Material.NAME_TAG).setName(ChatColor.BLUE + "Namen ändern").toItemStack();
-    static ItemStack collarColor = new ItemBuilder(Material.ARMOR_STAND).setName(ChatColor.DARK_GREEN + "Halsbandfarbe ändern").toItemStack();
-    static ItemStack nameChangeInput = new ItemBuilder(Material.NAME_TAG).toItemStack();
-    static ItemStack whiteCollarColor = new ItemBuilder(Material.WHITE_DYE).setName(ChatColor.WHITE + "Weiß").toItemStack();
-    static ItemStack lightGrayCollarColor = new ItemBuilder(Material.LIGHT_GRAY_DYE).setName(ChatColor.GRAY + "Hellgrau").toItemStack();
-    static ItemStack grayCollarColor = new ItemBuilder(Material.GRAY_DYE).setName(ChatColor.DARK_GRAY + "Grau").toItemStack();
-    static ItemStack blackCollarColor = new ItemBuilder(Material.BLACK_DYE).setName(ChatColor.BLACK + "Schwarz").toItemStack();
-    static ItemStack brownCollarColor = new ItemBuilder(Material.BROWN_DYE).setName(ChatColor.GOLD + "Braun").toItemStack();            //TODO: Hex Color code benutzen
-    static ItemStack redCollarColor = new ItemBuilder(Material.RED_DYE).setName(ChatColor.RED + "Rot").toItemStack();
-    static ItemStack orangeCollarColor = new ItemBuilder(Material.ORANGE_DYE).setName(ChatColor.GOLD + "Orange").toItemStack();
-    static ItemStack yellowCollarColor = new ItemBuilder(Material.YELLOW_DYE).setName(ChatColor.YELLOW + "Gelb").toItemStack();
-    static ItemStack limeCollarColor = new ItemBuilder(Material.LIME_DYE).setName(ChatColor.GREEN + "Hellgrün").toItemStack();
-    static ItemStack greenCollarColor = new ItemBuilder(Material.GREEN_DYE).setName(ChatColor.DARK_GREEN + "Grün").toItemStack();
-    static ItemStack cyanCollarColor = new ItemBuilder(Material.CYAN_DYE).setName(ChatColor.AQUA + "Türkis").toItemStack();
-    static ItemStack lightBlueCollarColor = new ItemBuilder(Material.LIGHT_BLUE_DYE).setName(ChatColor.BLUE + "Hellblau").toItemStack();
-    static ItemStack blueCollarColor = new ItemBuilder(Material.BLUE_DYE).setName(ChatColor.DARK_BLUE + "Blau").toItemStack();
-    static ItemStack purpleCollarColor = new ItemBuilder(Material.PURPLE_DYE).setName(ChatColor.DARK_PURPLE + "Violett").toItemStack();
-    static ItemStack magentaCollarColor = new ItemBuilder(Material.MAGENTA_DYE).setName(ChatColor.DARK_PURPLE + "Magenta").toItemStack();       //TODO: Hex Color code benutzen
-    static ItemStack pinkCollarColor = new ItemBuilder(Material.PINK_DYE).setName(ChatColor.LIGHT_PURPLE + "Rosa").toItemStack();
-
-    /*
-     * Creating items for the playerSettings inventories
-     */
-    static ItemStack timerCosmetics = new ItemBuilder(Material.CLOCK).setName(ChatColor.GOLD + "Timer").toItemStack();
-    static ItemStack timerColorCosmetics = new ItemBuilder(Material.CLOCK).setName(ChatColor.GOLD + "Farben").toItemStack();
-
-    /*
-     * Creating items for the Cosmetics inventory
-     */
-    //TODO: GRADIENT!!!
-    static ItemStack blackTimerColor = new ItemBuilder(Material.BLACK_SHULKER_BOX).setName(ChatColor.BLACK.toString() + ChatColor.BOLD + "Schwarz").toItemStack();
-    static ItemStack darkBlueTimerColor = new ItemBuilder(Material.BLUE_SHULKER_BOX).setName(ChatColor.DARK_BLUE.toString() + ChatColor.BOLD + "Blau").toItemStack();
-    static ItemStack darkGreenTimerColor = new ItemBuilder(Material.GREEN_SHULKER_BOX).setName(ChatColor.DARK_GREEN.toString() + ChatColor.BOLD + "Dunkelgrün").toItemStack();
-    static ItemStack darkTurquoiseTimerColor = new ItemBuilder(Material.CYAN_SHULKER_BOX).setName(ChatColor.DARK_AQUA.toString() + ChatColor.BOLD + "Türkis").toItemStack();
-    static ItemStack darkRedTimerColor = new ItemBuilder(Material.RED_SHULKER_BOX).setName(ChatColor.DARK_RED.toString() + ChatColor.BOLD + "Dunkelrot").toItemStack();
-    static ItemStack purpleTimerColor = new ItemBuilder(Material.PURPLE_SHULKER_BOX).setName(ChatColor.DARK_PURPLE.toString() + ChatColor.BOLD + "Violett").toItemStack();
-    static ItemStack darkYellowTimerColor = new ItemBuilder(Material.ORANGE_SHULKER_BOX).setName(ChatColor.GOLD.toString() + ChatColor.BOLD + "Orange").toItemStack();
-    static ItemStack lightGrayTimerColor = new ItemBuilder(Material.LIGHT_GRAY_SHULKER_BOX).setName(ChatColor.GRAY.toString() + ChatColor.BOLD + "Hellgrau").toItemStack();
-    static ItemStack darkGrayTimerColor = new ItemBuilder(Material.GRAY_SHULKER_BOX).setName(ChatColor.DARK_GRAY.toString() + ChatColor.BOLD + "Grau").toItemStack();
-    static ItemStack lightBlueTimerColor = new ItemBuilder(Material.LIGHT_BLUE_SHULKER_BOX).setName(ChatColor.BLUE.toString() + ChatColor.BOLD + "Hellblau").toItemStack();
-    static ItemStack lightGreenTimerColor = new ItemBuilder(Material.LIME_SHULKER_BOX).setName(ChatColor.GREEN.toString() + ChatColor.BOLD + "Grün").toItemStack();
-    static ItemStack lightTurquoiseTimerColor = new ItemBuilder(Material.CYAN_SHULKER_BOX).setName(ChatColor.AQUA.toString() + ChatColor.BOLD + "Aqua").toItemStack();
-    static ItemStack lightRedTimerColor = new ItemBuilder(Material.PINK_SHULKER_BOX).setName(ChatColor.RED.toString() + ChatColor.BOLD + "Rot").toItemStack();
-    static ItemStack magentaTimerColor = new ItemBuilder(Material.MAGENTA_SHULKER_BOX).setName(ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD + "Magenta").toItemStack();
-    static ItemStack yellowTimerColor = new ItemBuilder(Material.YELLOW_SHULKER_BOX).setName(ChatColor.YELLOW.toString() + ChatColor.BOLD + "Gelb").toItemStack();
-    static ItemStack whiteTimerColor = new ItemBuilder(Material.WHITE_SHULKER_BOX).setName(ChatColor.WHITE.toString() + ChatColor.BOLD + "Weiß").toItemStack();
-
-        @EventHandler
+    @EventHandler
     public void onInventoryClick(InventoryClickEvent event) throws IOException {
         Player player = (Player) event.getWhoClicked();
 
@@ -603,7 +589,8 @@ public class MainInventoryManager implements Listener {
                 || event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Halsbandfarbe ändern") || event.getView().getTitle().equalsIgnoreCase(
                 ChatColor.GRAY + "〣 " + ChatColor.LIGHT_PURPLE + "Cosmetics") || event.getView().getTitle().equalsIgnoreCase(
                 ChatColor.DARK_GRAY + "Kategorien") || event.getView().getTitle().equalsIgnoreCase(ChatColor.LIGHT_PURPLE + "Plugin-Einstellungen"
-                + ChatColor.DARK_GRAY + " • " + ChatColor.BLUE + "Seite 1") || event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Timer-Farben")) {
+                + ChatColor.DARK_GRAY + " • " + ChatColor.BLUE + "Seite 1") ||
+                event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Timer-Farben")) {
             if (event.getCurrentItem() == null) {
                 return;
             }
@@ -662,8 +649,8 @@ public class MainInventoryManager implements Listener {
                 if (event.isLeftClick()) {
                     player.openInventory(challengesInv);
                 }
-            } else if(event.getCurrentItem().getType().equals(Material.REPEATER)) {
-                if(event.isLeftClick()) {
+            } else if (event.getCurrentItem().getType().equals(Material.REPEATER)) {
+                if (event.isLeftClick()) {
                     dyeColorCheck("settings.backpack", pluginSettingsInv, (short) 20);
                     dyeColorCheck("settings.damage", pluginSettingsInv, (short) 24);
                     player.openInventory(pluginSettingsInv);
@@ -967,30 +954,30 @@ public class MainInventoryManager implements Listener {
             }
         } else if (event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Namen ändern")) { //TODO: geht alles nach nem reload nicht mehr
             Inventory inventory = event.getInventory();
-            if(event.getSlot() == 0) {
+            if (event.getSlot() == 0) {
                 player.sendMessage("test1");
             }
-            if(event.getSlot() == 2) {
+            if (event.getSlot() == 2) {
                 player.sendMessage("test2");
             }
-            if(event.getRawSlot() == 2) {
+            if (event.getRawSlot() == 2) {
                 player.sendMessage("test3");
             }
-            if(inventory instanceof AnvilInventory) {
+            if (inventory instanceof AnvilInventory) {
                 player.sendMessage("1");
                 InventoryView view = event.getView();
                 int rawSlot = event.getRawSlot();
-                if(rawSlot == view.convertSlot(rawSlot)) {
+                if (rawSlot == view.convertSlot(rawSlot)) {
                     player.sendMessage("2");
-                    if(rawSlot == 2) {
+                    if (rawSlot == 2) {
                         player.sendMessage("3");
                         ItemStack item = event.getCurrentItem();
-                        if(item != null) {
+                        if (item != null) {
                             player.sendMessage("4");
                             ItemMeta meta = item.getItemMeta();
-                            if(meta != null) {
+                            if (meta != null) {
                                 player.sendMessage("5");            //TODO: Funktioniert alles nicht
-                                if(meta.hasDisplayName()) {
+                                if (meta.hasDisplayName()) {
                                     player.sendMessage("6");
                                     String displayName = meta.getDisplayName();
                                     player.sendMessage(displayName);
@@ -1000,87 +987,158 @@ public class MainInventoryManager implements Listener {
                     }
                 }
             }
-        } else if(event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Halsbandfarbe ändern")) {
-            if(event.getSlot() == 17) {         //TODO: geht alles nach nem reload nicht mehr
+        } else if (event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Halsbandfarbe ändern")) {
+            if (event.getSlot() == 17) {         //TODO: geht alles nach nem reload nicht mehr
                 player.openInventory(wolfiChallengeInv);
-            } else if(event.getSlot() == 0) {
+            } else if (event.getSlot() == 0) {
                 wolf.setCollarColor(DyeColor.WHITE);
-            } else if(event.getSlot() == 1) {
+            } else if (event.getSlot() == 1) {
                 wolf.setCollarColor(DyeColor.LIGHT_GRAY);
-            } else if(event.getSlot() == 2) {
+            } else if (event.getSlot() == 2) {
                 wolf.setCollarColor(DyeColor.GRAY);
-            } else if(event.getSlot() == 3) {
+            } else if (event.getSlot() == 3) {
                 wolf.setCollarColor(DyeColor.BLACK);
-            } else if(event.getSlot() == 4) {
+            } else if (event.getSlot() == 4) {
                 wolf.setCollarColor(DyeColor.BROWN);
-            } else if(event.getSlot() == 5) {
+            } else if (event.getSlot() == 5) {
                 wolf.setCollarColor(DyeColor.RED);
-            } else if(event.getSlot() == 6) {
+            } else if (event.getSlot() == 6) {
                 wolf.setCollarColor(DyeColor.ORANGE);
-            } else if(event.getSlot() == 7) {
+            } else if (event.getSlot() == 7) {
                 wolf.setCollarColor(DyeColor.YELLOW);
-            } else if(event.getSlot() == 8) {
+            } else if (event.getSlot() == 8) {
                 wolf.setCollarColor(DyeColor.LIME);
-            } else if(event.getSlot() == 9) {
+            } else if (event.getSlot() == 9) {
                 wolf.setCollarColor(DyeColor.GREEN);
-            } else if(event.getSlot() == 10) {
+            } else if (event.getSlot() == 10) {
                 wolf.setCollarColor(DyeColor.CYAN);
-            } else if(event.getSlot() == 11) {
+            } else if (event.getSlot() == 11) {
                 wolf.setCollarColor(DyeColor.LIGHT_BLUE);
-            } else if(event.getSlot() == 12) {
+            } else if (event.getSlot() == 12) {
                 wolf.setCollarColor(DyeColor.BLUE);
-            } else if(event.getSlot() == 13) {
+            } else if (event.getSlot() == 13) {
                 wolf.setCollarColor(DyeColor.PURPLE);
-            } else if(event.getSlot() == 14) {
+            } else if (event.getSlot() == 14) {
                 wolf.setCollarColor(DyeColor.MAGENTA);
-            } else if(event.getSlot() == 15) {
+            } else if (event.getSlot() == 15) {
                 wolf.setCollarColor(DyeColor.PINK);
             }
-        } else if(event.getView().getTitle().equalsIgnoreCase(ChatColor.GRAY + "〣 " + ChatColor.LIGHT_PURPLE + "Cosmetics")) {
-            if(event.getCurrentItem().getType().equals(Material.CLOCK)) {
-                if(event.isLeftClick()) {
+        } else if (event.getView().getTitle().equalsIgnoreCase(ChatColor.GRAY + "〣 " + ChatColor.LIGHT_PURPLE + "Cosmetics")) {
+            if (event.getCurrentItem().getType().equals(Material.CLOCK)) {
+                if (event.isLeftClick()) {
                     player.openInventory(cosmeticsCategoriesInv);       //TODO: Weiter machen
                 }
             }
-        } else if(event.getView().getTitle().equalsIgnoreCase(ChatColor.LIGHT_PURPLE + "Plugin-Einstellungen"
+        } else if (event.getView().getTitle().equalsIgnoreCase(ChatColor.LIGHT_PURPLE + "Plugin-Einstellungen"
                 + ChatColor.DARK_GRAY + " • " + ChatColor.BLUE + "Seite 1")) {
-            if(event.getCurrentItem().getType().equals(Material.ARROW)) {
-                if(event.isLeftClick()) {
+            if (event.getCurrentItem().getType().equals(Material.ARROW)) {
+                if (event.isLeftClick()) {
                     player.openInventory(settingsInv);
                 }
             } else if (Objects.requireNonNull(event.getCurrentItem()).getType().equals(Material.ENDER_CHEST) || event.getSlot() == 20) {
                 if (event.isLeftClick()) {
                     if (!Config.getBoolean("settings.backpack").booleanValue()) {
-                        settingsChange(true, "Das" + ChatColor.GOLD.toString() + ChatColor.BOLD + " Backpack "
-                                + ChatColor.RESET + ChatColor.GRAY + "wurde aktiviert.", Material.GREEN_DYE,
+                        settingsChange(true, "Das" + ChatColor.GOLD + ChatColor.BOLD + " Backpack "
+                                        + ChatColor.RESET + ChatColor.GRAY + "wurde aktiviert.", Material.GREEN_DYE,
                                 ChatColor.GREEN + "Aktiviert", (byte) 20, "backpack");
                     }
                 } else if (event.isRightClick()) {
                     if (Config.getBoolean("settings.backpack").booleanValue()) {
-                        settingsChange(false, "Das" + ChatColor.GOLD.toString() + ChatColor.BOLD + " Backpack "
+                        settingsChange(false, "Das" + ChatColor.GOLD + ChatColor.BOLD + " Backpack "
                                         + ChatColor.RESET + ChatColor.GRAY + "wurde deaktiviert.", Material.RED_DYE,
                                 ChatColor.RED + "Deaktiviert", (byte) 20, "backpack");
                     }
                 }
-            } else if(event.getCurrentItem().getType().equals(Material.SPAWNER) || event.getSlot() == 24) {
-                if(event.isLeftClick()) {
-                    if(!Config.getBoolean("settings.damage").booleanValue()) {
-                        settingsChange(true, "Der" + ChatColor.GOLD.toString() + ChatColor.BOLD + " Schaden im Chat "
+            } else if (event.getCurrentItem().getType().equals(Material.SPAWNER) || event.getSlot() == 24) {
+                if (event.isLeftClick()) {
+                    if (!Config.getBoolean("settings.damage").booleanValue()) {
+                        settingsChange(true, "Der" + ChatColor.GOLD + ChatColor.BOLD + " Schaden im Chat "
                                         + ChatColor.RESET + ChatColor.GRAY + "wird nun angezeigt.", Material.GREEN_DYE,
                                 ChatColor.GREEN + "Aktiviert", (byte) 24, "damage");
                     }
-                } else if(event.isRightClick()) {
-                    if(Config.getBoolean("settings.damage").booleanValue()) {
-                        settingsChange(false, "Der" + ChatColor.GOLD.toString() + ChatColor.BOLD + " Schaden im Chat "
+                } else if (event.isRightClick()) {
+                    if (Config.getBoolean("settings.damage").booleanValue()) {
+                        settingsChange(false, "Der" + ChatColor.GOLD + ChatColor.BOLD + " Schaden im Chat "
                                         + ChatColor.RESET + ChatColor.GRAY + "wird nun nicht mehr angezeigt.", Material.RED_DYE,
                                 ChatColor.GREEN + "Aktiviert", (byte) 24, "damage");
                     }
                 }
             }
-        } else if(event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Kategorien")) {
-            if(event.getCurrentItem().getType().equals(Material.CLOCK)) {
-                if(event.isLeftClick()) {
+        } else if (event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Kategorien")) {
+            if (event.getCurrentItem().getType().equals(Material.CLOCK)) {
+                if (event.isLeftClick()) {
                     player.openInventory(timerColorsInv);
+                }
+            }
+        } else if (event.getView().getTitle().equalsIgnoreCase(ChatColor.DARK_GRAY + "Timer-Farben")) {
+            if (event.getCurrentItem().getType().equals(Material.RED_STAINED_GLASS_PANE)) {
+                if (event.isLeftClick()) {
+                    player.openInventory(cosmeticsCategoriesInv);
+                }
+            } else if (event.getCurrentItem().getType().equals(Material.BLACK_SHULKER_BOX)) {
+                if (event.isLeftClick()) {
+                    Bukkit.dispatchCommand(player, "timer color 0");
+                }
+            } else if (event.getCurrentItem().getType().equals(Material.BLUE_SHULKER_BOX)) {
+                if (event.isLeftClick()) {
+                    Bukkit.dispatchCommand(player, "timer color 1");
+                }
+            } else if (event.getCurrentItem().getType().equals(Material.GREEN_SHULKER_BOX)) {
+                if (event.isLeftClick()) {
+                    Bukkit.dispatchCommand(player, "timer color 2");
+                }
+            } else if (event.getCurrentItem().getType().equals(Material.CYAN_SHULKER_BOX) && event.getSlot() == 3) {
+                if (event.isLeftClick()) {
+                    Bukkit.dispatchCommand(player, "timer color 3");
+                }
+            } else if (event.getCurrentItem().getType().equals(Material.RED_SHULKER_BOX)) {
+                if (event.isLeftClick()) {
+                    Bukkit.dispatchCommand(player, "timer color 4");
+                }
+            } else if (event.getCurrentItem().getType().equals(Material.PURPLE_SHULKER_BOX)) {
+                if (event.isLeftClick()) {
+                    Bukkit.dispatchCommand(player, "timer color 5");
+                }
+            } else if (event.getCurrentItem().getType().equals(Material.ORANGE_SHULKER_BOX)) {
+                if (event.isLeftClick()) {
+                    Bukkit.dispatchCommand(player, "timer color 6");
+                }
+            } else if(event.getCurrentItem().getType().equals(Material.LIGHT_GRAY_SHULKER_BOX)) {
+                if(event.isLeftClick()) {
+                    Bukkit.dispatchCommand(player, "timer color 7");
+                }
+            } else if(event.getCurrentItem().getType().equals(Material.GRAY_SHULKER_BOX)) {
+                if(event.isLeftClick()) {
+                    Bukkit.dispatchCommand(player, "timer color 8");
+                }
+            } else if(event.getCurrentItem().getType().equals(Material.LIGHT_BLUE_SHULKER_BOX)) {
+                if(event.isLeftClick()) {
+                    Bukkit.dispatchCommand(player, "timer color 9");
+                }
+            }
+            else if(event.getCurrentItem().getType().equals(Material.LIME_SHULKER_BOX)) {
+                if(event.isLeftClick()) {
+                    Bukkit.dispatchCommand(player, "timer color a");
+                }
+            } else if(event.getCurrentItem().getType().equals(Material.CYAN_SHULKER_BOX) || event.getSlot() == 14) {
+                if(event.isLeftClick()) {
+                    Bukkit.dispatchCommand(player, "timer color b");
+                }
+            } else if(event.getCurrentItem().getType().equals(Material.PINK_SHULKER_BOX)) {
+                if(event.isLeftClick()) {
+                    Bukkit.dispatchCommand(player, "timer color c");
+                }
+            } else if(event.getCurrentItem().getType().equals(Material.MAGENTA_SHULKER_BOX)) {
+                if(event.isLeftClick()) {
+                    Bukkit.dispatchCommand(player, "timer color d");
+                }
+            } else if(event.getCurrentItem().getType().equals(Material.YELLOW_SHULKER_BOX)) {
+                if(event.isLeftClick()) {
+                    Bukkit.dispatchCommand(player, "timer color e");
+                }
+            } else if(event.getCurrentItem().getType().equals(Material.WHITE_SHULKER_BOX)) {
+                if(event.isLeftClick()) {
+                    Bukkit.dispatchCommand(player, "timer color f");
                 }
             }
         }
