@@ -7,7 +7,7 @@ authors: [ Glubschiii, Niklashere ]
 
 commands:
   timer:
-    permission: challenges.timer
+    description: timer settings
   settings:
     aliases: einstellungen
     permission: challenges.settings

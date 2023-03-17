@@ -28,132 +28,150 @@ public class TimerCommand implements CommandExecutor {
             if (args.length == 1) {
                 switch (args[0].toLowerCase()) {
                     case "toggle": {
-                        if (Timer.isRunning()) {
-                            runningFalse((Player) sender, timer);
-                        } else {
-                            checkStart((Player) sender, timer);
+                        if(sender.hasPermission("challenges.timer")) {
+                            if (Timer.isRunning()) {
+                                runningFalse((Player) sender, timer);
+                            } else {
+                                checkStart((Player) sender, timer);
+                            }
                         }
                         break;
                     }
 
                     case "reset": {
-                        timer.setRunning(false);
-                        timer.setTime(0);
-                        for (Player all : Bukkit.getOnlinePlayers()) {
-                            all.sendMessage(prefix + ChatColor.GREEN + "Der Timer wurde von " + ChatColor.WHITE + ChatColor.BOLD +
-                                    ((Player) sender).getDisplayName() + "" + ChatColor.RESET + "" + ChatColor.GREEN + " zurückgesetzt!");
+                        if(sender.hasPermission("challenges.timer")) {
+                            timer.setRunning(false);
+                            timer.setTime(0);
+                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                all.sendMessage(prefix + ChatColor.GREEN + "Der Timer wurde von " + ChatColor.WHITE + ChatColor.BOLD +
+                                        ((Player) sender).getDisplayName() + "" + ChatColor.RESET + "" + ChatColor.GREEN + " zurückgesetzt!");
+                            }
                         }
                         break;
 
                     }
 
                     case "up": {
-                        if (Config.get("timer-direction") != "up") {
-                            try {
-                                Config.set("timer-direction", "up");
-                                sender.sendMessage(prefix + ChatColor.YELLOW + "Der Timer zählt nun nach oben!");
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
+                        if(sender.hasPermission("challenges.timer")) {
+                            if (Config.get("timer-direction") != "up") {
+                                try {
+                                    Config.set("timer-direction", "up");
+                                    sender.sendMessage(prefix + ChatColor.YELLOW + "Der Timer zählt nun nach oben!");
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            } else {
+                                sender.sendMessage(prefix + ChatColor.GREEN + "Der Timer zählt bereits nach oben!");
                             }
-                        } else {
-                            sender.sendMessage(prefix + ChatColor.GREEN + "Der Timer zählt bereits nach oben!");
                         }
                         break;
                     }
 
                     case "down": {
-                        if (Config.get("timer-direction") != "down") {
-                            try {
-                                Config.set("timer-direction", "down");
-                                sender.sendMessage(prefix + ChatColor.YELLOW + "Der Timer zählt nun nach unten!");
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
+                        if(sender.hasPermission("challenges.timer")) {
+                            if (Config.get("timer-direction") != "down") {
+                                try {
+                                    Config.set("timer-direction", "down");
+                                    sender.sendMessage(prefix + ChatColor.YELLOW + "Der Timer zählt nun nach unten!");
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            } else {
+                                sender.sendMessage(prefix + ChatColor.GREEN + "Der Timer zählt bereits nach unten!");
                             }
-                        } else {
-                            sender.sendMessage(prefix + ChatColor.GREEN + "Der Timer zählt bereits nach unten!");
                         }
                         break;
                     }
 
                     case "pause": {
-                        if (Timer.isRunning()) {
-                            runningFalse((Player) sender, timer);
-                        } else {
-                            sender.sendMessage(prefix + ChatColor.GREEN + "Der Timer ist bereits pausiert!");
+                        if(sender.hasPermission("challenges.timer")) {
+                            if (Timer.isRunning()) {
+                                runningFalse((Player) sender, timer);
+                            } else {
+                                sender.sendMessage(prefix + ChatColor.GREEN + "Der Timer ist bereits pausiert!");
+                            }
                         }
                         break;
                     }
 
                     case "resume": {
-                        if (!Timer.isRunning()) {
-                            checkStart((Player) sender, timer);
-                        } else {
-                            sender.sendMessage(prefix + ChatColor.GREEN + "Der Timer wurde bereits fortgesetzt!");
+                        if(sender.hasPermission("challenges.timer")) {
+                            if (!Timer.isRunning()) {
+                                checkStart((Player) sender, timer);
+                            } else {
+                                sender.sendMessage(prefix + ChatColor.GREEN + "Der Timer wurde bereits fortgesetzt!");
+                            }
                         }
                         break;
                     }
                     default:
-                        sendUsage(sender);
+                        if(sender.hasPermission("challenges.timer")) {
+                            sendUsage(sender);
+                        }
                 }
-            } else if(args.length >= 1) {
+            } else if (args.length >= 1) {
                 if (args[0].equalsIgnoreCase("color")) {            //TODO: Colorcodes weg machen und nur noch bestimmte Farben eingeben können
-                try {
-                    Main.getInstance().setColor((Player) sender, ChatColor.getByChar(args[1]));
-                    timer.sendActionBar();
-                    sender.sendMessage(prefix + ChatColor.GREEN + "Die Farbe des Timers wurde auf " + ChatColor.WHITE.toString() + ChatColor.BOLD + args[1] +
-                            "" + ChatColor.RESET + "" + ChatColor.GREEN + " geändert!");
-                } catch (Exception e) {
-                    sendColorUsage(sender);
-                }
-            } else if (args[0].equalsIgnoreCase("set")) {
                     try {
-                        if (args.length >= 2) {
-                            int timeInSec = 0;
-                            String friendlyFormatTime = "";
-                            for (String time : args) {
-                                if (!time.equalsIgnoreCase("set")) {
-                                    int tempTime = Integer.parseInt(time.substring(0, time.length() - 1));
-                                    switch (time.charAt(time.length() - 1)) {
-                                        case 'd': {
-                                            timeInSec = timeInSec + tempTime * 86400;
-                                            friendlyFormatTime = friendlyFormatTime + tempTime + "d ";
-                                            break;
-                                        }
-                                        case 'h': {
-                                            timeInSec = timeInSec + tempTime * 3600;
-                                            friendlyFormatTime = friendlyFormatTime + tempTime + "h ";
-                                            break;
-                                        }
-                                        case 'm': {
-                                            timeInSec = timeInSec + tempTime * 60;
-                                            friendlyFormatTime = friendlyFormatTime + tempTime + "m ";
-                                            break;
-                                        }
-                                        case 's': {
-                                            timeInSec = timeInSec + tempTime;
-                                            friendlyFormatTime = friendlyFormatTime + tempTime + "s ";
-                                            break;
-                                        }
-                                        default: {
-                                            friendlyFormatTime = null;
+                        Main.getInstance().setColor((Player) sender, ChatColor.getByChar(args[1]));
+                        timer.sendActionBar();
+                        sender.sendMessage(prefix + ChatColor.GREEN + "Die Farbe des Timers wurde auf " + ChatColor.WHITE.toString() + ChatColor.BOLD + args[1] +
+                                "" + ChatColor.RESET + "" + ChatColor.GREEN + " geändert!");
+                    } catch (Exception e) {
+                        sendColorUsage(sender);
+                    }
+                } else if (args[0].equalsIgnoreCase("set")) {
+                    if (sender.hasPermission("challenges.timer")) {
+                        try {
+                            if (args.length >= 2) {
+                                int timeInSec = 0;
+                                String friendlyFormatTime = "";
+                                for (String time : args) {
+                                    if (!time.equalsIgnoreCase("set")) {
+                                        int tempTime = Integer.parseInt(time.substring(0, time.length() - 1));
+                                        switch (time.charAt(time.length() - 1)) {
+                                            case 'd': {
+                                                timeInSec = timeInSec + tempTime * 86400;
+                                                friendlyFormatTime = friendlyFormatTime + tempTime + "d ";
+                                                break;
+                                            }
+                                            case 'h': {
+                                                timeInSec = timeInSec + tempTime * 3600;
+                                                friendlyFormatTime = friendlyFormatTime + tempTime + "h ";
+                                                break;
+                                            }
+                                            case 'm': {
+                                                timeInSec = timeInSec + tempTime * 60;
+                                                friendlyFormatTime = friendlyFormatTime + tempTime + "m ";
+                                                break;
+                                            }
+                                            case 's': {
+                                                timeInSec = timeInSec + tempTime;
+                                                friendlyFormatTime = friendlyFormatTime + tempTime + "s ";
+                                                break;
+                                            }
+                                            default: {
+                                                friendlyFormatTime = null;
+                                            }
                                         }
                                     }
                                 }
+                                if (friendlyFormatTime != null) {
+                                    timer.setTime(timeInSec * 5);
+                                    sender.sendMessage(prefix + ChatColor.GREEN + "Der Timer wurde auf " + ChatColor.WHITE + ChatColor.BOLD + friendlyFormatTime +
+                                            "" + ChatColor.RESET + "" + ChatColor.GREEN + "gesetzt!");
+                                } else {
+                                    sender.sendMessage(ChatColor.RED + "Bitte verwende d für Tage, h für Stunden, m für Minuten und s für Sekunden!");
+                                }
                             }
-                            if (friendlyFormatTime != null) {
-                                timer.setTime(timeInSec * 5);
-                                sender.sendMessage(prefix + ChatColor.GREEN + "Der Timer wurde auf " + ChatColor.WHITE + ChatColor.BOLD + friendlyFormatTime +
-                                        "" + ChatColor.RESET + "" + ChatColor.GREEN + "gesetzt!");
-                            } else {
-                                sender.sendMessage(ChatColor.RED + "Bitte verwende d für Tage, h für Stunden, m für Minuten und s für Sekunden!");
-                            }
+                        } catch (NumberFormatException e) {
+                            sender.sendMessage(ChatColor.RED + "Dein Parameter 2 muss eine Zahl sein!");
                         }
-                    } catch (NumberFormatException e) {
-                        sender.sendMessage(ChatColor.RED + "Dein Parameter 2 muss eine Zahl sein!");
                     }
                 }
             } else {
-                sendUsage(sender);
+                if(sender.hasPermission("challenges.timer")) {
+                    sendUsage(sender);
+                }
             }
         }
         return false;
@@ -170,13 +188,13 @@ public class TimerCommand implements CommandExecutor {
     }
 
     private void checkStart(Player sender, Timer timer) {
-        if(!Config.getBoolean("challenge.started").booleanValue()) {
+        if (!Config.getBoolean("challenge.started").booleanValue()) {
             try {
                 Config.set("challenge.started", Boolean.valueOf(true));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            for(Player all : Bukkit.getOnlinePlayers()) {
+            for (Player all : Bukkit.getOnlinePlayers()) {
                 all.getInventory().clear();
             }
         }

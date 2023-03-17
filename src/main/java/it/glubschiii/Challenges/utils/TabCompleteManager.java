@@ -25,10 +25,12 @@ public class TabCompleteManager implements TabCompleter {
 
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
         if(cmd.getName().equalsIgnoreCase("timer")) {
-            if(args.length == 1) {
-                return timerTabComplete.stream().filter(option -> option.startsWith(args[0])).collect(Collectors.toList());
-            } else {
-                return Collections.emptyList();
+            if(sender.hasPermission("challenges.timer")) {
+                if (args.length == 1) {
+                    return timerTabComplete.stream().filter(option -> option.startsWith(args[0])).collect(Collectors.toList());
+                } else {
+                    return Collections.emptyList();
+                }
             }
         } else if(cmd.getName().equalsIgnoreCase("allitems")) {
             if(args.length == 1) {
