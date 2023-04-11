@@ -19,4 +19,4 @@ This plugin was created by Glubschiii. Thank you to the following individuals fo
 * Niklashere
 
 ## License
-This plugin is licensed under the <a href="#license">LICENSE.md</a>. Please refer to the LICENSE file for more information.
+This plugin is licensed under the <a href="https://github.com/Glubschiii/Challenges/blob/main/LICENSE">LICENSE.md</a>. Please refer to the LICENSE file for more information.
