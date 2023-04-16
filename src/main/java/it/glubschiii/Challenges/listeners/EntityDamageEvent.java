@@ -8,14 +8,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.event.entity.EntityDamageEvent.*;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 /** @author Glubschiii | https://github.com/glubschiii
@@ -25,36 +23,36 @@ public class EntityDamageEvent implements Listener {
     Timer timer = Main.getInstance().getTimer();
 
     private String prefix = ChatColor.DARK_GRAY + "[" + ChatColor.LIGHT_PURPLE + "P2YL" + ChatColor.DARK_GRAY + "] ";
-    private Map<org.bukkit.event.entity.EntityDamageEvent.DamageCause, String> damageCauseMap = new HashMap<>();
+    private final Map<DamageCause, String> damageCauseMap = new HashMap<>();
     {
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.LAVA, "Lava");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.ENTITY_ATTACK, "Angriff");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK, "Angriff");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.ENTITY_EXPLOSION, "Explosion");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.BLOCK_EXPLOSION, "Explosion");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.CONTACT, "Kontakt");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.CRAMMING, "Enge");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.DRAGON_BREATH, "Drachenatem");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.DROWNING, "Ertrinken");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.DRYOUT, "Austrocknen");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.FALL, "Fallschaden");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.POISON, "Vergiftung");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.VOID, "Void");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.FREEZE, "Erfrieren");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.SUFFOCATION, "Ersticken");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.FLY_INTO_WALL, "Ersticken");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.THORNS, "Dornen");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.LIGHTNING, "Blitz");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.FIRE, "Feuer");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.FIRE_TICK, "Feuer");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.HOT_FLOOR, "Heißer Boden");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.MAGIC, "Magie");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.SUICIDE, "Selbstmord");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.STARVATION, "Verhungern");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.PROJECTILE, "Projektil");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.SONIC_BOOM, "Sonic Boom");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.WITHER, "Ausdörrung");
-        damageCauseMap.put(org.bukkit.event.entity.EntityDamageEvent.DamageCause.FALLING_BLOCK, "Schlag");
+        damageCauseMap.put(DamageCause.LAVA, "Lava");
+        damageCauseMap.put(DamageCause.ENTITY_ATTACK, "Angriff");
+        damageCauseMap.put(DamageCause.ENTITY_SWEEP_ATTACK, "Angriff");
+        damageCauseMap.put(DamageCause.ENTITY_EXPLOSION, "Explosion");
+        damageCauseMap.put(DamageCause.BLOCK_EXPLOSION, "Explosion");
+        damageCauseMap.put(DamageCause.CONTACT, "Kontakt");
+        damageCauseMap.put(DamageCause.CRAMMING, "Enge");
+        damageCauseMap.put(DamageCause.DRAGON_BREATH, "Drachenatem");
+        damageCauseMap.put(DamageCause.DROWNING, "Ertrinken");
+        damageCauseMap.put(DamageCause.DRYOUT, "Austrocknen");
+        damageCauseMap.put(DamageCause.FALL, "Fallschaden");
+        damageCauseMap.put(DamageCause.POISON, "Vergiftung");
+        damageCauseMap.put(DamageCause.VOID, "Void");
+        damageCauseMap.put(DamageCause.FREEZE, "Erfrieren");
+        damageCauseMap.put(DamageCause.SUFFOCATION, "Ersticken");
+        damageCauseMap.put(DamageCause.FLY_INTO_WALL, "Ersticken");
+        damageCauseMap.put(DamageCause.THORNS, "Dornen");
+        damageCauseMap.put(DamageCause.LIGHTNING, "Blitz");
+        damageCauseMap.put(DamageCause.FIRE, "Feuer");
+        damageCauseMap.put(DamageCause.FIRE_TICK, "Feuer");
+        damageCauseMap.put(DamageCause.HOT_FLOOR, "Heißer Boden");
+        damageCauseMap.put(DamageCause.MAGIC, "Magie");
+        damageCauseMap.put(DamageCause.SUICIDE, "Selbstmord");
+        damageCauseMap.put(DamageCause.STARVATION, "Verhungern");
+        damageCauseMap.put(DamageCause.PROJECTILE, "Projektil");
+        damageCauseMap.put(DamageCause.SONIC_BOOM, "Sonic Boom");
+        damageCauseMap.put(DamageCause.WITHER, "Ausdörrung");
+        damageCauseMap.put(DamageCause.FALLING_BLOCK, "Schlag");
     }
 
     @EventHandler
@@ -62,8 +60,7 @@ public class EntityDamageEvent implements Listener {
         double FinalDamage = e.getFinalDamage() / 2;
         String damagecause = damageCauseMap.getOrDefault(e.getCause(), "Unbekannt");
 
-        if(e instanceof EntityDamageByEntityEvent) {
-            EntityDamageByEntityEvent damageEvent = (EntityDamageByEntityEvent) e;
+        if(e instanceof EntityDamageByEntityEvent damageEvent) {
             //TODO: Code unten effizienter (wie oben) machen
             damageEvent.getDamager();
             Entity entity = damageEvent.getDamager();
