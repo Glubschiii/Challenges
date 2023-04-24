@@ -1,10 +1,9 @@
 package it.glubschiii.Challenges.listeners;
 
 import it.glubschiii.Challenges.Main;
+import it.glubschiii.Challenges.timer.Timer;
 import it.glubschiii.Challenges.utils.Config;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

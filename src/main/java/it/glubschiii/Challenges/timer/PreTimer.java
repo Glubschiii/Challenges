@@ -4,6 +4,8 @@ import com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import it.glubschiii.Challenges.utils.Config;
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -17,10 +19,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerAdvancementDoneEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -34,7 +33,6 @@ import static it.glubschiii.Challenges.utils.MainInventoryManager.*;
  */
 public class PreTimer implements Listener {
 
-    //TODO: Ingame-Zeit(Tag-Nacht Zyklus) soll sich nicht ändern
     //TODO: Nur innerhalb 50 Blöcke gehen können
 
     @EventHandler
@@ -77,6 +75,9 @@ public class PreTimer implements Listener {
         }
     }
 
+    /*
+    * Prevent that other entities except of players can't move if the timer isn't running
+     */
     @EventHandler
     private void onMove(EntityMoveEvent event) {
         EntityType entity = event.getEntity().getType();
@@ -85,6 +86,19 @@ public class PreTimer implements Listener {
                 event.setCancelled(true);
             }
         }
+    }
+
+    /*
+    * Player's should only be able to walk within 50 blocks if the timer isn't running
+     */
+    @EventHandler
+    private void onPlayerMove(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        player.getLocation();
+        Location locationStart = event.getFrom();
+        Location locationEnd = event.getTo();
+
+        //TODO: Change the radius where players can move within
     }
 
     @EventHandler
@@ -138,6 +152,18 @@ public class PreTimer implements Listener {
                     event.setCancelled(true);
                 }
             }
+        }
+    }
+
+    /*
+    * Disable time changing if the timer isn't running
+     */
+    @EventHandler
+    private void onJoin(PlayerJoinEvent event) {
+        if(Timer.isRunning()) {
+            Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true));
+        } else {
+            Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false));
         }
     }
 }

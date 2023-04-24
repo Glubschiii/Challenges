@@ -5,6 +5,7 @@ import it.glubschiii.Challenges.timer.Timer;
 import it.glubschiii.Challenges.utils.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameRule;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,7 +34,8 @@ public class QuitEvent implements Listener {
         Config.set("timer", Timer.getTime()/5);
 
         if(Bukkit.getOnlinePlayers().size() <=1 && timer.isRunning()) {
-                timer.setRunning(false);
+            timer.setRunning(false);
+            Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false));
         }
 
         if (Config.getBoolean("goals.allitems").booleanValue()) {

@@ -5,6 +5,7 @@ import it.glubschiii.Challenges.timer.Timer;
 import it.glubschiii.Challenges.utils.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameRule;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -46,6 +47,7 @@ public class TimerCommand implements CommandExecutor {
                                 all.sendMessage(prefix + ChatColor.GREEN + "Der Timer wurde von " + ChatColor.WHITE + ChatColor.BOLD +
                                         ((Player) sender).getDisplayName() + "" + ChatColor.RESET + "" + ChatColor.GREEN + " zurückgesetzt!");
                             }
+                            Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false));
                         }
                         break;
 
@@ -185,6 +187,7 @@ public class TimerCommand implements CommandExecutor {
             //TODO: Sound ändern
             all.playSound(all.getPlayer().getLocation(), Sound.ENTITY_ARROW_SHOOT, 3.0F, 0.5F);
         }
+        Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false));
     }
 
     private void checkStart(Player sender, Timer timer) {
@@ -205,6 +208,7 @@ public class TimerCommand implements CommandExecutor {
             //TODO: Sound ändern
             all.playSound(all.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_YES, 3.0F, 0.5F);
         }
+        Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true));
     }
 
     // TODO: /timer show und /timer hide (Timer in der Actionbar wird eingeblendet - Standardmäßig!)
