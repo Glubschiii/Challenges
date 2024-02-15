@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -58,6 +59,23 @@ public class NoJumpChallenge implements Listener {
                         prevPlayersOnGround.add(player.getUniqueId());
                     } else {
                         prevPlayersOnGround.remove(player.getUniqueId());
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamageEvent(EntityDamageEvent event) {
+        if (Config.contains("challenges.nojump") && Config.getBoolean("challenges.nojump").booleanValue()) {
+            if (Timer.isRunning()) {
+                if (event.getEntity() instanceof Player) {
+                    Player player = (Player) event.getEntity();
+                    if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK ||
+                            event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE ||
+                            event.getCause() == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION ||
+                            event.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION) {
+                        prevPlayersOnGround.add(player.getUniqueId());
                     }
                 }
             }
