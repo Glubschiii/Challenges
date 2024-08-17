@@ -279,11 +279,14 @@ public class AllItemsGoal implements Listener, CommandExecutor {
         }
     }
 
-    @EventHandler
+    /*
+    * This event is triggered when a new version of Paper Spigot is released, and it is necessary to verify whether the goal still works as previous.
+     */
+    /*@EventHandler
     public void onBlockBreak(BlockBreakEvent event) throws IOException {
         Player player = event.getPlayer();
         Bukkit.dispatchCommand(player, "allitems skip");
-    }
+    }*/
 
     /*
     * /allitems command, which has the values "overview" and "skip".
