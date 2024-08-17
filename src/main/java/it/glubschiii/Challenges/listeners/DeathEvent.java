@@ -34,7 +34,7 @@ public class DeathEvent implements Listener {
         Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false));
         if(Timer.isRunning()) {
             for (Player all : Bukkit.getOnlinePlayers()) {              //TODO: Es soll kommen "XY ist gestorben."
-                spawnUpGoingParticleCircle((JavaPlugin) Main.getInstance(), all.getLocation(), Particle.SPELL_WITCH, 17, 1.0D, 2.0D);
+                spawnUpGoingParticleCircle((JavaPlugin) Main.getInstance(), all.getLocation(), Particle.WITCH, 17, 1.0D, 2.0D);
                 if (all != player) {
                     all.setHealth(0);
                 }

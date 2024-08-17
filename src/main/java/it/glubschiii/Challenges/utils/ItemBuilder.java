@@ -231,7 +231,7 @@ public class ItemBuilder {
         ItemMeta im = is.getItemMeta();
         if (is.getType() == Material.POTION) {
             final PotionMeta potionMeta = (PotionMeta) im;
-            im.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            im.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
             potionMeta.addCustomEffect(new PotionEffect(type, strength, duration), overwrite);
             is.setItemMeta(potionMeta);
         }
@@ -249,7 +249,7 @@ public class ItemBuilder {
         ItemMeta im = is.getItemMeta();
         if(is.getType() == Material.TIPPED_ARROW) {
             final PotionMeta potionMeta = (PotionMeta) im;
-            im.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            im.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
             potionMeta.addCustomEffect(new PotionEffect(type, strength, duration), overwrite);
             is.setItemMeta(potionMeta);
         }

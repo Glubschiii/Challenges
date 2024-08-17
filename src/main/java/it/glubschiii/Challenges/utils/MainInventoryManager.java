@@ -732,7 +732,7 @@ public class MainInventoryManager implements Listener {
                     player.openInventory(timerInv3);
                     if (((String) Config.get("timer-direction")).contains("down")) {
                         //TODO: Apply PotionEffect to Spectral (or tipped) arrow correctly here and in the ItemBuilder
-                        timerDirectionChange(ChatColor.RED, PotionEffectType.HEAL, '↡');
+                        timerDirectionChange(ChatColor.RED, PotionEffectType.INSTANT_HEALTH, '↡');
                     } else {
                         timerDirectionChange(ChatColor.GREEN, PotionEffectType.BLINDNESS, '↟');
                     }
@@ -749,7 +749,7 @@ public class MainInventoryManager implements Listener {
                     timerDirectionChange(ChatColor.GREEN, PotionEffectType.BLINDNESS, '↟');
                     Bukkit.dispatchCommand(player, "timer up");
                 } else if (event.isRightClick()) {
-                    timerDirectionChange(ChatColor.RED, PotionEffectType.HEAL, '↡');
+                    timerDirectionChange(ChatColor.RED, PotionEffectType.INSTANT_HEALTH, '↡');
                     Bukkit.dispatchCommand(player, "timer down");
                 }
             } else if (event.getCurrentItem().getType().equals(Material.DARK_OAK_DOOR)) {
